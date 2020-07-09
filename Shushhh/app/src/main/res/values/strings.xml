@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ShushAndroid</string>
+    <string name="shushhhlogo">Shushhh</string>
+    <string name="message">I am currently busy. I will get back to you soon. Thanks for your patience.</string>
 </resources>
