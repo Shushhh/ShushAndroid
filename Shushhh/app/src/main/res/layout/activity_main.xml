@@ -20,6 +20,7 @@
         app:layout_constraintBottom_toBottomOf="@id/top_logo"
         android:background="#484848"
         android:id="@+id/top_message"
+        android:src="@drawable/curved_edges"
         />
 
     <TextView
@@ -54,6 +55,18 @@
         android:paddingBottom="40dp"
         android:paddingTop="10dp"
         android:id="@+id/message"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/top_message"
+        app:layout_constraintRight_toRightOf="@id/top_message"
+        android:text="@string/editbutton"
+        android:textColor="#0DBAB3"
+        android:paddingBottom="10dp"
+        android:paddingRight="10dp"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
         />
 
 
