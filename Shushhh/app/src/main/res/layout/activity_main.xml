@@ -69,10 +69,9 @@
         android:text="@string/editbutton"
         android:textColor="#0DBAB3"
         android:paddingBottom="10dp"
-        android:paddingRight="10dp"
         android:fontFamily="@font/rubik_light"
         style="@style/Widget.AppCompat.Button.Borderless.Colored"
-        />
+        android:gravity="center" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -111,7 +110,9 @@
             app:tabIndicatorColor="#0DBAB3"
             app:tabTextColor="#A2A3A5"
             app:tabSelectedTextColor="#0DBAB3"
-            android:background="#383838">
+            android:background="#383838"
+            android:id="@+id/tabview">
+
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"
@@ -124,6 +125,17 @@
                 android:text="@string/timetab" />
 
         </com.google.android.material.tabs.TabLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/tabview"
+            app:layout_constraintRight_toRightOf="@id/tabview"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:text=". . ."
+            android:textStyle="bold"
+            android:textAlignment="textEnd"
+            android:gravity="end"
+            android:textColor="@android:color/white">
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
