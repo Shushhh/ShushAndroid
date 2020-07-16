@@ -4,30 +4,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-public class PagerAdapter extends FragmentStatePagerAdapter {
+public class PagerAdapter extends FragmentStateAdapter {
     private final List<Fragment> mFragmentList = new ArrayList<>();
 
     public void addFragment(Fragment fragment) {
         mFragmentList.add(fragment);
     }
-    public PagerAdapter(@NonNull FragmentManager fm) {
+    public PagerAdapter(@NonNull FragmentActivity fm) {
         super(fm);
     }
 
 
     @NonNull
     @Override
-    public Fragment getItem(int position) {
+    public Fragment createFragment(int position) {
         return mFragmentList.get(position);
     }
 
     @Override
-    public int getCount() {
+    public int getItemCount() {
         return mFragmentList.size();
     }
 }
