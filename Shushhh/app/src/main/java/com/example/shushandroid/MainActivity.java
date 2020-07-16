@@ -1,39 +1,70 @@
 package com.example.shushandroid;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import android.os.Bundle;
 import android.util.Log;
-
 import com.google.android.material.tabs.TabLayout;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "Main Activity";
-    private PagerAdapter mPagerAdapter;
-    private ViewPager mViewPager;
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d(TAG, "onCreate: Starting.");
 
-        mPagerAdapter = new PagerAdapter(getSupportFragmentManager());
+        viewPager = findViewById(R.id.tabviewpager);
+        tabLayout = findViewById(R.id.tablayout);
 
-        //Setup viewpager with sections adapter
-        mViewPager = (ViewPager) findViewById(R.id.tabviewpager);
-        setupViewPager(mViewPager);
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabview);
-        tabLayout.setupWithViewPager(mViewPager);
+        viewPager.setAdapter(new CustomPagerAdapter(getSupportFragmentManager()));
+        tabLayout.setupWithViewPager(viewPager);
 
     }
-    private void setupViewPager(ViewPager viewPager) {
-        PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new PlaceTab());
-        adapter.addFragment(new TimeTab());
 
-        viewPager.setAdapter(adapter);
+    private class CustomPagerAdapter extends FragmentStatePagerAdapter {
+
+        public CustomPagerAdapter(@NonNull FragmentManager fm) {
+            super(fm);
+        }
+
+        @NonNull
+        @Override
+        public Fragment getItem(int position) {
+            if (position == 0)
+                return new PlaceTab();
+            else if (position == 1)
+                return new TimeTab();
+            else return null;
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @Nullable
+        @Override
+        public CharSequence getPageTitle(int position) {
+            if (position == 0) {
+                return "Place";
+            } else if (position == 1) {
+                return "Time";
+            } else {
+                return "";
+            }
+        }
     }
+
 }
