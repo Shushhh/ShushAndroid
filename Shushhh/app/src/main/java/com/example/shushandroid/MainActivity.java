@@ -42,10 +42,14 @@ public class MainActivity extends AppCompatActivity {
 
         adapter = new CustomPagerAdapter(getSupportFragmentManager(), getLifecycle());
         viewPager2.setAdapter(adapter);
-        new TabLayoutMediator(tabLayout, viewPager2, (tab, position) ->
-                tab.setText("Place")).attach();
-
-        }
+        new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
+            if (position == 0) {
+                tab.setText("Place");
+            } else {
+                tab.setText("Time");
+            }
+        }).attach();
+    }
 
 
     }
