@@ -4,19 +4,28 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.lifecycle.Lifecycle;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
 import android.util.Log;
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
+
+import java.sql.Time;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "Main Activity";
-    private ViewPager viewPager;
+    private ViewPager2 viewPager2;
+    private CustomPagerAdapter adapter;
+    private ArrayList<Fragment> arrayList = new ArrayList<>();
     private TabLayout tabLayout;
 
     @Override
@@ -25,23 +34,31 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Log.d(TAG, "onCreate: Starting.");
 
-        viewPager = findViewById(R.id.tabviewpager);
-        tabLayout = findViewById(R.id.tablayout);
+        viewPager2 = findViewById(R.id.tabviewpager);
+        tabLayout = findViewById(R.id.tabview);
 
-        viewPager.setAdapter(new CustomPagerAdapter(getSupportFragmentManager()));
-        tabLayout.setupWithViewPager(viewPager);
+        arrayList.add(new PlaceTab());
+        arrayList.add(new TimeTab());
+
+        adapter = new CustomPagerAdapter(getSupportFragmentManager(), getLifecycle());
+        viewPager2.setAdapter(adapter);
+        new TabLayoutMediator(tabLayout, viewPager2, (tab, position) ->
+                tab.setText("Place")).attach();
+
+        }
+
 
     }
 
-    private class CustomPagerAdapter extends FragmentStatePagerAdapter {
+    class CustomPagerAdapter extends FragmentStateAdapter {
 
-        public CustomPagerAdapter(@NonNull FragmentManager fm) {
-            super(fm);
+        public CustomPagerAdapter(@NonNull FragmentManager fm, @NonNull Lifecycle lifecycle) {
+            super(fm, lifecycle);
         }
 
         @NonNull
         @Override
-        public Fragment getItem(int position) {
+        public Fragment createFragment(int position) {
             if (position == 0)
                 return new PlaceTab();
             else if (position == 1)
@@ -50,21 +67,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public int getCount() {
+        public int getItemCount() {
             return 2;
         }
 
-        @Nullable
-        @Override
-        public CharSequence getPageTitle(int position) {
-            if (position == 0) {
-                return "Place";
-            } else if (position == 1) {
-                return "Time";
-            } else {
-                return "";
-            }
-        }
     }
-
-}
