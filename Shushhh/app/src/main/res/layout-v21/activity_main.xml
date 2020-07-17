@@ -118,7 +118,7 @@
             android:layout_height="wrap_content"
             android:background="#64DDC7"
             android:src="@drawable/ic_baseline_add_24"
-            app:layout_anchor="@id/bottomappbar">
+            app:layout_anchor="@+id/bottomappbar">
 
         </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
