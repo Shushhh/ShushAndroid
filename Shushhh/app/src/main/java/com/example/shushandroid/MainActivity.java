@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
             if (position == 0) {
-                tab.setText("Place");
+                tab.setText("Location");
             } else {
                 tab.setText("Time");
             }

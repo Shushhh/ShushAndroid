@@ -8,74 +8,29 @@
 
     <View
         android:layout_width="wrap_content"
-        android:layout_height="300dp"
+        android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         android:background="@color/colorPrimary"
         android:id="@+id/top_view" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="170dp"
-        app:layout_constraintBottom_toBottomOf="@id/top_view"
-        android:background="@drawable/curved_edges"
-        android:id="@+id/top_message"
-        android:backgroundTint="@color/colorPrimary" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/shushhhlogo"
-        android:textColor="#0DBAB3"
-        android:textSize="40sp"
+        android:textColor="#64DDC7"
+        android:textSize="30sp"
         android:textStyle="bold"
+        android:textScaleX="1.05"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/top_view"
-        app:layout_constraintBottom_toTopOf="@id/top_message"
-        tools:layout_editor_absoluteX="146dp"
-        tools:layout_editor_absoluteY="62dp"
+        android:paddingTop="30dp"
         tools:text="Shushhh"
         android:fontFamily="@font/rubik_light"
         android:id="@+id/logo"/>
 
-
-    <TextView
-        android:id="@+id/message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/rubik_light"
-        android:paddingBottom="40dp"
-        android:paddingLeft="40dp"
-        android:paddingRight="40dp"
-        android:paddingTop="10dp"
-        android:text="@string/message"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@id/top_message"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/top_message" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/top_message"
-        app:layout_constraintRight_toRightOf="@id/top_message"
-        android:text="@string/editbutton"
-        android:textColor="#0DBAB3"
-        android:paddingBottom="10dp"
-        android:fontFamily="@font/rubik_light"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored"
-        android:gravity="center" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/top_message"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:background="@color/colorPrimary">
 
         <!--        <com.google.android.material.tabs.TabLayout-->
         <!--            android:layout_width="match_parent"-->
@@ -93,50 +48,81 @@
 
         <!--    </com.google.android.material.tabs.TabLayout>-->
 
-        <com.google.android.material.tabs.TabLayout
+    <com.google.android.material.tabs.TabLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logo"
+        app:tabIndicatorFullWidth="true"
+        app:tabMinWidth="205dp"
+        app:tabMode="scrollable"
+        tools:ignore="NotSibling"
+        app:tabIndicatorColor="#3E8D8F"
+        app:tabTextColor="#9499A3"
+        app:tabTextAppearance="@style/MyCustomTabText"
+        app:tabSelectedTextColor="#3E8D8F"
+        android:background="@color/colorPrimary"
+        android:id="@+id/tabview">
+
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/locationtab"
+            />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+               android:text="@string/timetab" />
+
+
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/tabviewpager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tabview">
+
+    </androidx.viewpager2.widget.ViewPager2>
+    
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/bottomcoordlayout">
+        
+        <com.google.android.material.bottomappbar.BottomAppBar
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/top_view"
-            app:tabMode="scrollable"
-            tools:ignore="NotSibling"
-            app:tabIndicatorColor="#0DBAB3"
-            app:tabTextColor="#A2A3A5"
-            app:tabSelectedTextColor="#0DBAB3"
-            android:background="@color/colorPrimary"
-            android:id="@+id/tabview">
+            android:layout_height="wrap_content"
+            android:id="@+id/bottomappbar"
+            android:layout_gravity="bottom"
+            android:backgroundTint="#3F9192"
+            app:fabCradleMargin="8dp"
+            app:fabCradleRoundedCornerRadius="32dp"
+            app:fabAlignmentMode="end"
+            app:navigationIcon="@drawable/ic_baseline_menu_24">
 
+        </com.google.android.material.bottomappbar.BottomAppBar>
 
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/placetab"
-                />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#64DDC7"
+            android:src="@drawable/ic_baseline_add_24"
+            app:layout_anchor="@id/bottomappbar">
 
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/timetab" />
+        </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
-
-        </com.google.android.material.tabs.TabLayout>
-
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/tabviewpager"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tabview">
-
-        </androidx.viewpager2.widget.ViewPager2>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
