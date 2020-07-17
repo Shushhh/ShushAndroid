@@ -3,6 +3,7 @@ package com.example.shushandroid;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
@@ -12,6 +13,10 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+
+import com.google.android.material.bottomappbar.BottomAppBar;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -26,6 +31,10 @@ public class MainActivity extends AppCompatActivity {
     private CustomPagerAdapter adapter;
     private ArrayList<Fragment> arrayList;
     private TabLayout tabLayout;
+
+    private BottomAppBar bottomAppBar;
+    private ConstraintLayout bottomSheet;
+    private BottomSheetBehavior bottomSheetBehavior;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +57,12 @@ public class MainActivity extends AppCompatActivity {
             }
         }).attach();
 
+        bottomSheet.findViewById(R.id.bottomsheet);
+        bottomAppBar.findViewById(R.id.bottomappbar);
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+
+        bottomAppBar.setNavigationOnClickListener(view ->
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED));
     }
 
 }
