@@ -17,7 +17,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:fontFamily="@font/rubik_light"
-        android:text="@string/voicemail"
+        android:text="@string/voicemail_message"
         android:textColor="@color/colorAccent"
         android:textSize="20dp"
         android:textStyle="bold"
@@ -33,22 +33,80 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="32dp"
         android:layout_marginRight="16dp"
-        android:hint="Enter voicemail"
+        android:hint="Message"
         android:textColorHint="#B0AECA"
         app:hintTextColor="#B0AECA"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/voicemailbottomcoord"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/materialTextView">
+        app:layout_constraintTop_toBottomOf="@+id/materialTextView"
+        app:helperTextEnabled="true"
+        app:helperText="Enter the voicemail message that you want the caller to hear"
+        app:helperTextTextColor="#B0AECA"
+        app:boxStrokeColor="@color/colorAccent"
+        app:boxStrokeWidth="2dp"
+        android:id="@+id/voicemailtextinput">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
-            android:textColor="#F2F1F7"/>
+            android:textColor="#F2F1F7"
+            android:fontFamily="@font/rubik_light"
+            android:id="@+id/voicemailedittext" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/voicemailbottomcoord">
+
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/voicemailappbar"
+            android:layout_gravity="bottom"
+            android:backgroundTint="#3F9192"
+            app:layout_constraintTop_toBottomOf="@id/voicemailtextinput"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Leave Feedback"
+                android:backgroundTint="#3F9192"
+                android:layout_marginLeft="10dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:fontFamily="@font/rubik_light"
+                android:textStyle="bold">
+            </com.google.android.material.button.MaterialButton>
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="About"
+                android:backgroundTint="#3F9192"
+                android:layout_marginRight="10dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:textColor="@color/colorPrimaryDark"
+                android:fontFamily="@font/rubik_light"
+                android:textStyle="bold">
+
+            </com.google.android.material.button.MaterialButton>
+
+        </com.google.android.material.bottomappbar.BottomAppBar>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

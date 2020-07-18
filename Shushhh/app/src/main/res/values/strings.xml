@@ -11,4 +11,5 @@
     <string name="timetabtext">TimeTab</string>
     <string name="locationtab">Location</string>
     <string name="voicemail">Voicemail message</string>
+    <string name="voicemail_message">Voicemail Message</string>
 </resources>
