@@ -122,10 +122,6 @@
 
         </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
-        <include layout="@layout/bottom_sheet_voicemail">
-
-        </include>
-
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
