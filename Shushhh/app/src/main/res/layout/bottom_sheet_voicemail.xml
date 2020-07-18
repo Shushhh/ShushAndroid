@@ -36,6 +36,8 @@
         android:layout_marginBottom="16dp"
         android:layout_marginRight="16dp"
         android:hint="Enter voicemail"
+        android:textColorHint="#B0AECA"
+        app:hintTextColor="#B0AECA"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +46,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary" />
+            android:background="@color/colorPrimary"
+            android:textColor="#F2F1F7"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
