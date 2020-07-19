@@ -28,7 +28,7 @@
         app:layout_constraintTop_toTopOf="@id/top_view"
         android:paddingTop="30dp"
         tools:text="Shushhh"
-        android:fontFamily="@font/rubik_light"
+        android:fontFamily="@font/rubik_bold"
         android:id="@+id/logo"/>
 
 
