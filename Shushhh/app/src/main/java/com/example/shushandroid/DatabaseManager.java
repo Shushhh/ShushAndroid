@@ -52,10 +52,23 @@ public class DatabaseManager extends SQLiteOpenHelper {
         super(context, name, factory, version);
     }
 
+    /**
+     * @param sqLiteDatabase current database
+     * @implNote method implemented when the database has been created for the first time
+     */
+
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(DatabaseEntry.CREATE_QUERY);
     }
+
+    /**
+     *
+     * @param sqLiteDatabase current database
+     * @param i old version number
+     * @param i1 new version number
+     * @implNote implemented when the database needs an upgrade. onDowngrade() exists as well
+     */
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
