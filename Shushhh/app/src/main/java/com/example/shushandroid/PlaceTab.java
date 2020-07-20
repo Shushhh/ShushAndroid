@@ -25,7 +25,7 @@ public class PlaceTab extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_place_tab, container, false);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
-        LocationAdapter locationAdapter = new LocationAdapter(locationList);
+        ShushRecyclerAdapter locationAdapter = new ShushRecyclerAdapter(locationList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(locationAdapter);
         return rootView;
