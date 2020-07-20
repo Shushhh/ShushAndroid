@@ -16,41 +16,24 @@
 
 
     <TextView
+        android:id="@+id/logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/rubik"
         android:text="@string/shushhhlogo"
         android:textColor="#64DDC7"
+        android:textScaleX="1.05"
         android:textSize="30sp"
         android:textStyle="bold"
-        android:textScaleX="1.05"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/top_view"
-        android:paddingTop="30dp"
-        tools:text="Shushhh"
-        android:fontFamily="@font/rubik_bold"
-        android:id="@+id/logo"/>
-
-
-        <!--        <com.google.android.material.tabs.TabLayout-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="match_parent"-->
-        <!--            android:background="#383838"-->
-        <!--            app:tabTextColor="@color/colorPrimary">-->
-
-        <!--            <com.google.android.material.tabs.TabItem-->
-        <!--                android:id="@+id/placetab"-->
-        <!--                android:layout_width="wrap_content"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                android:text="Tab1">-->
-        <!--            </com.google.android.material.tabs.TabItem>-->
-
-
-        <!--    </com.google.android.material.tabs.TabLayout>-->
+        tools:text="Shushhh" />
 
     <com.google.android.material.tabs.TabLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logo"
@@ -59,7 +42,7 @@
         tools:ignore="NotSibling"
         app:tabIndicatorColor="#3E8D8F"
         app:tabTextColor="#9499A3"
-        app:tabTextAppearance="@style/MyCustomTabText"
+        android:layout_marginTop="16dp"
         app:tabSelectedTextColor="#3E8D8F"
         android:background="@color/colorPrimary"
         android:id="@+id/tabview">
@@ -68,8 +51,7 @@
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/locationtab"
-            />
+            android:text="@string/locationtab" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"

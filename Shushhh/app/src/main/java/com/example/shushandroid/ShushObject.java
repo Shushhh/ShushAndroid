@@ -54,4 +54,22 @@ public class ShushObject {
                 ", supplementalData='" + supplementalData + '\'' +
                 '}';
     }
+
+    enum ShushObjectType {
+        Location("Location"), Time("Time");
+
+        private String description;
+
+        ShushObjectType(String description) {
+            this.description = description;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+    }
 }

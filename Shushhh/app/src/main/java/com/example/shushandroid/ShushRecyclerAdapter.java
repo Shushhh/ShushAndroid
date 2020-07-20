@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class ShushRecyclerAdapter extends RecyclerView.Adapter<ShushRecyclerAdapter.ShushViewHolder> {
 
-    private ArrayList<LocationRecyclerViewItem> locationList;
+    private ArrayList<ShushObject> shushObjectArrayList;
 
     public static class ShushViewHolder extends RecyclerView.ViewHolder {
 
@@ -28,8 +28,8 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<ShushRecyclerAdap
         }
     }
 
-    public ShushRecyclerAdapter(ArrayList<LocationRecyclerViewItem> locationList){
-        this.locationList = locationList;
+    public ShushRecyclerAdapter(ArrayList<ShushObject> locationList){
+        this.shushObjectArrayList = locationList;
 
     }
 
@@ -43,14 +43,14 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<ShushRecyclerAdap
 
     @Override
     public void onBindViewHolder(@NonNull ShushViewHolder holder, int position) {
-        LocationRecyclerViewItem currentItem = locationList.get(position);
-        holder.nameTextView.setText(currentItem.getText1());
-        holder.dataTextView.setText(currentItem.getText2());
-        holder.supplementalDataTextView.setText(currentItem.getText3());
+        ShushObject currentItem = shushObjectArrayList.get(position);
+        holder.nameTextView.setText(currentItem.getName());
+        holder.dataTextView.setText(currentItem.getData());
+        holder.supplementalDataTextView.setText(currentItem.getSupplementalData());
     }
 
     @Override
     public int getItemCount() {
-        return locationList.size();
+        return shushObjectArrayList.size();
     }
 }

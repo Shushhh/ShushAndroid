@@ -9,9 +9,8 @@
         <item name="textInputStyle">@style/CustomFontTextInputLayout</item>
     </style>
 
-    <style name="MyCustomTabText" parent="TextAppearance.Design.Tab">
-        <item name="android:textSize">15sp</item>
-        <item name="android:fontFamily">@font/rubik</item>
+    <style name="TabLayoutTextFont" parent="@android:style/TextAppearance.Widget.TabWidget">
+        <item name="fontFamily">@font/rubik</item>
     </style>
 
     <style name="AppBottomSheetDialogTheme"
