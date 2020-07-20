@@ -6,11 +6,12 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+        <item name="textInputStyle">@style/CustomFontTextInputLayout</item>
     </style>
 
     <style name="MyCustomTabText" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">15sp</item>
-        <item name="android:fontFamily">@font/rubik_light</item>
+        <item name="android:fontFamily">@font/rubik</item>
     </style>
 
     <style name="AppBottomSheetDialogTheme"
@@ -22,5 +23,22 @@
         parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/bottom_sheet_voicemail</item>
     </style>
+
+    <style name="TextInputEditText.OutlinedBox.CustomFont" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">
+        <item name="android:fontFamily">@font/rubik</item>
+    </style>
+    <style name="CustomFontTextInputLayout" parent="Widget.Design.TextInputLayout">
+        <item name="hintTextAppearance">@style/TextInputLayoutHintText</item>
+        <item name="helperTextTextAppearance">@style/TextInputLayoutHelperText</item>
+    </style>
+
+    <style name="TextInputLayoutHintText" parent="TextAppearance.Design.Hint">
+        <item name="android:fontFamily">@font/rubik</item>
+    </style>
+
+    <style name="TextInputLayoutHelperText" parent="TextAppearance.Design.HelperText">
+        <item name="android:fontFamily">@font/rubik</item>
+    </style>
+
 
 </resources>
