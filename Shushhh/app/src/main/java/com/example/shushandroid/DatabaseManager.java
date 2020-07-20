@@ -48,8 +48,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
         public static final String DROP_QUERY = "drop table if exists " + TABLE_NAME;
     }
 
-    private SQLiteDatabase sqLiteDatabase;
-
     /**
      *
      * @param context Provide application context
@@ -69,13 +67,14 @@ public class DatabaseManager extends SQLiteOpenHelper {
     /**
      * @param sqLiteDatabase current database
      * @implNote method implemented when the database has been created for the first time
+     * @apiNote onCreate is only called when a database that doesn't exist is attempted to be created
+     *          so this will be called when getWriteable or getReadable is called for the first time
      */
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(DatabaseEntry.CREATE_QUERY);
-        this.sqLiteDatabase = sqLiteDatabase;
-        Log.i("Database information", String.valueOf(this.sqLiteDatabase));
+        Log.i("Database information", String.valueOf(this.getDatabaseName()));
     }
 
     /**
@@ -92,6 +91,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(DatabaseEntry.CREATE_QUERY); // Adopt with new version (still need to understand how to assign version. Maybe another constructor?)
     }
 
+    /**
+     *
+     * @param shushObject insert a particular ShushObject
+     * @return return true if successful, false otherwise
+     */
+
     public boolean insert(ShushObject shushObject) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(DatabaseEntry.NAME, shushObject.getName());
@@ -102,6 +107,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
         if (n == -1) return false;
             else return false;
     }
+
+    /**
+     * @apiNote use a cursor object to traverse the database and retrieve data
+     * @return returns list of ShushObject items from the database
+     */
 
     public ArrayList retrieve() {
         List shushObjectArrayList = new ArrayList();
@@ -121,6 +131,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
         }
         cursor.close();
         return (ArrayList) shushObjectArrayList;
+    }
+
+    /**
+     * @implNote implement only to clear existing database with test values
+     */
+    public void deleteDatabase() {
+        this.getWritableDatabase().rawQuery("delete from " + DatabaseEntry.TABLE_NAME, null);
     }
 
 }

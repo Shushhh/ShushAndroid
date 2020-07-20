@@ -75,12 +75,15 @@ public class MainActivity extends AppCompatActivity {
 
         bottomAppBar.findViewById(R.id.bottomappbar);
 
-        databaseTest();
+        //databaseTest();
 
 
 
     }
 
+    /**
+     * @apiNote use method to test the functionality of the database
+     */
     public void databaseTest() {
         DatabaseManager databaseManager = new DatabaseManager(getApplicationContext());
         System.out.println(databaseManager.insert(new ShushObject("this", "that", "that", "this")));
