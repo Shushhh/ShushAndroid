@@ -1,11 +1,19 @@
 package com.example.shushandroid;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+import android.provider.ContactsContract;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @apiNote Helper database manager class. Refer to https://developer.android.com/reference/android/database/sqlite/SQLiteOpenHelper
  * @author  Akash Veerappan
@@ -26,7 +34,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         public static final String DATA = "data";
         public static final String SUPP = "supp"; //supplemental data (radius or duration)
 
-        private static final String TABLE_NAME = "ShushDB";
+        public static final String TABLE_NAME = "ShushDB";
 
         //create table ShushDB (name varchar, type varchar, data varchar, supp varchar)
 
@@ -37,8 +45,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 DATA + " varchar, " +
                 SUPP + " varchar)";
 
-        public static final String DROP_QUERY = "drop table " + TABLE_NAME;
+        public static final String DROP_QUERY = "drop table if exists " + TABLE_NAME;
     }
+
+    private SQLiteDatabase sqLiteDatabase;
 
     /**
      *
@@ -52,6 +62,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
         super(context, name, factory, version);
     }
 
+    public DatabaseManager(@Nullable Context context) {
+        super(context, DatabaseEntry.TABLE_NAME, null, 1);
+    }
+
     /**
      * @param sqLiteDatabase current database
      * @implNote method implemented when the database has been created for the first time
@@ -60,6 +74,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(DatabaseEntry.CREATE_QUERY);
+        this.sqLiteDatabase = sqLiteDatabase;
+        Log.i("Database information", String.valueOf(this.sqLiteDatabase));
     }
 
     /**
@@ -75,4 +91,36 @@ public class DatabaseManager extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(DatabaseEntry.DROP_QUERY); // Drop previous version
         sqLiteDatabase.execSQL(DatabaseEntry.CREATE_QUERY); // Adopt with new version (still need to understand how to assign version. Maybe another constructor?)
     }
+
+    public boolean insert(ShushObject shushObject) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DatabaseEntry.NAME, shushObject.getName());
+        contentValues.put(DatabaseEntry.TYPE, shushObject.getType());
+        contentValues.put(DatabaseEntry.DATA, shushObject.getData());
+        contentValues.put(DatabaseEntry.SUPP, shushObject.getSupplementalData());
+        long n = this.getWritableDatabase().insert(DatabaseEntry.TABLE_NAME, null, contentValues);
+        if (n == -1) return false;
+            else return false;
+    }
+
+    public ArrayList retrieve() {
+        List shushObjectArrayList = new ArrayList();
+        Cursor cursor = this.getReadableDatabase().rawQuery("select * from " + DatabaseEntry.TABLE_NAME, null);
+        if(cursor.moveToFirst()) {
+            do {
+                int customerID = cursor.getInt(0);
+                String name = cursor.getString(1);
+                String type = cursor.getString(2);
+                String data = cursor.getString(3);
+                String supp = cursor.getString(4);
+                ShushObject shushObject = new ShushObject(name, type, data, supp);
+                shushObjectArrayList.add(shushObject);
+            } while (cursor.moveToNext());
+        } else {
+            Log.e("Database Information", "Error");
+        }
+        cursor.close();
+        return (ArrayList) shushObjectArrayList;
+    }
+
 }

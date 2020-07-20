@@ -12,8 +12,10 @@ import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -29,6 +31,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class MainActivity extends AppCompatActivity {
@@ -72,6 +75,17 @@ public class MainActivity extends AppCompatActivity {
 
         bottomAppBar.findViewById(R.id.bottomappbar);
 
+        databaseTest();
+
+
+
+    }
+
+    public void databaseTest() {
+        DatabaseManager databaseManager = new DatabaseManager(getApplicationContext());
+        System.out.println(databaseManager.insert(new ShushObject("this", "that", "that", "this")));
+        List l = databaseManager.retrieve();
+        Log.i("Database Information", String.valueOf(l));
     }
 
 
@@ -100,7 +114,7 @@ class CustomPagerAdapter extends FragmentStateAdapter {
             return new PlaceTab();
         else if (position == 1)
             return new TimeTab();
-        else return null;
+        else return new PlaceTab();
     }
 
     @Override
