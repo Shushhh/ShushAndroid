@@ -2,31 +2,20 @@ package com.example.shushandroid;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.database.Cursor;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -34,18 +23,19 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "Main Activity";
     private ViewPager2 viewPager2;
     private CustomPagerAdapter adapter;
-    private ArrayList<Fragment> arrayList;
+    private ArrayList<Fragment> fragmentArrayList;
     private TabLayout tabLayout;
 
     private BottomAppBar bottomAppBar;
     private VoicemailBottomSheetDialogFragment voicemailBottomSheetDialogFragment;
+
+    private DatabaseManager databaseManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
 
         voicemailBottomSheetDialogFragment = new VoicemailBottomSheetDialogFragment();
 
-        arrayList = new ArrayList<>(Arrays.asList(new PlaceTab(), new TimeTab()));
+        fragmentArrayList = new ArrayList<>(Arrays.asList(new PlaceTab(), new TimeTab()));
+        databaseManager = new DatabaseManager(this);
 
         adapter = new CustomPagerAdapter(getSupportFragmentManager(), getLifecycle());
         viewPager2.setAdapter(adapter);
@@ -75,11 +66,30 @@ public class MainActivity extends AppCompatActivity {
             }
         }).attach();
 
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+//               if (tab.getText().toString().equals(ShushObject.ShushObjectType.LOCATION.getDescription())) {
+//                   ((PlaceTab) fragmentArrayList.get(0)).setShushObjectArrayList(databaseManager.retrieve());
+//               } else if (tab.getText().toString().equals(ShushObject.ShushObjectType.TIME.getDescription())) {
+//                   ((TimeTab) fragmentArrayList.get(1)).setShushObjectArrayList(databaseManager.retrieve());
+//               }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
         bottomAppBar.findViewById(R.id.bottomappbar);
 
         //databaseTest();
-
-
 
     }
 
@@ -104,27 +114,27 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-}
+    class CustomPagerAdapter extends FragmentStateAdapter {
 
-class CustomPagerAdapter extends FragmentStateAdapter {
+        public CustomPagerAdapter(@NonNull FragmentManager fm, @NonNull Lifecycle lifecycle) {
+            super(fm, lifecycle);
+        }
 
-    public CustomPagerAdapter(@NonNull FragmentManager fm, @NonNull Lifecycle lifecycle) {
-        super(fm, lifecycle);
-    }
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            if (position == 0)
+                return new PlaceTab();
+            else if (position == 1)
+                return new TimeTab();
+            else return new PlaceTab();
+        }
 
-    @NonNull
-    @Override
-    public Fragment createFragment(int position) {
-        if (position == 0)
-            return new PlaceTab();
-        else if (position == 1)
-            return new TimeTab();
-        else return new PlaceTab();
-    }
+        @Override
+        public int getItemCount() {
+            return 2;
+        }
 
-    @Override
-    public int getItemCount() {
-        return 2;
     }
 
 }

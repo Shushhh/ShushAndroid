@@ -56,7 +56,7 @@ public class ShushObject {
     }
 
     enum ShushObjectType {
-        Location("Location"), Time("Time");
+        LOCATION("Location"), TIME("Time");
 
         private String description;
 

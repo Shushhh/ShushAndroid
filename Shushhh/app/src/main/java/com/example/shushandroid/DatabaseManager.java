@@ -43,7 +43,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 NAME + " varchar, " +
                 TYPE + " varchar, " +
                 DATA + " varchar, " +
-                SUPP + " varchar)";
+                SUPP + " varchar) ";
 
         public static final String DROP_QUERY = "drop table if exists " + TABLE_NAME;
     }

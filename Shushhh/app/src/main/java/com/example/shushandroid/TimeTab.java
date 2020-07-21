@@ -2,7 +2,6 @@ package com.example.shushandroid;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class TimeTab extends Fragment {
 
@@ -31,7 +29,6 @@ public class TimeTab extends Fragment {
         shushRecyclerAdapter = new ShushRecyclerAdapter(shushObjectList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(shushRecyclerAdapter);
-
         return rootView;
     }
 
@@ -39,7 +36,10 @@ public class TimeTab extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         shushObjectList = new ArrayList<>();
-        shushObjectList.add(new ShushObject("Studying", ShushObject.ShushObjectType.Time.getDescription(), "10:00 PM - 11:00 PM", "1 hour"));
+        shushObjectList.add(new ShushObject("Studying", ShushObject.ShushObjectType.TIME.getDescription(), "10:00 PM - 11:00 PM", "1 hour"));
+    }
 
+    public void setShushObjectArrayList(ArrayList<ShushObject> shushObjectList) {
+        this.shushObjectList = shushObjectList;
     }
 }

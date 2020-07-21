@@ -34,7 +34,11 @@ public class PlaceTab extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         shushObjectArrayList = new ArrayList<>();
-        shushObjectArrayList.add(new ShushObject("Work", ShushObject.ShushObjectType.Location.getDescription(), "1005 Cameron Bridge Way", "10 mi"));
-        shushObjectArrayList.add(new ShushObject("College", ShushObject.ShushObjectType.Location.getDescription(), "1005 Cameron Bridge Way", "10 mi"));
+        shushObjectArrayList.add(new ShushObject("Work", ShushObject.ShushObjectType.LOCATION.getDescription(), "1005 Cameron Bridge Way", "10 mi"));
+        shushObjectArrayList.add(new ShushObject("College", ShushObject.ShushObjectType.LOCATION.getDescription(), "1005 Cameron Bridge Way", "10 mi"));
+    }
+
+    public void setShushObjectArrayList(ArrayList<ShushObject> shushObjectArrayList) {
+        this.shushObjectArrayList = shushObjectArrayList;
     }
 }
