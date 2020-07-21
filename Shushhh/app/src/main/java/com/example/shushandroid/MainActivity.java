@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
@@ -23,6 +24,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -78,6 +81,46 @@ public class MainActivity extends AppCompatActivity {
         bottomAppBar.findViewById(R.id.bottomappbar);
 
         //databaseTest();
+
+        /*
+        floatingButton = (Button) findViewById(R.id.floatingactionbutton);
+
+        View view = getLayoutInflater().inflate(R.layout.time_dialog, null);
+        dialog = new Dialog(this, android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen);
+        dialog.setContentView(view);
+
+        timeConstraint = view.findViewById(R.id.timedialog);
+
+        floatingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.show();
+                Toast.makeText(MainActivity.this, "Tap to Close", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        timeConstraint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });*/
+        Button button = findViewById(R.id.floatingactionbutton);
+        button.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                DialogFragment dialog = FullscreenDialog.newInstance();
+                ((FullscreenDialog) dialog).setCallback(new FullscreenDialog.Callback() {
+                    @Override
+                    public void onActionClick(String name) {
+                        Toast.makeText(MainActivity.this, name, Toast.LENGTH_SHORT).show();
+                    }
+                });
+                dialog.show(getSupportFragmentManager(), "tag");
+            }
+
+        });
 
 
 

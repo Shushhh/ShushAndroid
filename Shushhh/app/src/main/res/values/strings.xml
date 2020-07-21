@@ -12,4 +12,10 @@
     <string name="locationtab">Location</string>
     <string name="voicemail">Voicemail message</string>
     <string name="voicemail_message">Voicemail Message</string>
+    <string name="todo">TODO</string>
+    <string name="page_title">Page Title</string>
+    <string name="action">ACTION</string>
+    <string name="user01_gmail_com">user01@gmail.com</string>
+    <string name="event_name">Event name</string>
+    <string name="from">From</string>
 </resources>
