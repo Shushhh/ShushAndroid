@@ -113,7 +113,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
      * @return returns list of ShushObject items from the database
      */
 
-    private ArrayList retrieve(Cursor cursor) {
+    private ArrayList retrieveWithCursor(Cursor cursor) {
         List shushObjectArrayList = new ArrayList();
         if(cursor.moveToFirst()) {
             do {
@@ -135,7 +135,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public ArrayList retrieveWithTAG(final String TAG) {
         Cursor cursor = this.getReadableDatabase().rawQuery("select * from " + DatabaseEntry.TABLE_NAME + " where " + DatabaseEntry.TYPE
                 + " = '" + TAG + "'", null);
-        return retrieve(cursor);
+        return retrieveWithCursor(cursor);
     }
 
     /**

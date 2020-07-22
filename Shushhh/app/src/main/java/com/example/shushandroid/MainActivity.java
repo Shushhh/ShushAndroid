@@ -54,9 +54,6 @@ public class MainActivity extends AppCompatActivity {
         adapter = new CustomPagerAdapter(getSupportFragmentManager(), getLifecycle());
         viewPager2.setAdapter(adapter);
 
-        //databaseManager.insert(new ShushObject("College", ShushObject.ShushObjectType.LOCATION.getDescription(), "1234 Dunwoody street", "10mi"));
-        //databaseManager.insert(new ShushObject("Studying", ShushObject.ShushObjectType.TIME.getDescription(), "10:00 PM to 11:00 PM", "MWF"));
-
         bottomAppBar.setNavigationOnClickListener((View v) -> {
             voicemailBottomSheetDialogFragment.show(getSupportFragmentManager(), "dialog_fragment");
         });
@@ -70,8 +67,6 @@ public class MainActivity extends AppCompatActivity {
         }).attach();
 
         bottomAppBar.findViewById(R.id.bottomappbar);
-
-        //databaseTest();
 
     }
 
