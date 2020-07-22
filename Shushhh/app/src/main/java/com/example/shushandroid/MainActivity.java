@@ -31,6 +31,7 @@ import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -105,21 +106,14 @@ public class MainActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });*/
-        Button button = findViewById(R.id.floatingactionbutton);
-        button.setOnClickListener(new View.OnClickListener() {
 
+        FloatingActionButton button = findViewById(R.id.floatingactionbutton);
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogFragment dialog = FullscreenDialog.newInstance();
-                ((FullscreenDialog) dialog).setCallback(new FullscreenDialog.Callback() {
-                    @Override
-                    public void onActionClick(String name) {
-                        Toast.makeText(MainActivity.this, name, Toast.LENGTH_SHORT).show();
-                    }
-                });
                 dialog.show(getSupportFragmentManager(), "tag");
             }
-
         });
 
 

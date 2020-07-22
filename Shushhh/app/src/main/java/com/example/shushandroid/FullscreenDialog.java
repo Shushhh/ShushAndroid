@@ -15,14 +15,8 @@ import androidx.fragment.app.DialogFragment;
 
 public class FullscreenDialog extends DialogFragment implements View.OnClickListener {
 
-    private Callback callback;
-
     static FullscreenDialog newInstance() {
         return new FullscreenDialog();
-    }
-
-    public void setCallback(Callback callback) {
-        this.callback = callback;
     }
 
     @Override
@@ -49,23 +43,15 @@ public class FullscreenDialog extends DialogFragment implements View.OnClickList
         int id = v.getId();
 
         switch (id) {
-
             case R.id.fullscreen_dialog_close:
                 dismiss();
                 break;
 
             case R.id.fullscreen_dialog_action:
-                callback.onActionClick("Whatever");
                 dismiss();
                 break;
 
         }
-
-    }
-
-    public interface Callback {
-
-        void onActionClick(String name);
 
     }
 
