@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
@@ -40,7 +40,7 @@
     </style>
 
     <style name="LocationDialogTheme" parent="Theme.AppCompat.Light.DialogWhenLarge">
-        <item name="android:statusBarColor">@color/colorPrimary</item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/colorPrimary</item>
     </style>
 
 </resources>

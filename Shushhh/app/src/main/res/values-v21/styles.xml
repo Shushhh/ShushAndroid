@@ -45,5 +45,9 @@
         <item name="android:windowAnimationStyle">@style/Animation.AppCompat.Dialog</item>
     </style>
 
+    <style name="LocationDialogTheme" parent="Theme.AppCompat.Light.DialogWhenLarge">
+        <item name="android:statusBarColor">@color/colorPrimary</item>
+    </style>
+
 
 </resources>
