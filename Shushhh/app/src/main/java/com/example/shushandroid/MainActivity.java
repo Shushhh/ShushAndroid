@@ -54,6 +54,9 @@ public class MainActivity extends AppCompatActivity {
         adapter = new CustomPagerAdapter(getSupportFragmentManager(), getLifecycle());
         viewPager2.setAdapter(adapter);
 
+        //databaseManager.insert(new ShushObject("College", ShushObject.ShushObjectType.LOCATION.getDescription(), "1234 Dunwoody street", "10mi"));
+        //databaseManager.insert(new ShushObject("Studying", ShushObject.ShushObjectType.TIME.getDescription(), "10:00 PM to 11:00 PM", "MWF"));
+
         bottomAppBar.setNavigationOnClickListener((View v) -> {
             voicemailBottomSheetDialogFragment.show(getSupportFragmentManager(), "dialog_fragment");
         });
@@ -66,27 +69,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }).attach();
 
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-//               if (tab.getText().toString().equals(ShushObject.ShushObjectType.LOCATION.getDescription())) {
-//                   ((PlaceTab) fragmentArrayList.get(0)).setShushObjectArrayList(databaseManager.retrieve());
-//               } else if (tab.getText().toString().equals(ShushObject.ShushObjectType.TIME.getDescription())) {
-//                   ((TimeTab) fragmentArrayList.get(1)).setShushObjectArrayList(databaseManager.retrieve());
-//               }
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-
         bottomAppBar.findViewById(R.id.bottomappbar);
 
         //databaseTest();
@@ -96,13 +78,6 @@ public class MainActivity extends AppCompatActivity {
     /**
      * @apiNote use method to test the functionality of the database
      */
-    public void databaseTest() {
-        DatabaseManager databaseManager = new DatabaseManager(getApplicationContext());
-        System.out.println(databaseManager.insert(new ShushObject("this", "that", "that", "this")));
-        List l = databaseManager.retrieve();
-        Log.i("Database Information", String.valueOf(l));
-    }
-
 
     public static class VoicemailBottomSheetDialogFragment extends BottomSheetDialogFragment {
         @Nullable

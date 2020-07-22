@@ -113,9 +113,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
      * @return returns list of ShushObject items from the database
      */
 
-    public ArrayList retrieve() {
+    private ArrayList retrieve(Cursor cursor) {
         List shushObjectArrayList = new ArrayList();
-        Cursor cursor = this.getReadableDatabase().rawQuery("select * from " + DatabaseEntry.TABLE_NAME, null);
         if(cursor.moveToFirst()) {
             do {
                 int customerID = cursor.getInt(0);
@@ -131,6 +130,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
         }
         cursor.close();
         return (ArrayList) shushObjectArrayList;
+    }
+
+    public ArrayList retrieveWithTAG(final String TAG) {
+        Cursor cursor = this.getReadableDatabase().rawQuery("select * from " + DatabaseEntry.TABLE_NAME + " where " + DatabaseEntry.TYPE
+                + " = '" + TAG + "'", null);
+        return retrieve(cursor);
     }
 
     /**

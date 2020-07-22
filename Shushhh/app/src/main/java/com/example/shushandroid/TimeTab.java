@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,18 +19,20 @@ public class TimeTab extends Fragment {
 
     private RecyclerView recyclerView;
     private ShushRecyclerAdapter shushRecyclerAdapter;
-    private ArrayList<ShushObject> shushObjectList;
+    private ArrayList<ShushObject> shushObjectList = new ArrayList<>();
+    private DatabaseManager databaseManager;
+
+    private static final String TAG = ShushObject.ShushObjectType.TIME.getDescription();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_time_tab, container, false);
-
         recyclerView = rootView.findViewById(R.id.recyclerView);
         shushRecyclerAdapter = new ShushRecyclerAdapter(shushObjectList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(shushRecyclerAdapter);
+
         return rootView;
     }
 
@@ -36,10 +40,23 @@ public class TimeTab extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         shushObjectList = new ArrayList<>();
-        shushObjectList.add(new ShushObject("Studying", ShushObject.ShushObjectType.TIME.getDescription(), "10:00 PM - 11:00 PM", "1 hour"));
+        databaseManager = new DatabaseManager(getActivity());
     }
 
     public void setShushObjectArrayList(ArrayList<ShushObject> shushObjectList) {
         this.shushObjectList = shushObjectList;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateRecyclerView();
+    }
+
+    private void updateRecyclerView () {
+        shushObjectList = databaseManager.retrieveWithTAG(TAG);
+        shushRecyclerAdapter.setShushObjectArrayList(shushObjectList);
+        recyclerView.setAdapter(shushRecyclerAdapter);
+    }
+
 }

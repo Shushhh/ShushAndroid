@@ -30,7 +30,6 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<ShushRecyclerAdap
 
     public ShushRecyclerAdapter(ArrayList<ShushObject> locationList){
         this.shushObjectArrayList = locationList;
-
     }
 
     @NonNull
@@ -52,5 +51,9 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<ShushRecyclerAdap
     @Override
     public int getItemCount() {
         return shushObjectArrayList.size();
+    }
+
+    public void setShushObjectArrayList(ArrayList<ShushObject> shushObjectArrayList) {
+        this.shushObjectArrayList = shushObjectArrayList;
     }
 }
