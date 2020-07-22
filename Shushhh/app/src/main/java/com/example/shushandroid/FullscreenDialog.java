@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -30,7 +31,7 @@ public class FullscreenDialog extends DialogFragment implements View.OnClickList
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.time_dialog, container, false);
         ImageButton close = view.findViewById(R.id.fullscreen_dialog_close);
-        TextView action = view.findViewById(R.id.fullscreen_dialog_action);
+        Button action = view.findViewById(R.id.fullscreen_dialog_action);
 
         close.setOnClickListener(this);
         action.setOnClickListener(this);

@@ -1,275 +1,296 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/colorPrimary">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
+    <ImageButton
+        android:id="@+id/fullscreen_dialog_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/fullscreen_dialog_action"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:paddingTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:src="@drawable/ic_baseline_close_24"
+        android:contentDescription="@string/todo"
+        />
+
+
+    <Button
+        android:id="@+id/fullscreen_dialog_action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:backgroundTint="@color/colorAccent"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:text="Save"
+        android:textColor="@color/colorPrimary" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/addnametext"
+        app:layout_constraintTop_toBottomOf="@id/fullscreen_dialog_close"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="Add Name"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="20dp"
+        android:textColor="#5F6678"
+        android:fontFamily="@font/rubik"
+        android:textSize="30sp">
+    </EditText>
+
+    <View
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:cardBackgroundColor="#5e35b1"
-        app:cardCornerRadius="0dp"
-        app:cardElevation="4dp"
+        android:layout_height="1dp"
+        android:id="@+id/firstview"
+        app:layout_constraintTop_toBottomOf="@id/addnametext"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="@color/cardview_light_background"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp">
+    </View>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/timedialogtimetext"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/firstview"
+        android:text="TIME"
+        android:textColor="#969EB0"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        android:fontFamily="@font/rubik_light">
+    </TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/firstdate"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/timedialogtimetext"
+        android:text="Mon, Jul 20, 2020"
+        android:textColor="@color/cardview_light_background"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="20dp"
+        android:textSize="20sp"
+        android:fontFamily="@font/rubik"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/seconddate"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/firstdate"
+        android:text="Mon, Jul 20, 2020"
+        android:textColor="@color/cardview_light_background"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="30dp"
+        android:textSize="20sp"
+        android:fontFamily="@font/rubik"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/firsttime"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/firstdate"
+        android:text="9:30 PM"
+        android:textColor="@color/cardview_light_background"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="30dp"
+        android:textSize="19sp"
+        android:fontFamily="@font/rubik"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/secondtime"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/seconddate"
+        android:text="10:30 PM"
+        android:textColor="@color/cardview_light_background"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="30dp"
+        android:textSize="19sp"
+        android:fontFamily="@font/rubik"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:id="@+id/secondview"
+        app:layout_constraintTop_toBottomOf="@id/seconddate"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="@color/cardview_light_background"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp">
+    </View>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/timedialogrepeattext"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/secondview"
+        android:text="REPEAT"
+        android:textColor="#969EB0"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        android:fontFamily="@font/rubik_light">
+    </TextView>
+
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dayofweektoggle"
+        app:layout_constraintTop_toBottomOf="@id/timedialogrepeattext"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="10dp"
+        app:selectionRequired="false"
+        app:singleSelection="false">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/sunday"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="S"
+            android:fontFamily="@font/rubik"
+            android:textColor="@color/cardview_light_background"
+            style="?attr/materialButtonOutlinedStyle"
+            />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/monday"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="M"
+            android:fontFamily="@font/rubik"
+            android:textColor="@color/cardview_light_background"
+            style="?attr/materialButtonOutlinedStyle"
+            />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/tuesday"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="T"
+            android:fontFamily="@font/rubik"
+            android:textColor="@color/cardview_light_background"
+            style="?attr/materialButtonOutlinedStyle"
+            />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/wednesday"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="W"
+            android:fontFamily="@font/rubik"
+            android:textColor="@color/cardview_light_background"
+            style="?attr/materialButtonOutlinedStyle"
+            />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/thursday"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="T"
+            android:fontFamily="@font/rubik"
+            android:textColor="@color/cardview_light_background"
+            style="?attr/materialButtonOutlinedStyle"
+            />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/friday"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="F"
+            android:fontFamily="@font/rubik"
+            android:textColor="@color/cardview_light_background"
+            style="?attr/materialButtonOutlinedStyle"
+            />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/saturday"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="S"
+            android:fontFamily="@font/rubik"
+            android:textColor="@color/cardview_light_background"
+            style="?attr/materialButtonOutlinedStyle"
+            />
+
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:id="@+id/thirdview"
+        app:layout_constraintTop_toBottomOf="@id/dayofweektoggle"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="@color/cardview_light_background"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp">
+    </View>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/timedialogvoicemailtext"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/thirdview"
+        android:text="VOICEMAIL MESSAGE"
+        android:textColor="#969EB0"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        android:fontFamily="@font/rubik_light">
+    </TextView>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/message_text_input_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="50dp"
+        android:paddingBottom="20dp"
+        android:hint="Enter message"
+        android:textColorHint="@color/cardview_light_background"
+        app:boxStrokeColor="@color/colorAccent"
+        app:helperText="Enter the voicemail message that you want the caller to hear"
+        app:helperTextEnabled="true"
+        app:helperTextTextColor="@color/colorAccent"
+        app:hintEnabled="true"
+        app:hintTextColor="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/timedialogvoicemailtext">
 
-        <RelativeLayout
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/message_edit_text"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageButton
-                android:id="@+id/fullscreen_dialog_close"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="8dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="8dp"
-                android:src="@drawable/ic_baseline_close_24"
-                android:contentDescription="@string/todo" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="8dp"
-                android:layout_toEndOf="@id/fullscreen_dialog_close"
-                android:text="@string/page_title"
-                android:textColor="@android:color/white"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/fullscreen_dialog_action"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="8dp"
-                android:background="?attr/selectableItemBackground"
-                android:padding="8dp"
-                android:text="@string/action"
-                android:textColor="@android:color/white" />
-
-        </RelativeLayout>
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+            android:layout_height="wrap_content"
+            android:textColor="@color/cardview_light_background"
+            android:layout_marginBottom="10dp"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView"
-                style="@style/Widget.AppCompat.Spinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/user01_gmail_com"
-                android:textColor="@android:color/black"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
-            <View
-                android:id="@+id/view"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="8dp"
-                android:background="@android:color/darker_gray"
-                app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-            <EditText
-                android:id="@+id/editText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="16dp"
-                android:text="@string/event_name"
-                android:textSize="40sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view"
-                android:autofillHints="@string/action"
-                />
-
-            <EditText
-                android:id="@+id/editText2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="16dp"
-                android:text="123 Main Street, San Francisco, CA 94107"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editText" />
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:text="@string/from"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="12sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editText2"
-                android:layout_marginLeft="16dp" />
-
-            <LinearLayout
-                android:id="@+id/linearLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="3"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView2"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="8dp">
-
-                <TextView
-                    style="@style/Widget.AppCompat.Spinner"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:layout_weight="2"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:text="Thu, September 13 2018"
-                    android:textColor="@android:color/black"
-                    android:textSize="14sp"
-                    android:layout_marginRight="16dp" />
-
-                <TextView
-                    style="@style/Widget.AppCompat.Spinner"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:text="Time"
-                    android:textColor="@android:color/darker_gray"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:text="To"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="12sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-                android:layout_marginLeft="16dp" />
-
-            <LinearLayout
-                android:id="@+id/linearLayout2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="3"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView3"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="8dp">
-
-                <TextView
-                    style="@style/Widget.AppCompat.Spinner"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:layout_weight="2"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:text="End date"
-                    android:textColor="@android:color/darker_gray"
-                    android:textSize="14sp"
-                    android:layout_marginRight="16dp" />
-
-                <TextView
-                    style="@style/Widget.AppCompat.Spinner"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:text="Time"
-                    android:textColor="@android:color/darker_gray"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-            <CheckBox
-                android:id="@+id/checkBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
-                android:text="All-day"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-                android:layout_marginLeft="8dp" />
-
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:text="Timezone"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="12sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/checkBox"
-                android:layout_marginLeft="16dp" />
-
-            <TextView
-                style="@style/Widget.AppCompat.Spinner"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_weight="2"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="Pacific Standard Time"
-                android:textColor="@android:color/black"
-                android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView4"
-                android:layout_marginLeft="16dp" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.core.widget.NestedScrollView>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 <!--
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
