@@ -24,7 +24,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
-public class FullscreenDialog extends DialogFragment implements View.OnClickListener {
+public class FullscreenDialog extends DialogFragment {
 
     static FullscreenDialog newInstance() {
         return new FullscreenDialog();
@@ -44,27 +44,18 @@ public class FullscreenDialog extends DialogFragment implements View.OnClickList
         Button action = view.findViewById(R.id.fullscreen_dialog_action);
         TextView textView = view.findViewById(R.id.firstdate);
 
-        close.setOnClickListener(this);
-        action.setOnClickListener(this);
-        textView.setOnClickListener(this);
+        close.setOnClickListener(v -> {
+            dismiss();
+        });
+        action.setOnClickListener(v -> {
+            dismiss();
+        });
+        textView.setOnClickListener(v -> {
+            DialogFragment datePicker = new DatePickerFragment(getActivity());
+            datePicker.show(getFragmentManager(), "date picker");
+        });
 
         return view;
-    }
-
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        switch (id) {
-            case R.id.fullscreen_dialog_close:
-                dismiss();
-                break;
-            case R.id.fullscreen_dialog_action:
-                dismiss();
-                break;
-            case R.id.firstdate:
-                DialogFragment datePicker = new DatePickerFragment(getActivity());
-                datePicker.show(getFragmentManager(), "date picker");
-        }
     }
 
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
