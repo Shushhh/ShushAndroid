@@ -42,14 +42,19 @@ import java.util.function.Consumer;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "Main Activity";
+    public static String TAG = ShushObject.ShushObjectType.Location.getDescription();
+
     private ViewPager2 viewPager2;
     private CustomPagerAdapter adapter;
     private ArrayList<Fragment> arrayList;
     private TabLayout tabLayout;
+    private FloatingActionButton floatingActionButton;
 
     private BottomAppBar bottomAppBar;
     private VoicemailBottomSheetDialogFragment voicemailBottomSheetDialogFragment;
+
+    private PlaceTab placeTab;
+    private TimeTab timeTab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +66,12 @@ public class MainActivity extends AppCompatActivity {
         bottomAppBar = findViewById(R.id.bottomappbar);
 
         voicemailBottomSheetDialogFragment = new VoicemailBottomSheetDialogFragment();
-
         arrayList = new ArrayList<>(Arrays.asList(new PlaceTab(), new TimeTab()));
-
         adapter = new CustomPagerAdapter(getSupportFragmentManager(), getLifecycle());
+
+        timeTab = new TimeTab();
+        placeTab = new PlaceTab();
+
         viewPager2.setAdapter(adapter);
 
         bottomAppBar.setNavigationOnClickListener((View v) -> {
@@ -81,43 +88,38 @@ public class MainActivity extends AppCompatActivity {
 
         bottomAppBar.findViewById(R.id.bottomappbar);
 
-        //databaseTest();
-
-        /*
-        floatingButton = (Button) findViewById(R.id.floatingactionbutton);
-
-        View view = getLayoutInflater().inflate(R.layout.time_dialog, null);
-        dialog = new Dialog(this, android.R.style.Theme_DeviceDefault_Light_NoActionBar_Fullscreen);
-        dialog.setContentView(view);
-
-        timeConstraint = view.findViewById(R.id.timedialog);
-
-        floatingButton.setOnClickListener(new View.OnClickListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onClick(View view) {
-                dialog.show();
-                Toast.makeText(MainActivity.this, "Tap to Close", Toast.LENGTH_SHORT).show();
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getText().toString().equals(ShushObject.ShushObjectType.Location.getDescription())) {
+                    TAG = ShushObject.ShushObjectType.Location.getDescription();
+                } else if (tab.getText().toString().equals(ShushObject.ShushObjectType.Time.getDescription())) {
+                    TAG = ShushObject.ShushObjectType.Time.getDescription();
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
             }
         });
 
-        timeConstraint.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });*/
 
-        FloatingActionButton button = findViewById(R.id.floatingactionbutton);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment dialog = FullscreenDialog.newInstance();
+        floatingActionButton = findViewById(R.id.floatingactionbutton);
+        floatingActionButton.setOnClickListener(v -> {
+            if (TAG.equals(ShushObject.ShushObjectType.Location.getDescription())) {
+                DialogFragment dialog = LocationDialog.newInstance();
+                dialog.show(getSupportFragmentManager(), "tag");
+            } else if (TAG.equals(ShushObject.ShushObjectType.Time.getDescription())) {
+                DialogFragment dialog = TimeDialog.newInstance();
                 dialog.show(getSupportFragmentManager(), "tag");
             }
         });
-
-
-
     }
 
     /**
@@ -141,27 +143,37 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    class CustomPagerAdapter extends FragmentStateAdapter {
+
+        public CustomPagerAdapter(@NonNull FragmentManager fm, @NonNull Lifecycle lifecycle) {
+            super(fm, lifecycle);
+        }
+
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            Log.i("Fragment", "Created");
+            if (position == 0) {
+
+                return new PlaceTab();
+            }
+            else if (position == 1) {
+
+                return new TimeTab();
+            }
+            else {
+
+                return new PlaceTab();
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return 2;
+        }
+
+    }
+
+
 }
 
-class CustomPagerAdapter extends FragmentStateAdapter {
-
-    public CustomPagerAdapter(@NonNull FragmentManager fm, @NonNull Lifecycle lifecycle) {
-        super(fm, lifecycle);
-    }
-
-    @NonNull
-    @Override
-    public Fragment createFragment(int position) {
-        if (position == 0)
-            return new PlaceTab();
-        else if (position == 1)
-            return new TimeTab();
-        else return new PlaceTab();
-    }
-
-    @Override
-    public int getItemCount() {
-        return 2;
-    }
-
-}

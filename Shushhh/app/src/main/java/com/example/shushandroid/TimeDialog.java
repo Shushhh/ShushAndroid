@@ -24,10 +24,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
-public class FullscreenDialog extends DialogFragment {
+public class TimeDialog extends DialogFragment {
 
-    static FullscreenDialog newInstance() {
-        return new FullscreenDialog();
+    static TimeDialog newInstance() {
+        return new TimeDialog();
     }
 
     @Override
