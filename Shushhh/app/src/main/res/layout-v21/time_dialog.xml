@@ -75,17 +75,18 @@
     </TextView>
 
     <TextView
+        android:id="@+id/firstdate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/firstdate"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/timedialogtimetext"
-        android:text="Mon, Jul 20, 2020"
-        android:textColor="@color/cardview_light_background"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="20dp"
+        android:clickable="true"
+        android:fontFamily="@font/rubik"
+        android:text="Mon, Jul 20, 2020"
+        android:textColor="@color/cardview_light_background"
         android:textSize="20sp"
-        android:fontFamily="@font/rubik"/>
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/timedialogtimetext" />
 
     <TextView
         android:layout_width="wrap_content"
