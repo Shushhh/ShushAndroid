@@ -2,6 +2,7 @@ package com.example.shushandroid;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.media.Image;
 import android.os.Bundle;
@@ -14,6 +15,9 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.TimePicker;
+
+import com.google.android.material.button.MaterialButton;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -23,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 
 public class TimeDialog extends DialogFragment {
 
@@ -42,7 +47,10 @@ public class TimeDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.time_dialog, container, false);
         ImageButton close = view.findViewById(R.id.fullscreen_dialog_close);
         Button action = view.findViewById(R.id.fullscreen_dialog_action);
-        TextView textView = view.findViewById(R.id.firstdate);
+        TextView date1 = view.findViewById(R.id.firstdate);
+        TextView date2 = view.findViewById(R.id.seconddate);
+        TextView time1 = view.findViewById(R.id.firsttime);
+        Button sunday = view.findViewById(R.id.sunday);
 
         close.setOnClickListener(v -> {
             dismiss();
@@ -50,9 +58,24 @@ public class TimeDialog extends DialogFragment {
         action.setOnClickListener(v -> {
             dismiss();
         });
-        textView.setOnClickListener(v -> {
-            DialogFragment datePicker = new DatePickerFragment(getActivity());
-            datePicker.show(getFragmentManager(), "date picker");
+        date1.setOnClickListener(v -> {
+            DialogFragment datePicker1 = new DatePickerFragment(getActivity());
+            datePicker1.show(getFragmentManager(), "date picker 1");
+        });
+        date2.setOnClickListener(v -> {
+            DialogFragment datePicker2 = new DatePickerFragment(getActivity());
+            datePicker2.show(getFragmentManager(), "date picker 2");
+        });
+
+        //Onclick crashes app because of TimePickerFragment
+        time1.setOnClickListener(v -> {
+            DialogFragment timePicker1 = new TimePickerFragment(getActivity());
+            timePicker1.show(getFragmentManager(), "time picker 1");
+        });
+
+        //Not working -> created new xml file that changes color based off of state
+        sunday.setOnClickListener(v -> {
+            sunday.isSelected();
         });
 
         return view;
@@ -83,6 +106,33 @@ public class TimeDialog extends DialogFragment {
             c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime());
             Log.i("Date", currentDateString);
+        }
+    }
+
+    public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener{
+
+        private Context context;
+
+        TimePickerFragment(Context context) {
+            this.context = context;
+        }
+
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+            Calendar c = Calendar.getInstance();
+            int hour = c.get(Calendar.HOUR_OF_DAY);
+            int minute = c.get(Calendar.MINUTE);
+            return new TimePickerDialog(context, (TimePickerDialog.OnTimeSetListener) getActivity(), hour, minute, android.text.format.DateFormat.is24HourFormat(getActivity()));
+        }
+        @Override
+        public void onTimeSet(TimePicker view, int hour, int minute) {
+            Calendar c = Calendar.getInstance();
+            c.set(Calendar.HOUR_OF_DAY, hour);
+            c.set(Calendar.MINUTE, minute);
+            String currentTimeString = DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime());
+            Log.i("Time", currentTimeString);
+
         }
     }
 

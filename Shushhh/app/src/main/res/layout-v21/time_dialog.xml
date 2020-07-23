@@ -86,7 +86,8 @@
         android:textColor="@color/cardview_light_background"
         android:textSize="20sp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/timedialogtimetext" />
+        app:layout_constraintTop_toBottomOf="@id/timedialogtimetext"
+        android:focusable="false"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -173,9 +174,11 @@
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:text="S"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            app:backgroundTint="@color/togglebutton_background_color"
             android:fontFamily="@font/rubik"
             android:textColor="@color/cardview_light_background"
-            style="?attr/materialButtonOutlinedStyle"
+            app:rippleColor="@color/colorAccent"
             />
         <com.google.android.material.button.MaterialButton
             android:id="@+id/monday"
@@ -184,7 +187,8 @@
             android:text="M"
             android:fontFamily="@font/rubik"
             android:textColor="@color/cardview_light_background"
-            style="?attr/materialButtonOutlinedStyle"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            app:backgroundTint="@color/togglebutton_background_color"
             />
         <com.google.android.material.button.MaterialButton
             android:id="@+id/tuesday"
@@ -193,7 +197,8 @@
             android:text="T"
             android:fontFamily="@font/rubik"
             android:textColor="@color/cardview_light_background"
-            style="?attr/materialButtonOutlinedStyle"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            app:backgroundTint="@color/togglebutton_background_color"
             />
         <com.google.android.material.button.MaterialButton
             android:id="@+id/wednesday"
@@ -202,7 +207,8 @@
             android:text="W"
             android:fontFamily="@font/rubik"
             android:textColor="@color/cardview_light_background"
-            style="?attr/materialButtonOutlinedStyle"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            app:backgroundTint="@color/togglebutton_background_color"
             />
         <com.google.android.material.button.MaterialButton
             android:id="@+id/thursday"
@@ -211,7 +217,8 @@
             android:text="T"
             android:fontFamily="@font/rubik"
             android:textColor="@color/cardview_light_background"
-            style="?attr/materialButtonOutlinedStyle"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            app:backgroundTint="@color/togglebutton_background_color"
             />
         <com.google.android.material.button.MaterialButton
             android:id="@+id/friday"
@@ -220,7 +227,8 @@
             android:text="F"
             android:fontFamily="@font/rubik"
             android:textColor="@color/cardview_light_background"
-            style="?attr/materialButtonOutlinedStyle"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            app:backgroundTint="@color/togglebutton_background_color"
             />
         <com.google.android.material.button.MaterialButton
             android:id="@+id/saturday"
@@ -229,7 +237,8 @@
             android:text="S"
             android:fontFamily="@font/rubik"
             android:textColor="@color/cardview_light_background"
-            style="?attr/materialButtonOutlinedStyle"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            app:backgroundTint="@color/togglebutton_background_color"
             />
 
     </com.google.android.material.button.MaterialButtonToggleGroup>
