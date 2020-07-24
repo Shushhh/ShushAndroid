@@ -105,7 +105,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         contentValues.put(DatabaseEntry.SUPP, shushObject.getSupplementalData());
         long n = this.getWritableDatabase().insert(DatabaseEntry.TABLE_NAME, null, contentValues);
         if (n == -1) return false;
-            else return false;
+            else return true;
     }
 
     /**

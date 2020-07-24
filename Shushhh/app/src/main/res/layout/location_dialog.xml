@@ -34,7 +34,7 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/addnametext"
+        android:id="@+id/addNameEditText"
         app:layout_constraintTop_toBottomOf="@id/fullscreen_dialog_close"
         app:layout_constraintLeft_toLeftOf="parent"
         android:text="Add Name"
@@ -56,7 +56,7 @@
         android:background="@color/cardview_light_background"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/addnametext">
+        app:layout_constraintTop_toBottomOf="@id/addNameEditText">
     </View>
 
     <TextView
@@ -145,7 +145,7 @@
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/dayofweektoggle"
+        android:id="@+id/repeatWeeklyToggleGroup"
         app:layout_constraintTop_toBottomOf="@id/timedialogrepeattext"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

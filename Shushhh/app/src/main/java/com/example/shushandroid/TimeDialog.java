@@ -5,46 +5,53 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.media.Image;
 import android.os.Bundle;
 
+import android.provider.ContactsContract;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Objects;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentActivity;
-
-import org.w3c.dom.Text;
 
 public class TimeDialog extends DialogFragment {
 
     private View view;
     private ImageButton closeButton;
-    private Button actionButton;
+    private Button saveButton;
     private TextView dateTextView1;
     private TextView dateTextView2;
     private TextView timeTextView1;
     private TextView timeTextView2;
-    private Button sundayButton;
+    private EditText addNameEditText;
 
+    private ToggleGroupManager toggleGroupManager;
+    private ShushObject shushObject;
     private TimePickerFragment timePicker;
+
+    private DatabaseManager databaseManager;
 
     static TimeDialog newInstance() {
         return new TimeDialog();
@@ -59,33 +66,83 @@ public class TimeDialog extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         view = inflater.inflate(R.layout.time_dialog, container, false);
+
         closeButton = view.findViewById(R.id.fullscreen_dialog_close);
-        actionButton = view.findViewById(R.id.fullscreen_dialog_action);
+        saveButton = view.findViewById(R.id.fullscreen_dialog_action);
         dateTextView1 = view.findViewById(R.id.firstdate);
         dateTextView2 = view.findViewById(R.id.seconddate);
         timeTextView1 = view.findViewById(R.id.firsttime);
         timeTextView2 = view.findViewById(R.id.secondtime);
-        sundayButton = view.findViewById(R.id.sunday);
+        addNameEditText = view.findViewById(R.id.addNameEditText);
 
+        toggleGroupManager = new ToggleGroupManager(view);
+        shushObject = new ShushObject();
         timePicker = new TimePickerFragment(getActivity());
 
-        Log.i("Activity", view.toString());
+        databaseManager = new DatabaseManager(getActivity());
+
+        dateTextView1.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                dateTextView2.setText(dateTextView1.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         closeButton.setOnClickListener(v -> {
             dismiss();
         });
 
-        actionButton.setOnClickListener(v -> {
-            dismiss();
+        saveButton.setOnClickListener(v -> {
+            if (!addNameEditText.getText().toString().isEmpty()) {
+                if (!toggleGroupManager.getToggleStateString().isEmpty()) {
+                    shushObject.setName(addNameEditText.getText().toString());
+                    shushObject.setData(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
+                    shushObject.setSupplementalData(toggleGroupManager.getToggleStateString());
+                    shushObject.setType(ShushObject.ShushObjectType.Time.getDescription());
+                    Log.i("Shush", shushObject.toString());
+                    if (databaseManager.insert(shushObject))
+                        dismiss();
+                    else
+                        Toast.makeText(getActivity(), "Problem saving data. Please try again.", Toast.LENGTH_LONG).show();
+                } else {
+                    shushObject.setName(addNameEditText.getText().toString());
+                    shushObject.setData(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
+                    shushObject.setSupplementalData(dateTextView1.getText().toString() + " - " + dateTextView2.getText().toString());
+                    shushObject.setType(ShushObject.ShushObjectType.Time.getDescription());
+                    databaseManager.insert(shushObject);
+                    Log.i("Shush", shushObject.toString());
+                    if (databaseManager.insert(shushObject))
+                        dismiss();
+                    else
+                        Toast.makeText(getActivity(), "Problem saving data. Please try again.", Toast.LENGTH_LONG).show();
+                }
+            } else {
+                Toast.makeText(getActivity(), "Please enter a name for your time constraint. Ex: Work/Study.", Toast.LENGTH_LONG).show();
+            }
         });
 
         dateTextView1.setOnClickListener(v -> {
-            DialogFragment datePicker1 = new DatePickerFragment(getActivity());
+            DatePickerFragment datePicker1 = new DatePickerFragment(getActivity());
+            datePicker1.setTextView(dateTextView1);
             datePicker1.show(getFragmentManager(), "date picker 1");
         });
+
         dateTextView2.setOnClickListener(v -> {
-            DialogFragment datePicker2 = new DatePickerFragment(getActivity());
+            DatePickerFragment datePicker2 = new DatePickerFragment(getActivity());
+            datePicker2.setTextView(dateTextView2);
+            datePicker2.setConstraintTextView(dateTextView1);
             datePicker2.show(getFragmentManager(), "date picker 2");
         });
 
@@ -100,17 +157,14 @@ public class TimeDialog extends DialogFragment {
             timePicker.show(getFragmentManager(), "time picker 1");
         });
 
-        //Not working -> created new xml file that changes color based off of state
-        sundayButton.setOnClickListener(v -> {
-            Log.i("Toggle", String.valueOf(sundayButton.isSelected()));
-        });
-
         return view;
     }
 
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
         private Context context;
+        private TextView textView;
+        private TextView constraintTextView;
 
         DatePickerFragment (Context context) {
             this.context = context;
@@ -122,17 +176,36 @@ public class TimeDialog extends DialogFragment {
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
-            return new DatePickerDialog(context, this, year, month, day);
+            DatePickerDialog datePickerDialog = new DatePickerDialog(context, this, year, month, day);
+            if (constraintTextView == null) {
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+            } else {
+                try {
+                    Date date = new SimpleDateFormat("EEE, MMM dd, yyyy").parse(constraintTextView.getText().toString());
+                    datePickerDialog.getDatePicker().setMinDate(date.getTime());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+            return datePickerDialog;
         }
 
         @Override
         public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
             Calendar c = Calendar.getInstance();
-            c.set(Calendar.YEAR, year);
-            c.set(Calendar.MONTH, month);
-            c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime());
-            Log.i("Date", currentDateString);
+            c.set(year, month, dayOfMonth);
+            SimpleDateFormat format = new SimpleDateFormat("EEE, MMM dd, yyyy");
+            if (textView != null) {
+                textView.setText(format.format(c.getTime()));
+            }
+        }
+
+        public void setTextView(TextView textView) {
+            this.textView = textView;
+        }
+
+        public void setConstraintTextView(TextView constraintTextView) {
+            this.constraintTextView = constraintTextView;
         }
     }
 

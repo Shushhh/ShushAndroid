@@ -74,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager2.setAdapter(adapter);
 
+        databaseTest();
+
         bottomAppBar.setNavigationOnClickListener((View v) -> {
             voicemailBottomSheetDialogFragment.show(getSupportFragmentManager(), "dialog_fragment");
         });
