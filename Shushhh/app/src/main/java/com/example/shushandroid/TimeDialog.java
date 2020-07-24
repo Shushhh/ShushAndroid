@@ -1,5 +1,6 @@
 package com.example.shushandroid;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -21,6 +22,7 @@ import com.google.android.material.button.MaterialButton;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
@@ -29,7 +31,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
+import org.w3c.dom.Text;
+
 public class TimeDialog extends DialogFragment {
+
+    private View view;
+    private ImageButton closeButton;
+    private Button actionButton;
+    private TextView dateTextView1;
+    private TextView dateTextView2;
+    private TextView timeTextView1;
+    private TextView timeTextView2;
+    private Button sundayButton;
+
+    private TimePickerFragment timePicker;
 
     static TimeDialog newInstance() {
         return new TimeDialog();
@@ -44,38 +59,50 @@ public class TimeDialog extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.time_dialog, container, false);
-        ImageButton close = view.findViewById(R.id.fullscreen_dialog_close);
-        Button action = view.findViewById(R.id.fullscreen_dialog_action);
-        TextView date1 = view.findViewById(R.id.firstdate);
-        TextView date2 = view.findViewById(R.id.seconddate);
-        TextView time1 = view.findViewById(R.id.firsttime);
-        Button sunday = view.findViewById(R.id.sunday);
+        view = inflater.inflate(R.layout.time_dialog, container, false);
+        closeButton = view.findViewById(R.id.fullscreen_dialog_close);
+        actionButton = view.findViewById(R.id.fullscreen_dialog_action);
+        dateTextView1 = view.findViewById(R.id.firstdate);
+        dateTextView2 = view.findViewById(R.id.seconddate);
+        timeTextView1 = view.findViewById(R.id.firsttime);
+        timeTextView2 = view.findViewById(R.id.secondtime);
+        sundayButton = view.findViewById(R.id.sunday);
 
-        close.setOnClickListener(v -> {
+        timePicker = new TimePickerFragment(getActivity());
+
+        Log.i("Activity", view.toString());
+
+        closeButton.setOnClickListener(v -> {
             dismiss();
         });
-        action.setOnClickListener(v -> {
+
+        actionButton.setOnClickListener(v -> {
             dismiss();
         });
-        date1.setOnClickListener(v -> {
+
+        dateTextView1.setOnClickListener(v -> {
             DialogFragment datePicker1 = new DatePickerFragment(getActivity());
             datePicker1.show(getFragmentManager(), "date picker 1");
         });
-        date2.setOnClickListener(v -> {
+        dateTextView2.setOnClickListener(v -> {
             DialogFragment datePicker2 = new DatePickerFragment(getActivity());
             datePicker2.show(getFragmentManager(), "date picker 2");
         });
 
         //Onclick crashes app because of TimePickerFragment
-        time1.setOnClickListener(v -> {
-            DialogFragment timePicker1 = new TimePickerFragment(getActivity());
-            timePicker1.show(getFragmentManager(), "time picker 1");
+        timeTextView1.setOnClickListener(v -> {
+            timePicker.setTextView(timeTextView1);
+            timePicker.show(getFragmentManager(), "time picker 1");
+        });
+
+        timeTextView2.setOnClickListener(v -> {
+            timePicker.setTextView(timeTextView2);
+            timePicker.show(getFragmentManager(), "time picker 1");
         });
 
         //Not working -> created new xml file that changes color based off of state
-        sunday.setOnClickListener(v -> {
-            sunday.isSelected();
+        sundayButton.setOnClickListener(v -> {
+            Log.i("Toggle", String.valueOf(sundayButton.isSelected()));
         });
 
         return view;
@@ -109,9 +136,10 @@ public class TimeDialog extends DialogFragment {
         }
     }
 
-    public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener{
+    public static class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener{
 
         private Context context;
+        private TextView textView;
 
         TimePickerFragment(Context context) {
             this.context = context;
@@ -124,14 +152,50 @@ public class TimeDialog extends DialogFragment {
             int minute = c.get(Calendar.MINUTE);
             return new TimePickerDialog(context, this, hour, minute, false);
         }
-        @Override
-        public void onTimeSet(TimePicker view, int hour, int minute) {
-            Calendar c = Calendar.getInstance();
-            c.set(Calendar.HOUR_OF_DAY, hour);
-            c.set(Calendar.MINUTE, minute);
-            String currentTimeString = DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime());
-            Log.i("Time", currentTimeString);
 
+        @SuppressLint("SetTextI18n")
+        @Override
+        public void onTimeSet(TimePicker view, int hourOfDay, int minuteOfDay) {
+            String amOrPm = "";
+            String hour = "", minute = "";
+
+            if (hourOfDay < 12) {
+                amOrPm = "AM";
+                if (hourOfDay == 0) {
+                    hour = "12";
+                } else {
+                    if (hourOfDay < 10) {
+                        hour = "0" + hourOfDay;
+                    } else {
+                        hour = "" + hourOfDay;
+                    }
+                }
+            } else if (hourOfDay <= 23) {
+                amOrPm = "PM";
+                if (hourOfDay == 12) {
+                    hour = "" + hourOfDay;
+                } else {
+                    if (hourOfDay < 22) {
+                        hour = "0" + (hourOfDay - 12);
+                    } else {
+                        hour = "" + (hourOfDay - 12);
+                    }
+                }
+            }
+
+            if (minuteOfDay < 10) {
+                minute = "0" + minuteOfDay;
+            } else {
+                minute = "" + minuteOfDay;
+            }
+
+            if (textView != null)
+                textView.setText(hour + ":" + minute + " " + amOrPm);
+
+        }
+
+        public void setTextView(TextView textView) {
+            this.textView = textView;
         }
     }
 
