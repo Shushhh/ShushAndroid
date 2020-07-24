@@ -3,6 +3,9 @@ package com.example.shushandroid;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
@@ -14,9 +17,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -26,16 +32,20 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "Main Activity";
+    public static String TAG = ShushObject.ShushObjectType.LOCATION.getDescription();
+
     private ViewPager2 viewPager2;
     private CustomPagerAdapter adapter;
     private ArrayList<Fragment> fragmentArrayList;
     private TabLayout tabLayout;
+    private FloatingActionButton floatingActionButton;
 
     private BottomAppBar bottomAppBar;
     private VoicemailBottomSheetDialogFragment voicemailBottomSheetDialogFragment;
 
     private DatabaseManager databaseManager;
+    private PlaceTab placeTab;
+    private TimeTab timeTab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +57,17 @@ public class MainActivity extends AppCompatActivity {
         bottomAppBar = findViewById(R.id.bottomappbar);
 
         voicemailBottomSheetDialogFragment = new VoicemailBottomSheetDialogFragment();
-
-        fragmentArrayList = new ArrayList<>(Arrays.asList(new PlaceTab(), new TimeTab()));
         databaseManager = new DatabaseManager(this);
 
         adapter = new CustomPagerAdapter(getSupportFragmentManager(), getLifecycle());
+
+        timeTab = new TimeTab();
+        placeTab = new PlaceTab();
+
         viewPager2.setAdapter(adapter);
+
+        databaseManager = new DatabaseManager(this);
+        Log.i("DB", databaseManager.retrieveWithTAG(ShushObject.ShushObjectType.TIME.getDescription()).toString());
 
         bottomAppBar.setNavigationOnClickListener((View v) -> {
             voicemailBottomSheetDialogFragment.show(getSupportFragmentManager(), "dialog_fragment");
@@ -68,11 +83,39 @@ public class MainActivity extends AppCompatActivity {
 
         bottomAppBar.findViewById(R.id.bottomappbar);
 
-    }
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getText().toString().equals(ShushObject.ShushObjectType.LOCATION.getDescription())) {
+                    TAG = ShushObject.ShushObjectType.LOCATION.getDescription();
+                } else if (tab.getText().toString().equals(ShushObject.ShushObjectType.TIME.getDescription())) {
+                    TAG = ShushObject.ShushObjectType.TIME.getDescription();
+                }
+            }
 
-    /**
-     * @apiNote use method to test the functionality of the database
-     */
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+
+        floatingActionButton = findViewById(R.id.floatingactionbutton);
+        floatingActionButton.setOnClickListener(v -> {
+            if (TAG.equals(ShushObject.ShushObjectType.LOCATION.getDescription())) {
+                DialogFragment dialog = LocationDialog.newInstance();
+                dialog.show(getSupportFragmentManager(), "tag");
+            } else if (TAG.equals(ShushObject.ShushObjectType.TIME.getDescription())) {
+                DialogFragment dialog = TimeDialog.newInstance();
+                dialog.show(getSupportFragmentManager(), "tag");
+            }
+        });
+    }
 
     public static class VoicemailBottomSheetDialogFragment extends BottomSheetDialogFragment {
         @Nullable
@@ -99,7 +142,6 @@ public class MainActivity extends AppCompatActivity {
                 return new TimeTab();
             else return new PlaceTab();
         }
-
         @Override
         public int getItemCount() {
             return 2;
@@ -107,4 +149,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
 }
+

@@ -13,6 +13,8 @@ public class ShushObject {
         this.supplementalData = supplementalData;
     }
 
+    public ShushObject() {}
+
     public String getName() {
         return name;
     }
