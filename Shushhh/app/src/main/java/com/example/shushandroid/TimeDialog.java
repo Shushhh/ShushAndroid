@@ -118,12 +118,11 @@ public class TimeDialog extends DialogFragment {
         }
 
         @NonNull
-        @Override
-        public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
             Calendar c = Calendar.getInstance();
             int hour = c.get(Calendar.HOUR_OF_DAY);
             int minute = c.get(Calendar.MINUTE);
-            return new TimePickerDialog(context, (TimePickerDialog.OnTimeSetListener) getActivity(), hour, minute, android.text.format.DateFormat.is24HourFormat(getActivity()));
+            return new TimePickerDialog(context, this, hour, minute, false);
         }
         @Override
         public void onTimeSet(TimePicker view, int hour, int minute) {
