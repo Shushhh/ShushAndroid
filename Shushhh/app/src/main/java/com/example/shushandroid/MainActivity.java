@@ -3,8 +3,6 @@ package com.example.shushandroid;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -17,8 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -27,8 +23,6 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -110,10 +104,10 @@ public class MainActivity extends AppCompatActivity {
         floatingActionButton.setOnClickListener(v -> {
             if (TAG.equals(ShushObject.ShushObjectType.LOCATION.getDescription())) {
                 DialogFragment dialog = LocationDialog.newInstance();
-                dialog.show(getSupportFragmentManager(), "tag");
+                dialog.show(getSupportFragmentManager(), ShushObject.ShushObjectType.LOCATION.getDescription());
             } else if (TAG.equals(ShushObject.ShushObjectType.TIME.getDescription())) {
                 DialogFragment dialog = TimeDialog.newInstance();
-                dialog.show(getSupportFragmentManager(), "tag");
+                dialog.show(getSupportFragmentManager(), ShushObject.ShushObjectType.TIME.getDescription());
             }
         });
     }
