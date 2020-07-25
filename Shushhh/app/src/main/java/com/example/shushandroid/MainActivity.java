@@ -3,6 +3,7 @@ package com.example.shushandroid;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -10,12 +11,17 @@ import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -40,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseManager databaseManager;
     private PlaceTab placeTab;
     private TimeTab timeTab;
+
+    FusedLocationProviderClient fusedLocationProviderClient;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,11 +106,16 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         floatingActionButton = findViewById(R.id.floatingactionbutton);
         floatingActionButton.setOnClickListener(v -> {
             if (TAG.equals(ShushObject.ShushObjectType.LOCATION.getDescription())) {
+                if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    Log.i("Location Permission", "Worked");
+                } else {
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
+                }
                 DialogFragment dialog = LocationDialog.newInstance();
                 dialog.show(getSupportFragmentManager(), ShushObject.ShushObjectType.LOCATION.getDescription());
             } else if (TAG.equals(ShushObject.ShushObjectType.TIME.getDescription())) {

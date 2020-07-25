@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -30,6 +33,7 @@ public class LocationDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.location_dialog, container, false);
         ImageButton close = view.findViewById(R.id.fullscreen_dialog_close);
         Button action = view.findViewById(R.id.fullscreen_dialog_action);
+
 
         close.setOnClickListener(v -> {
             dismiss();
