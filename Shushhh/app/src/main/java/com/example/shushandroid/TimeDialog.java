@@ -36,6 +36,7 @@ import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.UUID;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -132,34 +133,38 @@ public class TimeDialog extends DialogFragment {
         });
 
         saveButton.setOnClickListener(v -> {
-            if (!addNameEditText.getText().toString().isEmpty()) {
-                if (!toggleGroupManager.getToggleStateString().isEmpty()) {
-                    shushObject.setName(addNameEditText.getText().toString());
-                    shushObject.setData(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
-                    shushObject.setSupplementalData(toggleGroupManager.getToggleStateString());
-                    shushObject.setType(ShushObject.ShushObjectType.TIME.getDescription());
-                    Log.i("Shush", shushObject.toString());
-                    if (databaseManager.insert(shushObject)) {
-                        TimeTab.updateRecyclerView();
-                        dismiss();
+            if (this.from.equals("fab")) {
+                if (!addNameEditText.getText().toString().isEmpty()) {
+                    if (!toggleGroupManager.getToggleStateString().isEmpty()) {
+                        shushObject.setName(addNameEditText.getText().toString());
+                        shushObject.setData(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
+                        shushObject.setSupplementalData(toggleGroupManager.getToggleStateString());
+                        shushObject.setType(ShushObject.ShushObjectType.TIME.getDescription());
+                        Log.i("Shush", shushObject.toString());
+                        if (databaseManager.insert(shushObject)) {
+                            TimeTab.updateRecyclerView();
+                            dismiss();
+                        } else {
+                            Toast.makeText(getActivity(), "Problem saving data. Please try again.", Toast.LENGTH_LONG).show();
+                        }
                     } else {
-                        Toast.makeText(getActivity(), "Problem saving data. Please try again.", Toast.LENGTH_LONG).show();
+                        shushObject.setName(addNameEditText.getText().toString());
+                        shushObject.setData(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
+                        shushObject.setSupplementalData(dateTextView1.getText().toString());
+                        shushObject.setType(ShushObject.ShushObjectType.TIME.getDescription());
+                        Log.i("Shush", shushObject.toString());
+                        if (databaseManager.insert(shushObject)) {
+                            TimeTab.updateRecyclerView();
+                            dismiss();
+                        } else {
+                            Toast.makeText(getActivity(), "Problem saving data. Please try again.", Toast.LENGTH_LONG).show();
+                        }
                     }
                 } else {
-                    shushObject.setName(addNameEditText.getText().toString());
-                    shushObject.setData(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
-                    shushObject.setSupplementalData(dateTextView1.getText().toString());
-                    shushObject.setType(ShushObject.ShushObjectType.TIME.getDescription());
-                    Log.i("Shush", shushObject.toString());
-                    if (databaseManager.insert(shushObject)) {
-                        TimeTab.updateRecyclerView();
-                        dismiss();
-                    } else {
-                        Toast.makeText(getActivity(), "Problem saving data. Please try again.", Toast.LENGTH_LONG).show();
-                    }
+                    Toast.makeText(getActivity(), "Please enter a name for your time constraint. Ex: Work/Study.", Toast.LENGTH_LONG).show();
                 }
-            } else {
-                Toast.makeText(getActivity(), "Please enter a name for your time constraint. Ex: Work/Study.", Toast.LENGTH_LONG).show();
+            } else if (this.from.equals("fab")) {
+
             }
         });
 

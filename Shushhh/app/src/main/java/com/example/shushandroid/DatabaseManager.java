@@ -9,6 +9,7 @@ import android.provider.BaseColumns;
 import android.provider.ContactsContract;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
@@ -28,18 +29,19 @@ public class DatabaseManager extends SQLiteOpenHelper {
      * columns in the respective database
      */
 
-    public class DatabaseEntry implements BaseColumns {
+    public class DatabaseEntry {
         public static final String NAME = "name";
         public static final String TYPE = "type";
         public static final String DATA = "data";
         public static final String SUPP = "supp"; //supplemental data (radius or duration)
+        public static final String ID = "id";
 
         public static final String TABLE_NAME = "ShushDB";
 
         //create table ShushDB (name varchar, type varchar, data varchar, supp varchar)
 
         public static final String CREATE_QUERY = "create table " + TABLE_NAME + "(" +
-                _ID + " integer, " + // using BaseColumns constant
+                ID + " varchar , " + // using BaseColumns constant
                 NAME + " varchar, " +
                 TYPE + " varchar, " +
                 DATA + " varchar, " +
@@ -104,6 +106,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         contentValues.put(DatabaseEntry.DATA, shushObject.getData());
         contentValues.put(DatabaseEntry.SUPP, shushObject.getSupplementalData());
         long n = this.getWritableDatabase().insert(DatabaseEntry.TABLE_NAME, null, contentValues);
+
         if (n == -1) return false;
             else return true;
     }
@@ -117,12 +120,13 @@ public class DatabaseManager extends SQLiteOpenHelper {
         List shushObjectArrayList = new ArrayList();
         if(cursor.moveToFirst()) {
             do {
-                int customerID = cursor.getInt(0);
+
                 String name = cursor.getString(1);
                 String type = cursor.getString(2);
                 String data = cursor.getString(3);
                 String supp = cursor.getString(4);
                 ShushObject shushObject = new ShushObject(name, type, data, supp);
+
                 shushObjectArrayList.add(shushObject);
             } while (cursor.moveToNext());
         } else {
