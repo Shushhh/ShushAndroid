@@ -142,7 +142,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
      * @implNote implement only to clear existing database with test values
      */
     public void deleteDatabase() {
-        this.getWritableDatabase().rawQuery("delete from " + DatabaseEntry.TABLE_NAME, null);
+        this.getWritableDatabase().delete(DatabaseEntry.TABLE_NAME, null, null);
     }
 
 }

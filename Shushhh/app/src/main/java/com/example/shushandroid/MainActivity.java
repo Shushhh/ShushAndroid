@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager2.setAdapter(adapter);
 
         databaseManager = new DatabaseManager(this);
-        Log.i("DB", databaseManager.retrieveWithTAG(ShushObject.ShushObjectType.TIME.getDescription()).toString());
+        Log.i("DB", "" + databaseManager.retrieveWithTAG(ShushObject.ShushObjectType.TIME.getDescription()).size());
 
         bottomAppBar.setNavigationOnClickListener((View v) -> {
             voicemailBottomSheetDialogFragment.show(getSupportFragmentManager(), "dialog_fragment");

@@ -121,7 +121,6 @@ public class TimeDialog extends DialogFragment {
                     shushObject.setData(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
                     shushObject.setSupplementalData(dateTextView1.getText().toString() + " - " + dateTextView2.getText().toString());
                     shushObject.setType(ShushObject.ShushObjectType.TIME.getDescription());
-                    databaseManager.insert(shushObject);
                     Log.i("Shush", shushObject.toString());
                     if (databaseManager.insert(shushObject))
                         dismiss();
