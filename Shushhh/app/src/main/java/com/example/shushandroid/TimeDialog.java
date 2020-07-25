@@ -121,7 +121,7 @@ public class TimeDialog extends DialogFragment {
                 } else {
                     shushObject.setName(addNameEditText.getText().toString());
                     shushObject.setData(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
-                    shushObject.setSupplementalData(dateTextView1.getText().toString() + " - " + dateTextView2.getText().toString());
+                    shushObject.setSupplementalData(dateTextView1.getText().toString() + " " + timeTextView1.getText().toString() + "-" + timeTextView2.getText().toString());
                     shushObject.setType(ShushObject.ShushObjectType.TIME.getDescription());
                     Log.i("Shush", shushObject.toString());
                     if (databaseManager.insert(shushObject)) {
