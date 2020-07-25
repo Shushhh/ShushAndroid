@@ -44,7 +44,6 @@ public class TimeDialog extends DialogFragment {
     private ImageButton closeButton;
     private Button saveButton;
     private TextView dateTextView1;
-    private TextView dateTextView2;
     private TextView timeTextView1;
     private TextView timeTextView2;
     private EditText addNameEditText;
@@ -78,7 +77,6 @@ public class TimeDialog extends DialogFragment {
         closeButton = view.findViewById(R.id.fullscreen_dialog_close);
         saveButton = view.findViewById(R.id.fullscreen_dialog_action);
         dateTextView1 = view.findViewById(R.id.firstdate);
-        dateTextView2 = view.findViewById(R.id.seconddate);
         timeTextView1 = view.findViewById(R.id.firsttime);
         timeTextView2 = view.findViewById(R.id.secondtime);
         addNameEditText = view.findViewById(R.id.addNameEditText);
@@ -88,23 +86,6 @@ public class TimeDialog extends DialogFragment {
         timePicker = new TimePickerFragment(getActivity());
 
         databaseManager = new DatabaseManager(getActivity());
-
-        dateTextView1.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                dateTextView2.setText(dateTextView1.getText().toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
 
         closeButton.setOnClickListener(v -> {
             dismiss();
@@ -127,7 +108,7 @@ public class TimeDialog extends DialogFragment {
                 } else {
                     shushObject.setName(addNameEditText.getText().toString());
                     shushObject.setData(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
-                    shushObject.setSupplementalData(dateTextView1.getText().toString() + " " + timeTextView1.getText().toString() + "-" + timeTextView2.getText().toString());
+                    shushObject.setSupplementalData(dateTextView1.getText().toString());
                     shushObject.setType(ShushObject.ShushObjectType.TIME.getDescription());
                     Log.i("Shush", shushObject.toString());
                     if (databaseManager.insert(shushObject)) {
@@ -146,13 +127,6 @@ public class TimeDialog extends DialogFragment {
             DatePickerFragment datePicker1 = new DatePickerFragment(getActivity());
             datePicker1.setTextView(dateTextView1);
             datePicker1.show(getFragmentManager(), "date picker 1");
-        });
-
-        dateTextView2.setOnClickListener(v -> {
-            DatePickerFragment datePicker2 = new DatePickerFragment(getActivity());
-            datePicker2.setTextView(dateTextView2);
-            datePicker2.setConstraintTextView(dateTextView1);
-            datePicker2.show(getFragmentManager(), "date picker 2");
         });
 
         timeTextView1.setOnClickListener(v -> {
@@ -186,7 +160,6 @@ public class TimeDialog extends DialogFragment {
 
         private Context context;
         private TextView textView;
-        private TextView constraintTextView;
 
         DatePickerFragment (Context context) {
             this.context = context;
@@ -199,16 +172,8 @@ public class TimeDialog extends DialogFragment {
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
             DatePickerDialog datePickerDialog = new DatePickerDialog(context, this, year, month, day);
-            if (constraintTextView == null) {
-                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-            } else {
-                try {
-                    Date date = new SimpleDateFormat("EEE, MMM dd, yyyy").parse(constraintTextView.getText().toString());
-                    datePickerDialog.getDatePicker().setMinDate(date.getTime());
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            }
+            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+
             return datePickerDialog;
         }
 
@@ -225,16 +190,15 @@ public class TimeDialog extends DialogFragment {
         public void setTextView(TextView textView) {
             this.textView = textView;
         }
-
-        public void setConstraintTextView(TextView constraintTextView) {
-            this.constraintTextView = constraintTextView;
-        }
     }
 
     public static class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener{
 
         private Context context;
         private TextView textView;
+
+        private Date date;
+        private int hour, minute;
 
         TimePickerFragment(Context context) {
             this.context = context;
@@ -253,6 +217,9 @@ public class TimeDialog extends DialogFragment {
         public void onTimeSet(TimePicker view, int hourOfDay, int minuteOfDay) {
             String amOrPm = "";
             String hour = "", minute = "";
+
+            this.hour = hourOfDay;
+            this.minute = minuteOfDay;
 
             if (hourOfDay < 12) {
                 amOrPm = "AM";

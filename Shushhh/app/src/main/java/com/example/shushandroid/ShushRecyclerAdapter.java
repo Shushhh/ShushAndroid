@@ -55,6 +55,7 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<ShushRecyclerAdap
     @Override
     public void onBindViewHolder(@NonNull ShushViewHolder holder, int position) {
         ShushObject currentItem = shushObjectArrayList.get(position);
+
         holder.nameTextView.setText(currentItem.getName());
         holder.dataTextView.setText(currentItem.getData());
         holder.supplementalDataTextView.setText(currentItem.getSupplementalData());
