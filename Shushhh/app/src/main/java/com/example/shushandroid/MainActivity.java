@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
         floatingActionButton = findViewById(R.id.floatingactionbutton);
         floatingActionButton.setOnClickListener(v -> {
             if (TAG.equals(ShushObject.ShushObjectType.LOCATION.getDescription())) {
+                //Check Settings -> if you deny too many times, it will remain denied and the notification won't pop up anymore
                 if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     Log.i("Test", "Working");
                 } else {

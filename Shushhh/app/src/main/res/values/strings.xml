@@ -18,4 +18,7 @@
     <string name="user01_gmail_com">user01@gmail.com</string>
     <string name="event_name">Event name</string>
     <string name="from">From</string>
+
+    <!--Map Key-->
+    <string name="map_key" translatable="false">AIzaSyB_qsP8AOP_P0MdlPz-48TDaJYjTP3vbjo</string>
 </resources>
