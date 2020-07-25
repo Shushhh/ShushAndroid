@@ -61,6 +61,7 @@ public class TimeDialog extends DialogFragment {
     private String presetDateTextString = "";
     private String presetTimeString1 = "";
     private String presetTimeString2 = "";
+    private String presetUUIDString = "";
 
     private String from = "";
     private String currentDate = "", currentTime1 = "", currentTime2 = "";
@@ -159,8 +160,39 @@ public class TimeDialog extends DialogFragment {
                 } else {
                     Toast.makeText(getActivity(), "Please enter a name for your time constraint. Ex: Work/Study.", Toast.LENGTH_LONG).show();
                 }
-            } else if (this.from.equals("fab")) {
-
+            } else if (this.from.equals("click")) {
+                if (!presetUUIDString.isEmpty()) {
+                    if (!addNameEditText.getText().toString().isEmpty()) {
+                        if (!toggleGroupManager.getToggleStateString().isEmpty()) {
+                            shushObject.setName(addNameEditText.getText().toString());
+                            shushObject.setData(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
+                            shushObject.setSupplementalData(toggleGroupManager.getToggleStateString());
+                            shushObject.setType(ShushObject.ShushObjectType.TIME.getDescription());
+                            shushObject.setUUID(presetUUIDString);
+                            if (databaseManager.update(shushObject)) {
+                                TimeTab.updateRecyclerView();
+                                dismiss();
+                            } else {
+                                Toast.makeText(getActivity(), "Problem saving data. Please try again.", Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            shushObject.setName(addNameEditText.getText().toString());
+                            shushObject.setData(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
+                            shushObject.setSupplementalData(dateTextView1.getText().toString());
+                            shushObject.setType(ShushObject.ShushObjectType.TIME.getDescription());
+                            shushObject.setUUID(presetUUIDString);
+                            Log.i("Shush", shushObject.toString());
+                            if (databaseManager.update(shushObject)) {
+                                TimeTab.updateRecyclerView();
+                                dismiss();
+                            } else {
+                                Toast.makeText(getActivity(), "Problem saving data. Please try again.", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    } else {
+                        Toast.makeText(getActivity(), "Please enter a name for your time constraint. Ex: Work/Study.", Toast.LENGTH_LONG).show();
+                    }
+                }
             }
         });
 
@@ -193,6 +225,7 @@ public class TimeDialog extends DialogFragment {
                 presetNameString = getArguments().getString(DatabaseManager.DatabaseEntry.NAME);
                 presetDataString = getArguments().getString(DatabaseManager.DatabaseEntry.DATA);
                 presetSupplementalDataString = getArguments().getString(DatabaseManager.DatabaseEntry.SUPP);
+                presetUUIDString = getArguments().getString(DatabaseManager.DatabaseEntry.UUID);
 
                 if (!presetSupplementalDataString.isEmpty() && !presetSupplementalDataString.contains(",")) {
                     Calendar calendar = Calendar.getInstance();

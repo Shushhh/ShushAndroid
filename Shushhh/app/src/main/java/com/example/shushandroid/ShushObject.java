@@ -64,6 +64,7 @@ public class ShushObject {
                 ", type='" + type + '\'' +
                 ", data='" + data + '\'' +
                 ", supplementalData='" + supplementalData + '\'' +
+                ", uuid='" + UUID + '\'' +
                 '}';
     }
 

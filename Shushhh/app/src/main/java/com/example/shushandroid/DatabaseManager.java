@@ -111,6 +111,18 @@ public class DatabaseManager extends SQLiteOpenHelper {
             else return true;
     }
 
+    public boolean update (ShushObject shushObject) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DatabaseEntry.NAME, shushObject.getName());
+        contentValues.put(DatabaseEntry.TYPE, shushObject.getType());
+        contentValues.put(DatabaseEntry.DATA, shushObject.getData());
+        contentValues.put(DatabaseEntry.SUPP, shushObject.getSupplementalData());
+        contentValues.put(DatabaseEntry.UUID, shushObject.getUUID());
+        long n = this.getWritableDatabase().update(DatabaseEntry.TABLE_NAME, contentValues, DatabaseEntry.UUID + "=?", new String[] {shushObject.getUUID()});
+        if (n > 0) return true;
+            else return false;
+    }
+
     /**
      * @apiNote use a cursor object to traverse the database and retrieve data
      * @return returns list of ShushObject items from the database
