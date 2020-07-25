@@ -112,20 +112,24 @@ public class TimeDialog extends DialogFragment {
                     shushObject.setSupplementalData(toggleGroupManager.getToggleStateString());
                     shushObject.setType(ShushObject.ShushObjectType.TIME.getDescription());
                     Log.i("Shush", shushObject.toString());
-                    if (databaseManager.insert(shushObject))
+                    if (databaseManager.insert(shushObject)) {
+                        TimeTab.updateRecyclerView();
                         dismiss();
-                    else
+                    } else {
                         Toast.makeText(getActivity(), "Problem saving data. Please try again.", Toast.LENGTH_LONG).show();
+                    }
                 } else {
                     shushObject.setName(addNameEditText.getText().toString());
                     shushObject.setData(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
                     shushObject.setSupplementalData(dateTextView1.getText().toString() + " - " + dateTextView2.getText().toString());
                     shushObject.setType(ShushObject.ShushObjectType.TIME.getDescription());
                     Log.i("Shush", shushObject.toString());
-                    if (databaseManager.insert(shushObject))
+                    if (databaseManager.insert(shushObject)) {
+                        TimeTab.updateRecyclerView();
                         dismiss();
-                    else
+                    } else {
                         Toast.makeText(getActivity(), "Problem saving data. Please try again.", Toast.LENGTH_LONG).show();
+                    }
                 }
             } else {
                 Toast.makeText(getActivity(), "Please enter a name for your time constraint. Ex: Work/Study.", Toast.LENGTH_LONG).show();

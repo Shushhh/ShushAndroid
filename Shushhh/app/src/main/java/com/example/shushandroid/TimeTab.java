@@ -17,10 +17,10 @@ import java.util.ArrayList;
 
 public class TimeTab extends Fragment {
 
-    private RecyclerView recyclerView;
-    private ShushRecyclerAdapter shushRecyclerAdapter;
-    private ArrayList<ShushObject> shushObjectList = new ArrayList<>();
-    private DatabaseManager databaseManager;
+    private static RecyclerView recyclerView;
+    private static ShushRecyclerAdapter shushRecyclerAdapter;
+    private static ArrayList<ShushObject> shushObjectList = new ArrayList<>();
+    private static DatabaseManager databaseManager;
 
     private static final String TAG = ShushObject.ShushObjectType.TIME.getDescription();
 
@@ -53,7 +53,7 @@ public class TimeTab extends Fragment {
         updateRecyclerView();
     }
 
-    private void updateRecyclerView () {
+    public static void updateRecyclerView () {
         shushObjectList = databaseManager.retrieveWithTAG(TAG);
         shushRecyclerAdapter.setShushObjectArrayList(shushObjectList);
         recyclerView.setAdapter(shushRecyclerAdapter);
