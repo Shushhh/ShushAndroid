@@ -30,7 +30,7 @@ public class TimeTab extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_time_tab, container, false);
         recyclerView = rootView.findViewById(R.id.recyclerView);
-        shushRecyclerAdapter = new ShushRecyclerAdapter(shushObjectList);
+        shushRecyclerAdapter = new ShushRecyclerAdapter(shushObjectList, getFragmentManager());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         return rootView;

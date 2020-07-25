@@ -61,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
         viewPager2.setAdapter(adapter);
 
         databaseManager = new DatabaseManager(this);
-        databaseManager.deleteDatabase();
         Log.i("DB", "" + databaseManager.retrieveWithTAG(ShushObject.ShushObjectType.TIME.getDescription()).size());
 
         bottomAppBar.setNavigationOnClickListener((View v) -> {
@@ -106,8 +105,8 @@ public class MainActivity extends AppCompatActivity {
                 DialogFragment dialog = LocationDialog.newInstance();
                 dialog.show(getSupportFragmentManager(), ShushObject.ShushObjectType.LOCATION.getDescription());
             } else if (TAG.equals(ShushObject.ShushObjectType.TIME.getDescription())) {
-                DialogFragment dialog = TimeDialog.newInstance();
-                dialog.show(getSupportFragmentManager(), ShushObject.ShushObjectType.TIME.getDescription());
+                TimeDialog dialog = TimeDialog.newInstance();
+                dialog.show(getSupportFragmentManager(), ShushObject.ShushObjectType.TIME.getDescription(), "fab");
             }
         });
     }

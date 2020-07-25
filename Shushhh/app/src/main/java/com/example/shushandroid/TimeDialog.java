@@ -35,6 +35,8 @@ import java.util.Locale;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 public class TimeDialog extends DialogFragment {
 
@@ -52,6 +54,10 @@ public class TimeDialog extends DialogFragment {
     private TimePickerFragment timePicker;
 
     private DatabaseManager databaseManager;
+
+    private String presetNameString;
+    private String presetDataString;
+    private String presetSupplementalDataString;
 
     static TimeDialog newInstance() {
         return new TimeDialog();
@@ -149,7 +155,6 @@ public class TimeDialog extends DialogFragment {
             datePicker2.show(getFragmentManager(), "date picker 2");
         });
 
-        //Onclick crashes app because of TimePickerFragment
         timeTextView1.setOnClickListener(v -> {
             timePicker.setTextView(timeTextView1);
             timePicker.show(getFragmentManager(), "time picker 1");
@@ -161,6 +166,20 @@ public class TimeDialog extends DialogFragment {
         });
 
         return view;
+    }
+
+    public void show(FragmentManager fragmentManager, @Nullable String tag, String from) {
+        if (from.equals("click")) {
+            if (getArguments() != null) {
+                presetNameString = getArguments().getString(DatabaseManager.DatabaseEntry.NAME);
+                presetDataString = getArguments().getString(DatabaseManager.DatabaseEntry.DATA);
+                presetSupplementalDataString = getArguments().getString(DatabaseManager.DatabaseEntry.SUPP);
+                Log.i("Arguments", presetNameString + " | " + presetDataString + " | " + presetSupplementalDataString);
+            }
+        } else if (from.equals("fab")) {
+            Log.i("Dialog", "fab");
+        }
+        super.show(fragmentManager, tag);
     }
 
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {

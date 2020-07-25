@@ -29,7 +29,7 @@ public class PlaceTab extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_place_tab, container, false);
         recyclerView = rootView.findViewById(R.id.recyclerView);
-        shushRecyclerAdapter = new ShushRecyclerAdapter(shushObjectArrayList);
+        shushRecyclerAdapter = new ShushRecyclerAdapter(shushObjectArrayList, getFragmentManager());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return rootView;
     }
