@@ -1,5 +1,6 @@
 package com.example.shushandroid;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
@@ -52,6 +54,7 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<ShushRecyclerAdap
         return locationViewHolder;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull ShushViewHolder holder, int position) {
         ShushObject currentItem = shushObjectArrayList.get(position);
