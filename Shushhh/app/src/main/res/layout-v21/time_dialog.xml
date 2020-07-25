@@ -96,25 +96,26 @@
         android:id="@+id/firsttime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="40dp"
+        android:layout_marginRight="40dp"
         android:fontFamily="@font/rubik"
         android:text="9:30 PM"
         android:textColor="@color/cardview_light_background"
         android:textSize="19sp"
         app:layout_constraintBottom_toTopOf="@+id/firstdate"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/firstdate" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/secondtime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="40dp"
+        android:layout_marginRight="40dp"
         android:fontFamily="@font/rubik"
         android:text="10:30 PM"
         android:textColor="@color/cardview_light_background"
         android:textSize="19sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.467"
-        app:layout_constraintStart_toEndOf="@+id/firstdate"
         app:layout_constraintTop_toBottomOf="@+id/firstdate" />
 
     <View

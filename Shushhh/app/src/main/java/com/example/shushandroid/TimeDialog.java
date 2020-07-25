@@ -8,6 +8,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -62,6 +63,12 @@ public class TimeDialog extends DialogFragment {
     private String presetNameString = "";
     private String presetDataString = "";
     private String presetSupplementalDataString = "";
+    private String presetDateTextString = "";
+    private String presetTimeString1 = "";
+    private String presetTimeString2 = "";
+
+    private String from = "";
+    private String currentDate = "", currentTime1 = "", currentTime2 = "";
 
     static TimeDialog newInstance() {
         return new TimeDialog();
@@ -94,20 +101,30 @@ public class TimeDialog extends DialogFragment {
 
         databaseManager = new DatabaseManager(getActivity());
 
-        if (!presetNameString.isEmpty()) {
-            Log.i("Text", presetNameString);
-            Log.i("EditText", addNameEditText.getText().toString());
-            addNameEditText.post(new Runnable() {
-                @Override
-                public void run() {
-                    addNameEditText.setText(presetNameString);
-                }
-            });
-            Log.i("Text2", presetNameString);
-        }
+        if (this.from.equals("click")) {
 
-        if (!presetSupplementalDataString.isEmpty()) {
-            dateTextView1.setText(presetSupplementalDataString);
+            if (!presetNameString.isEmpty()) {
+                Log.i("Text1", presetNameString);
+                addNameEditText.post(() -> {
+                    addNameEditText.setText(presetNameString);
+                });
+                Log.i("Text2", presetNameString);
+            }
+
+            if (!presetTimeString1.isEmpty() && !presetTimeString2.isEmpty()) {
+                timeTextView1.setText(presetTimeString1);
+                timeTextView2.setText(presetTimeString2);
+            }
+
+            if (!presetDateTextString.isEmpty()) {
+                dateTextView1.setText(presetDateTextString);
+            } else if (!presetSupplementalDataString.isEmpty()) {
+                dateTextView1.setText(presetSupplementalDataString);
+            }
+        } else if (this.from.equals("fab")) {
+            dateTextView1.setText(currentDate);
+            timeTextView1.setText(currentTime1);
+            timeTextView2.setText(currentTime2);
         }
 
         closeButton.setOnClickListener(v -> {
@@ -154,7 +171,7 @@ public class TimeDialog extends DialogFragment {
 
         timeTextView1.setOnClickListener(v -> {
             timePicker.setTextView(timeTextView1);
-            timePicker.show(getFragmentManager(), "time picker 1");
+            timePicker.show(getFragmentManager(), "time picker 1")
         });
 
         timeTextView2.setOnClickListener(v -> {
@@ -167,36 +184,46 @@ public class TimeDialog extends DialogFragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void show(FragmentManager fragmentManager, @Nullable String tag, String from) {
+        presetDateTextString = "";
+        this.from = from;
         if (from.equals("click")) {
             if (getArguments() != null) {
+
                 presetNameString = getArguments().getString(DatabaseManager.DatabaseEntry.NAME);
                 presetDataString = getArguments().getString(DatabaseManager.DatabaseEntry.DATA);
                 presetSupplementalDataString = getArguments().getString(DatabaseManager.DatabaseEntry.SUPP);
-                // 2 formats: supp is either togglestring or date
 
-                Log.i("Name", presetNameString);
+                if (!presetSupplementalDataString.isEmpty() && !presetSupplementalDataString.contains(",")) {
+                    Calendar calendar = Calendar.getInstance();
+                    SimpleDateFormat format = new SimpleDateFormat("EEE, MMM dd, yyyy");
+                    presetDateTextString = format.format(calendar.getTime());
+                }
 
-                if (presetSupplementalDataString != null) {
-                    if (presetSupplementalDataString.contains(",")) {
-                        try {
-                            Log.i("Sequence", "Parse");
-                            SimpleDateFormat format = new SimpleDateFormat("EEE, MMM dd, yyyy");
-                            Date d = format.parse(presetSupplementalDataString);
-                            LocalDate localDate = d.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                            Calendar c = Calendar.getInstance();
-                            c.set(localDate.getYear(), localDate.getMonthValue(), localDate.getDayOfMonth());
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
+                int index = 0;
+                for (Character character: presetDataString.toCharArray()) {
+                    if (character == '-') {
+                        presetTimeString1 = presetDataString.substring(0, index - 1);
+                        presetTimeString2 = presetDataString.substring(index + 2);
+                        Log.i("Time", presetTimeString1 + "-" + presetTimeString2);
                     }
+                    index = index + 1;
                 }
 
             }
         } else if (from.equals("fab")) {
-            Log.i("Dialog", "fab");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, MMM dd, yyyy");
+            currentDate = simpleDateFormat.format(new Date());
+            SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
+            Calendar c = Calendar.getInstance();
+            c.setTime(new Date());
+            c.add(Calendar.HOUR_OF_DAY, 1);
+            currentTime1 = timeFormat.format(new Date());
+            currentTime2 = timeFormat.format(c.getTime());
+
         }
         super.show(fragmentManager, tag);
     }
+
 
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
@@ -244,8 +271,7 @@ public class TimeDialog extends DialogFragment {
         private Context context;
         private TextView textView;
 
-        private Date date;
-        private int hour, minute;
+        private Calendar selectedCalendar;
 
         TimePickerFragment(Context context) {
             this.context = context;
@@ -264,9 +290,6 @@ public class TimeDialog extends DialogFragment {
         public void onTimeSet(TimePicker view, int hourOfDay, int minuteOfDay) {
             String amOrPm = "";
             String hour = "", minute = "";
-
-            this.hour = hourOfDay;
-            this.minute = minuteOfDay;
 
             if (hourOfDay < 12) {
                 amOrPm = "AM";
@@ -305,6 +328,10 @@ public class TimeDialog extends DialogFragment {
 
         public void setTextView(TextView textView) {
             this.textView = textView;
+        }
+
+        public void setSelectedCalendar(Calendar selectedCalendar) {
+            this.selectedCalendar = selectedCalendar;
         }
     }
 
