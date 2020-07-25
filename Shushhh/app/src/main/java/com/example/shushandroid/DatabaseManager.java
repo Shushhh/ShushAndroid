@@ -34,14 +34,14 @@ public class DatabaseManager extends SQLiteOpenHelper {
         public static final String TYPE = "type";
         public static final String DATA = "data";
         public static final String SUPP = "supp"; //supplemental data (radius or duration)
-        public static final String ID = "id";
+        public static final String UUID = "uuid";
 
         public static final String TABLE_NAME = "ShushDB";
 
         //create table ShushDB (name varchar, type varchar, data varchar, supp varchar)
 
         public static final String CREATE_QUERY = "create table " + TABLE_NAME + "(" +
-                ID + " varchar , " + // using BaseColumns constant
+                UUID + " varchar , " +
                 NAME + " varchar, " +
                 TYPE + " varchar, " +
                 DATA + " varchar, " +
@@ -63,7 +63,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     public DatabaseManager(@Nullable Context context) {
-        super(context, DatabaseEntry.TABLE_NAME, null, 1);
+        super(context, DatabaseEntry.TABLE_NAME, null, 2);
     }
 
     /**
@@ -76,7 +76,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(DatabaseEntry.CREATE_QUERY);
-        Log.i("Database information", String.valueOf(this.getDatabaseName()));
     }
 
     /**
@@ -105,6 +104,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         contentValues.put(DatabaseEntry.TYPE, shushObject.getType());
         contentValues.put(DatabaseEntry.DATA, shushObject.getData());
         contentValues.put(DatabaseEntry.SUPP, shushObject.getSupplementalData());
+        contentValues.put(DatabaseEntry.UUID, shushObject.getUUID());
         long n = this.getWritableDatabase().insert(DatabaseEntry.TABLE_NAME, null, contentValues);
 
         if (n == -1) return false;
@@ -121,13 +121,16 @@ public class DatabaseManager extends SQLiteOpenHelper {
         if(cursor.moveToFirst()) {
             do {
 
-                String name = cursor.getString(1);
-                String type = cursor.getString(2);
-                String data = cursor.getString(3);
-                String supp = cursor.getString(4);
-                ShushObject shushObject = new ShushObject(name, type, data, supp);
+                String name = cursor.getString(cursor.getColumnIndex(DatabaseEntry.NAME));
+                String type = cursor.getString(cursor.getColumnIndex(DatabaseEntry.TYPE));
+                String data = cursor.getString(cursor.getColumnIndex(DatabaseEntry.DATA));
+                String supp = cursor.getString(cursor.getColumnIndex(DatabaseEntry.SUPP));
+                String uuid = cursor.getString(cursor.getColumnIndex(DatabaseEntry.UUID));
+
+                ShushObject shushObject = new ShushObject(name, type, data, supp, uuid);
 
                 shushObjectArrayList.add(shushObject);
+
             } while (cursor.moveToNext());
         } else {
             Log.e("Database Information", "Error");

@@ -69,7 +69,8 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<ShushRecyclerAdap
             bundle.putString(DatabaseManager.DatabaseEntry.NAME, currentItem.getName());
             bundle.putString(DatabaseManager.DatabaseEntry.DATA, currentItem.getData());
             bundle.putString(DatabaseManager.DatabaseEntry.SUPP, currentItem.getSupplementalData());
-            timeDialog.setArguments(bundle);
+            bundle.putString(DatabaseManager.DatabaseEntry.UUID, currentItem.getUUID());
+            bundle.putString(DatabaseManager.DatabaseEntry.TYPE, currentItem.getType());
             timeDialog.setArguments(bundle);
             timeDialog.show(fragmentManager, "tag", "click");
         });

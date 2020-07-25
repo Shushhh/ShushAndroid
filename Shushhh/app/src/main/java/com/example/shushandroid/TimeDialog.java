@@ -8,10 +8,6 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 
-import android.os.Handler;
-import android.provider.ContactsContract;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,8 +20,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.DateFormat;
@@ -140,6 +134,7 @@ public class TimeDialog extends DialogFragment {
                         shushObject.setData(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
                         shushObject.setSupplementalData(toggleGroupManager.getToggleStateString());
                         shushObject.setType(ShushObject.ShushObjectType.TIME.getDescription());
+                        shushObject.setUUID(UUID.randomUUID().toString());
                         Log.i("Shush", shushObject.toString());
                         if (databaseManager.insert(shushObject)) {
                             TimeTab.updateRecyclerView();
@@ -152,6 +147,7 @@ public class TimeDialog extends DialogFragment {
                         shushObject.setData(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
                         shushObject.setSupplementalData(dateTextView1.getText().toString());
                         shushObject.setType(ShushObject.ShushObjectType.TIME.getDescription());
+                        shushObject.setUUID(UUID.randomUUID().toString());
                         Log.i("Shush", shushObject.toString());
                         if (databaseManager.insert(shushObject)) {
                             TimeTab.updateRecyclerView();

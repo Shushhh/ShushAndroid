@@ -5,12 +5,14 @@ public class ShushObject {
     private String type;
     private String data;
     private String supplementalData;
+    private String UUID;
 
-    public ShushObject(String name, String type, String data, String supplementalData) {
+    public ShushObject(String name, String type, String data, String supplementalData, String UUID) {
         this.name = name;
         this.type = type;
         this.data = data;
         this.supplementalData = supplementalData;
+        this.UUID = UUID;
     }
 
     public ShushObject() {}
@@ -47,6 +49,14 @@ public class ShushObject {
         this.supplementalData = supplementalData;
     }
 
+    public void setUUID(String UUID) {
+        this.UUID = UUID;
+    }
+
+    public String getUUID() {
+        return UUID;
+    }
+
     @Override
     public String toString() {
         return "ShushObject{" +
@@ -73,5 +83,6 @@ public class ShushObject {
         public void setDescription(String description) {
             this.description = description;
         }
+
     }
 }
