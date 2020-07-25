@@ -171,7 +171,7 @@ public class TimeDialog extends DialogFragment {
 
         timeTextView1.setOnClickListener(v -> {
             timePicker.setTextView(timeTextView1);
-            timePicker.show(getFragmentManager(), "time picker 1")
+            timePicker.show(getFragmentManager(), "time picker 1");
         });
 
         timeTextView2.setOnClickListener(v -> {
@@ -208,7 +208,6 @@ public class TimeDialog extends DialogFragment {
                     }
                     index = index + 1;
                 }
-
             }
         } else if (from.equals("fab")) {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, MMM dd, yyyy");
@@ -219,7 +218,6 @@ public class TimeDialog extends DialogFragment {
             c.add(Calendar.HOUR_OF_DAY, 1);
             currentTime1 = timeFormat.format(new Date());
             currentTime2 = timeFormat.format(c.getTime());
-
         }
         super.show(fragmentManager, tag);
     }
@@ -229,7 +227,6 @@ public class TimeDialog extends DialogFragment {
 
         private Context context;
         private TextView textView;
-        public static Calendar selectedCalendar;
 
         DatePickerFragment (Context context) {
             this.context = context;
@@ -242,9 +239,19 @@ public class TimeDialog extends DialogFragment {
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
             DatePickerDialog datePickerDialog = new DatePickerDialog(context, this, year, month, day);
-            if (selectedCalendar != null) {
-                datePickerDialog.updateDate(selectedCalendar.get(Calendar.YEAR), selectedCalendar.get(Calendar.MONTH), selectedCalendar.get(Calendar.DATE));
+            if (textView != null) {
+                String text = textView.getText().toString();
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, MMM dd, yyyy");
+                try {
+                    Date date = simpleDateFormat.parse(text);
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(date);
+                    datePickerDialog.updateDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
+
             datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
 
             return datePickerDialog;
@@ -271,8 +278,6 @@ public class TimeDialog extends DialogFragment {
         private Context context;
         private TextView textView;
 
-        private Calendar selectedCalendar;
-
         TimePickerFragment(Context context) {
             this.context = context;
         }
@@ -282,7 +287,18 @@ public class TimeDialog extends DialogFragment {
             Calendar c = Calendar.getInstance();
             int hour = c.get(Calendar.HOUR_OF_DAY);
             int minute = c.get(Calendar.MINUTE);
-            return new TimePickerDialog(context, this, hour, minute, false);
+            TimePickerDialog timePickerDialog = new TimePickerDialog(context, this, hour, minute, false);
+            String text = textView.getText().toString();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm a");
+            try {
+                Date date = simpleDateFormat.parse(text);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                timePickerDialog.updateTime(calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return timePickerDialog;
         }
 
         @SuppressLint("SetTextI18n")
@@ -330,9 +346,6 @@ public class TimeDialog extends DialogFragment {
             this.textView = textView;
         }
 
-        public void setSelectedCalendar(Calendar selectedCalendar) {
-            this.selectedCalendar = selectedCalendar;
-        }
     }
 
 }
