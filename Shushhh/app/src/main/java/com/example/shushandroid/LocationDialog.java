@@ -16,21 +16,42 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
-
+/**
+ * @apiNote Location Dialog class
+ * @author  Sahil Sudhir
+ * @version 1.0
+ * @since   2020-7-18
+ * @resources
+ */
 public class LocationDialog extends DialogFragment {
 
     TextView mapText;
 
+    /**
+     *
+     * @return
+     */
     static LocationDialog newInstance () {
         return new LocationDialog();
     }
 
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullscreenDialogTheme);
     }
 
+    /**
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

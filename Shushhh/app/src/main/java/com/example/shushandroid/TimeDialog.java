@@ -38,6 +38,13 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+/**
+ * @apiNote Time Dialog class
+ * @author  Akash Veerappan and Sahil Sudhir
+ * @version 1.0
+ * @since   2020-7-18
+ * @resources
+ */
 public class TimeDialog extends DialogFragment {
 
     private View view;
@@ -63,12 +70,23 @@ public class TimeDialog extends DialogFragment {
         return new TimeDialog();
     }
 
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullscreenDialogTheme);
     }
 
+    /**
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -89,27 +107,55 @@ public class TimeDialog extends DialogFragment {
 
         databaseManager = new DatabaseManager(getActivity());
 
+        /**
+         *
+         */
         dateTextView1.addTextChangedListener(new TextWatcher() {
+
+            /**
+             *
+             * @param charSequence
+             * @param i
+             * @param i1
+             * @param i2
+             */
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
             }
 
+            /**
+             *
+             * @param charSequence
+             * @param i
+             * @param i1
+             * @param i2
+             */
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 dateTextView2.setText(dateTextView1.getText().toString());
             }
 
+            /**
+             *
+             * @param editable
+             */
             @Override
             public void afterTextChanged(Editable editable) {
 
             }
         });
 
+        /**
+         *
+         */
         closeButton.setOnClickListener(v -> {
             dismiss();
         });
 
+        /**
+         *
+         */
         saveButton.setOnClickListener(v -> {
             if (!addNameEditText.getText().toString().isEmpty()) {
                 if (!toggleGroupManager.getToggleStateString().isEmpty()) {
@@ -142,12 +188,18 @@ public class TimeDialog extends DialogFragment {
             }
         });
 
+        /**
+         *
+         */
         dateTextView1.setOnClickListener(v -> {
             DatePickerFragment datePicker1 = new DatePickerFragment(getActivity());
             datePicker1.setTextView(dateTextView1);
             datePicker1.show(getFragmentManager(), "date picker 1");
         });
 
+        /**
+         *
+         */
         dateTextView2.setOnClickListener(v -> {
             DatePickerFragment datePicker2 = new DatePickerFragment(getActivity());
             datePicker2.setTextView(dateTextView2);
@@ -155,11 +207,17 @@ public class TimeDialog extends DialogFragment {
             datePicker2.show(getFragmentManager(), "date picker 2");
         });
 
+        /**
+         *
+         */
         timeTextView1.setOnClickListener(v -> {
             timePicker.setTextView(timeTextView1);
             timePicker.show(getFragmentManager(), "time picker 1");
         });
 
+        /**
+         *
+         */
         timeTextView2.setOnClickListener(v -> {
             timePicker.setTextView(timeTextView2);
             timePicker.show(getFragmentManager(), "time picker 1");
@@ -168,6 +226,12 @@ public class TimeDialog extends DialogFragment {
         return view;
     }
 
+    /**
+     *
+     * @param fragmentManager
+     * @param tag
+     * @param from
+     */
     public void show(FragmentManager fragmentManager, @Nullable String tag, String from) {
         if (from.equals("click")) {
             if (getArguments() != null) {
@@ -182,16 +246,28 @@ public class TimeDialog extends DialogFragment {
         super.show(fragmentManager, tag);
     }
 
+    /**
+     *
+     */
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
         private Context context;
         private TextView textView;
         private TextView constraintTextView;
 
+        /**
+         *
+         * @param context
+         */
         DatePickerFragment (Context context) {
             this.context = context;
         }
 
+        /**
+         *
+         * @param savedInstanceState
+         * @return
+         */
         @NonNull
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             Calendar c = Calendar.getInstance();
@@ -212,6 +288,13 @@ public class TimeDialog extends DialogFragment {
             return datePickerDialog;
         }
 
+        /**
+         *
+         * @param datePicker
+         * @param year
+         * @param month
+         * @param dayOfMonth
+         */
         @Override
         public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
             Calendar c = Calendar.getInstance();
@@ -222,24 +305,44 @@ public class TimeDialog extends DialogFragment {
             }
         }
 
+        /**
+         *
+         * @param textView
+         */
         public void setTextView(TextView textView) {
             this.textView = textView;
         }
 
+        /**
+         *
+         * @param constraintTextView
+         */
         public void setConstraintTextView(TextView constraintTextView) {
             this.constraintTextView = constraintTextView;
         }
     }
 
+    /**
+     *
+     */
     public static class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener{
 
         private Context context;
         private TextView textView;
 
+        /**
+         *
+         * @param context
+         */
         TimePickerFragment(Context context) {
             this.context = context;
         }
 
+        /**
+         *
+         * @param savedInstanceState
+         * @return
+         */
         @NonNull
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             Calendar c = Calendar.getInstance();
@@ -248,6 +351,12 @@ public class TimeDialog extends DialogFragment {
             return new TimePickerDialog(context, this, hour, minute, false);
         }
 
+        /**
+         *
+         * @param view
+         * @param hourOfDay
+         * @param minuteOfDay
+         */
         @SuppressLint("SetTextI18n")
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minuteOfDay) {
@@ -289,6 +398,10 @@ public class TimeDialog extends DialogFragment {
 
         }
 
+        /**
+         *
+         * @param textView
+         */
         public void setTextView(TextView textView) {
             this.textView = textView;
         }

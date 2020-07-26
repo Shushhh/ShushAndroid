@@ -30,6 +30,13 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
 
+/**
+ * @apiNote Main Activity class
+ * @author  Sahil Sudhir and Akash Veerappan
+ * @version 1.0
+ * @since   2020-7-18
+ * @resources
+ */
 public class MainActivity extends AppCompatActivity {
 
     public static String TAG = ShushObject.ShushObjectType.LOCATION.getDescription();
@@ -50,6 +57,10 @@ public class MainActivity extends AppCompatActivity {
     FusedLocationProviderClient fusedLocationProviderClient;
 
 
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,10 +83,16 @@ public class MainActivity extends AppCompatActivity {
         databaseManager = new DatabaseManager(this);
         Log.i("DB", "" + databaseManager.retrieveWithTAG(ShushObject.ShushObjectType.TIME.getDescription()).size());
 
+        /**
+         *
+         */
         bottomAppBar.setNavigationOnClickListener((View v) -> {
             voicemailBottomSheetDialogFragment.show(getSupportFragmentManager(), "dialog_fragment");
         });
 
+        /**
+         *
+         */
         new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
             if (position == 0) {
                 tab.setText("Location");
@@ -87,6 +104,10 @@ public class MainActivity extends AppCompatActivity {
         bottomAppBar.findViewById(R.id.bottomappbar);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            /**
+             *
+             * @param tab
+             */
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 if (tab.getText().toString().equals(ShushObject.ShushObjectType.LOCATION.getDescription())) {
@@ -96,11 +117,19 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
+            /**
+             *
+             * @param tab
+             */
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
 
             }
 
+            /**
+             *
+             * @param tab
+             */
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
 
@@ -109,6 +138,9 @@ public class MainActivity extends AppCompatActivity {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         floatingActionButton = findViewById(R.id.floatingactionbutton);
+        /**
+         *
+         */
         floatingActionButton.setOnClickListener(v -> {
             if (TAG.equals(ShushObject.ShushObjectType.LOCATION.getDescription())) {
                 //Check Settings -> if you deny too many times, it will remain denied and the notification won't pop up anymore
@@ -126,7 +158,17 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     *
+     */
     public static class VoicemailBottomSheetDialogFragment extends BottomSheetDialogFragment {
+        /**
+         *
+         * @param inflater
+         * @param container
+         * @param savedInstanceState
+         * @return
+         */
         @Nullable
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -136,12 +178,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     *
+     */
     class CustomPagerAdapter extends FragmentStateAdapter {
 
+        /**
+         *
+         * @param fm
+         * @param lifecycle
+         */
         public CustomPagerAdapter(@NonNull FragmentManager fm, @NonNull Lifecycle lifecycle) {
             super(fm, lifecycle);
         }
 
+        /**
+         *
+         * @param position
+         * @return
+         */
         @NonNull
         @Override
         public Fragment createFragment(int position) {
@@ -151,6 +206,11 @@ public class MainActivity extends AppCompatActivity {
                 return new TimeTab();
             else return new PlaceTab();
         }
+
+        /**
+         *
+         * @return
+         */
         @Override
         public int getItemCount() {
             return 2;

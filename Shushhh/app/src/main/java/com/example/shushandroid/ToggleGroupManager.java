@@ -4,6 +4,13 @@ import android.view.View;
 
 import com.google.android.material.button.MaterialButton;
 
+/**
+ * @apiNote Day of Week Toggle helper class
+ * @author  Akash Veerappn
+ * @version 1.0
+ * @since   2020-7-18
+ * @resources
+ */
 public class ToggleGroupManager {
 
     private MaterialButton sundayButton;
@@ -14,6 +21,10 @@ public class ToggleGroupManager {
     private MaterialButton fridayButton;
     private MaterialButton saturdayButton;
 
+    /**
+     *
+     * @param view
+     */
     public ToggleGroupManager (View view) {
         sundayButton = view.findViewById(R.id.sunday);
         mondayButton = view.findViewById(R.id.monday);
@@ -24,6 +35,10 @@ public class ToggleGroupManager {
         saturdayButton = view.findViewById(R.id.saturday);
     }
 
+    /**
+     *
+     * @return
+     */
     public String getToggleStateString () {
         String checkedStateString = "";
         if (sundayButton.isChecked()) {

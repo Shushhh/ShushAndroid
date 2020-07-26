@@ -14,6 +14,13 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
+/**
+ * @apiNote Place Tab class
+ * @author  Sahil Sudhir and Akash Veerapan
+ * @version 1.0
+ * @since   2020-7-18
+ * @resources
+ */
 public class PlaceTab extends Fragment {
 
     private RecyclerView recyclerView;
@@ -23,6 +30,13 @@ public class PlaceTab extends Fragment {
 
     private static final String TAG = ShushObject.ShushObjectType.LOCATION.getDescription();
 
+    /**
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -34,22 +48,36 @@ public class PlaceTab extends Fragment {
         return rootView;
     }
 
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         databaseManager = new DatabaseManager(getActivity());
     }
 
+    /**
+     *
+     * @param shushObjectArrayList
+     */
     public void setShushObjectArrayList(ArrayList<ShushObject> shushObjectArrayList) {
         this.shushObjectArrayList = shushObjectArrayList;
     }
 
+    /**
+     *
+     */
     @Override
     public void onResume() {
         super.onResume();
         updateRecyclerView();
     }
 
+    /**
+     *
+     */
     private void updateRecyclerView () {
         shushObjectArrayList = databaseManager.retrieveWithTAG(TAG);
         shushRecyclerAdapter.setShushObjectArrayList(shushObjectArrayList);

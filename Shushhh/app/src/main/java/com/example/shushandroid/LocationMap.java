@@ -18,6 +18,13 @@ import java.util.List;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
+/**
+ * @apiNote Location Map class
+ * @author  Sahil Sudhir
+ * @version 1.0
+ * @since   2020-7-18
+ * @resources
+ */
 public class LocationMap extends FragmentActivity implements OnMapReadyCallback {
 
     //Map Fragment that shows the location with a marker
@@ -25,6 +32,10 @@ public class LocationMap extends FragmentActivity implements OnMapReadyCallback 
     SupportMapFragment mapFragment;
     SearchView searchView;
 
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +44,11 @@ public class LocationMap extends FragmentActivity implements OnMapReadyCallback 
         searchView.findViewById(R.id.searchview_location);
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            /**
+             *
+             * @param s
+             * @return
+             */
             @Override
             public boolean onQueryTextSubmit(String s) {
                 String location = searchView.getQuery().toString();
@@ -52,6 +68,11 @@ public class LocationMap extends FragmentActivity implements OnMapReadyCallback 
                 return false;
             }
 
+            /**
+             *
+             * @param s
+             * @return
+             */
             @Override
             public boolean onQueryTextChange(String s) {
                 return false;
@@ -60,6 +81,10 @@ public class LocationMap extends FragmentActivity implements OnMapReadyCallback 
         mapFragment.getMapAsync(this);
     }
 
+    /**
+     *
+     * @param googleMap
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
