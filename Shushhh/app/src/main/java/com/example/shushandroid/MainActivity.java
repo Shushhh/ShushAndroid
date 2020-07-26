@@ -12,6 +12,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -19,7 +20,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -43,6 +47,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static String TAG = ShushObject.ShushObjectType.LOCATION.getDescription();
+    private final String CHECK = "MainActivity";
+
+    private static final int ERROR_DIALOG_REQUEST = 9001;
 
     private ViewPager2 viewPager2;
     private CustomPagerAdapter adapter;
@@ -149,6 +156,32 @@ public class MainActivity extends AppCompatActivity {
                 dialog.show(getSupportFragmentManager(), ShushObject.ShushObjectType.TIME.getDescription(), "fab");
             }
         });
+    }
+
+    private void init() {
+
+    }
+
+    //will use after fixing current error
+    public boolean isServicesOK() {
+        Log.d(CHECK, "isServicesOK: Checking Google services version");
+
+        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(MainActivity.this);
+
+        if (available == ConnectionResult.SUCCESS) {
+            //Connection is find and user can make requests
+            Log.d(CHECK, "isServicesOK: Google Play Services is working");
+            return true;
+        } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
+            //error occurred but is fixable
+            Log.d(CHECK, "isServicesOK: error occurred but is fixable");
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(MainActivity.this, available, ERROR_DIALOG_REQUEST);
+            dialog.show();
+        } else {
+            //unknown error and is not resolvable
+            Toast.makeText(this, "Unable to make map requests",Toast.LENGTH_SHORT).show();
+        }
+        return false;
     }
 
     /**

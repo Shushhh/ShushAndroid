@@ -19,6 +19,5 @@
     <string name="event_name">Event name</string>
     <string name="from">From</string>
 
-    <!--Map Key-->
-    <string name="map_key" translatable="false">AIzaSyB_qsP8AOP_P0MdlPz-48TDaJYjTP3vbjo</string>
+    <string name="google_maps_API_key">AIzaSyDD2LTMrNwOk5sYCfUq2mSVF5NPWbpArFk</string>
 </resources>

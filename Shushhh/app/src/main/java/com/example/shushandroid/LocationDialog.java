@@ -1,5 +1,7 @@
 package com.example.shushandroid;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,13 +29,19 @@ public class LocationDialog extends DialogFragment {
 
     TextView mapText;
 
-    /**
-     *
-     * @return
-     */
-    static LocationDialog newInstance () {
-        return new LocationDialog();
+    private MainActivity context;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.context = (MainActivity) context;
     }
+
+
+    public LocationDialog() {
+
+    }
+
 
     /**
      *
@@ -63,7 +71,8 @@ public class LocationDialog extends DialogFragment {
         //On-Click Listener for Map Not Working
         mapText = view.findViewById(R.id.location);
         mapText.setOnClickListener(v -> {
-
+            Intent intent = new Intent(context, MapActivity.class);
+            startActivity(intent);
         });
 
 
