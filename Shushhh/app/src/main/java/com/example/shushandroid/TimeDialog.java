@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -22,16 +21,10 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 
 import androidx.annotation.NonNull;
@@ -39,9 +32,12 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 public class TimeDialog extends DialogFragment {
+
+    /*
+     * View definitions for TimeDialog
+     */
 
     private View view;
     private ImageButton closeButton;
@@ -51,22 +47,29 @@ public class TimeDialog extends DialogFragment {
     private TextView timeTextView2;
     private TextInputEditText addNameEditText;
 
+    /*
+     * Utility objects
+     */
+
     private ToggleGroupManager toggleGroupManager;
     private ShushObject shushObject;
     private TimePickerFragment timePicker;
-
     private DatabaseManager databaseManager;
 
-    private String presetNameString = "";
-    private String presetDataString = "";
-    private String presetSupplementalDataString = "";
-    private String presetDateTextString = "";
-    private String presetTimeString1 = "";
-    private String presetTimeString2 = "";
-    private String presetUUIDString = "";
+    /*
+     * Strings to set the text in the dialog after recycler item click
+     */
 
-    private String from = "";
-    private String currentDate = "", currentTime1 = "", currentTime2 = "";
+    private String presetNameString = ""; // string for name
+    private String presetDataString = ""; // string for time
+    private String presetSupplementalDataString = ""; // string for either the date or the repeatedDates
+    private String presetDateTextString = ""; // current date string for when the data string is repeatable days instead of a date
+    private String presetTimeString1 = ""; // modified string from presetDataString
+    private String presetTimeString2 = ""; // modified string from presetDataString
+    private String presetUUIDString = ""; // uuid string
+
+    private String from = ""; // from where: fab or click
+    private String currentDate = "", currentTime1 = "", currentTime2 = ""; // the current date and time to be displayed when the user launches TimeDialog with a FAB
 
     static TimeDialog newInstance() {
         return new TimeDialog();
@@ -76,8 +79,6 @@ public class TimeDialog extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullscreenDialogTheme);
-
-        Log.i("Sequence", "Create");
     }
 
     @Nullable
@@ -96,35 +97,30 @@ public class TimeDialog extends DialogFragment {
         toggleGroupManager = new ToggleGroupManager(view);
         shushObject = new ShushObject();
         timePicker = new TimePickerFragment(getActivity());
-
         databaseManager = new DatabaseManager(getActivity());
 
-        if (this.from.equals("click")) {
-
-            if (!presetNameString.isEmpty()) {
-                Log.i("Text1", presetNameString);
+        if (this.from.equals("click")) { // if user comes here with recycler item click
+            if (!presetNameString.isEmpty()) { // if nameString is not empty (check bundle code in the show method)
                 addNameEditText.post(() -> {
-                    addNameEditText.setText(presetNameString);
+                    addNameEditText.setText(presetNameString); // update EditText in a separate UIThread (still not sure why the main thread won't update it properly)
                 });
-                Log.i("Text2", presetNameString);
             }
-
-            if (!presetTimeString1.isEmpty() && !presetTimeString2.isEmpty()) {
+            if (!presetTimeString1.isEmpty() && !presetTimeString2.isEmpty()) { // if time strings aren't empty, update time text views
                 timeTextView1.setText(presetTimeString1);
                 timeTextView2.setText(presetTimeString2);
             }
-
-            if (!presetDateTextString.isEmpty()) {
-                dateTextView1.setText(presetDateTextString);
-                toggleGroupManager.setCheckedToggleButtons(presetSupplementalDataString);
-            } else if (!presetSupplementalDataString.isEmpty()) {
+            if (!presetDateTextString.isEmpty()) { // if the preset date string is not empty (this item has repeatable days)
+                dateTextView1.setText(presetDateTextString); // set the repeatable days string
+                toggleGroupManager.setCheckedToggleButtons(presetSupplementalDataString); // check toggle buttons
+            } else if (!presetSupplementalDataString.isEmpty()) { // else if it is not repeatable days, it has to be a particular day, so update that
                 dateTextView1.setText(presetSupplementalDataString);
             }
-
-        } else if (this.from.equals("fab")) {
-            dateTextView1.setText(currentDate);
-            timeTextView1.setText(currentTime1);
-            timeTextView2.setText(currentTime2);
+        } else if (this.from.equals("fab")) { // if user comes here from fab action, set the current date and time
+            if (!currentDate.isEmpty() && !currentTime1.isEmpty() && !currentTime2.isEmpty()) {
+                dateTextView1.setText(currentDate);
+                timeTextView1.setText(currentTime1);
+                timeTextView2.setText(currentTime2);
+            }
         }
 
         closeButton.setOnClickListener(v -> {
@@ -132,12 +128,13 @@ public class TimeDialog extends DialogFragment {
         });
 
         saveButton.setOnClickListener(v -> {
-            if (this.from.equals("fab")) {
+            if (this.from.equals("fab")) { // if the user comes in from the fab action click
                 if (!addNameEditText.getText().toString().isEmpty()) {
                     if (!toggleGroupManager.getToggleStateString().isEmpty()) {
+                        // set all the data to a shushObject (defined above) and insert into Database (not update)
                         shushObject.setName(addNameEditText.getText().toString());
                         shushObject.setData(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
-                        shushObject.setSupplementalData(toggleGroupManager.getToggleStateString());
+                        shushObject.setSupplementalData(toggleGroupManager.getToggleStateString()); // set the repeatable days string
                         shushObject.setType(ShushObject.ShushObjectType.TIME.getDescription());
                         shushObject.setUUID(UUID.randomUUID().toString());
                         Log.i("Shush", shushObject.toString());
@@ -147,7 +144,7 @@ public class TimeDialog extends DialogFragment {
                         } else {
                             Toast.makeText(getActivity(), "Problem saving data. Please try again.", Toast.LENGTH_LONG).show();
                         }
-                    } else {
+                    } else { // if there are no repeatable days, then just push the date and not the repeatable days as done in the previous block
                         shushObject.setName(addNameEditText.getText().toString());
                         shushObject.setData(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
                         shushObject.setSupplementalData(dateTextView1.getText().toString());
@@ -164,7 +161,7 @@ public class TimeDialog extends DialogFragment {
                 } else {
                     Toast.makeText(getActivity(), "Please enter a name for your time constraint. Ex: Work/Study.", Toast.LENGTH_LONG).show();
                 }
-            } else if (this.from.equals("click")) {
+            } else if (this.from.equals("click")) { // if the user comes in from a recycler item click, do the same thing as above but update the database instead of inserting data
                 if (!presetUUIDString.isEmpty()) {
                     if (!addNameEditText.getText().toString().isEmpty()) {
                         if (!toggleGroupManager.getToggleStateString().isEmpty()) {
@@ -200,6 +197,10 @@ public class TimeDialog extends DialogFragment {
             }
         });
 
+        /*
+         * provide onClick for all the date and time textviews and pass the respective views to the date and time pickers to preset the time and date
+         */
+
         dateTextView1.setOnClickListener(v -> {
             DatePickerFragment datePicker1 = new DatePickerFragment(getActivity());
             datePicker1.setTextView(dateTextView1);
@@ -225,6 +226,9 @@ public class TimeDialog extends DialogFragment {
         this.from = from;
         if (from.equals("click")) {
             if (getArguments() != null) {
+
+                // receive the bundle from the recycler adapter class's onClick
+
                 presetNameString = getArguments().getString(DatabaseManager.DatabaseEntry.NAME);
                 presetDataString = getArguments().getString(DatabaseManager.DatabaseEntry.DATA);
                 presetSupplementalDataString = getArguments().getString(DatabaseManager.DatabaseEntry.SUPP);
@@ -236,6 +240,8 @@ public class TimeDialog extends DialogFragment {
                     presetDateTextString = format.format(calendar.getTime());
                 }
 
+                // gather separate time strings from the data string obtained from the bundle
+
                 int index = 0;
                 for (Character character: presetDataString.toCharArray()) {
                     if (character == '-') {
@@ -245,13 +251,13 @@ public class TimeDialog extends DialogFragment {
                     index = index + 1;
                 }
             }
-        } else if (from.equals("fab")) {
+        } else if (from.equals("fab")) { // if the user comes from the fab, then set the current date and time
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, MMM dd, yyyy");
             currentDate = simpleDateFormat.format(new Date());
             SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
             Calendar c = Calendar.getInstance();
             c.setTime(new Date());
-            c.add(Calendar.HOUR_OF_DAY, 1);
+            c.add(Calendar.HOUR_OF_DAY, 1); // set toTime to 1 hour after fromTime
             currentTime1 = timeFormat.format(new Date());
             currentTime2 = timeFormat.format(c.getTime());
         }
@@ -267,6 +273,11 @@ public class TimeDialog extends DialogFragment {
             this.context = context;
         }
 
+
+        /**
+         * @implNote set the current date to the calendar datepicker for ease of access and presentability
+         */
+
         @NonNull
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             Calendar c = Calendar.getInstance();
@@ -274,6 +285,7 @@ public class TimeDialog extends DialogFragment {
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
             DatePickerDialog datePickerDialog = new DatePickerDialog(context, this, year, month, day);
+
             if (textView != null) {
                 String text = textView.getText().toString();
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, MMM dd, yyyy");
@@ -292,6 +304,10 @@ public class TimeDialog extends DialogFragment {
             return datePickerDialog;
         }
 
+        /**
+         * @implNote set the date to the textView when the date has been set
+         */
+
         @Override
         public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
             Calendar c = Calendar.getInstance();
@@ -308,7 +324,7 @@ public class TimeDialog extends DialogFragment {
         }
     }
 
-    public static class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener{
+    public static class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
 
         private Context context;
         private TextView textView;
@@ -316,6 +332,10 @@ public class TimeDialog extends DialogFragment {
         TimePickerFragment(Context context) {
             this.context = context;
         }
+
+        /**
+         * @implNote set current time from the textView
+         */
 
         @NonNull
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -335,6 +355,10 @@ public class TimeDialog extends DialogFragment {
             }
             return timePickerDialog;
         }
+
+        /**
+         * manage AM PM conversions and set the appropriate time to the textView
+         */
 
         @SuppressLint("SetTextI18n")
         @Override

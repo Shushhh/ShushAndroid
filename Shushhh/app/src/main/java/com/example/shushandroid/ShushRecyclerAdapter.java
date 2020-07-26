@@ -65,7 +65,7 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<ShushRecyclerAdap
         holder.supplementalDataTextView.setText(currentItem.getSupplementalData());
 
         holder.containerView.setOnClickListener(view -> {
-            Bundle bundle = new Bundle();
+            Bundle bundle = new Bundle(); // send data from this viewHolder to the the timeDialog via a bundle and preset string key constants
             bundle.putString(DatabaseManager.DatabaseEntry.NAME, currentItem.getName());
             bundle.putString(DatabaseManager.DatabaseEntry.DATA, currentItem.getData());
             bundle.putString(DatabaseManager.DatabaseEntry.SUPP, currentItem.getSupplementalData());

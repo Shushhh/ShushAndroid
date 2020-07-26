@@ -4,6 +4,11 @@ import android.view.View;
 
 import com.google.android.material.button.MaterialButton;
 
+/**
+ * Efficiently manage toggle button group via this class
+ * NOTE: use the same IDs for both locationDialog and timeDialog to prevent discrepancies (store ids?)
+ */
+
 public class ToggleGroupManager {
 
     private MaterialButton sundayButton;
@@ -23,6 +28,10 @@ public class ToggleGroupManager {
         fridayButton = view.findViewById(R.id.friday);
         saturdayButton = view.findViewById(R.id.saturday);
     }
+
+    /**
+     * @return string of characters for the days chosen
+     */
 
     public String getToggleStateString () {
         String checkedStateString = "";
@@ -49,6 +58,11 @@ public class ToggleGroupManager {
         }
         return checkedStateString;
     }
+
+    /**
+     * @param selectedDaysString provide the string of selected days obtained from the previous method defined
+     * @implNote set the buttons that are present in the string to checked (not selected -> different. Select makes the background colorAccent)
+     */
 
     public void setCheckedToggleButtons(String selectedDaysString) {
         if (selectedDaysString.charAt(0) == 'S') {

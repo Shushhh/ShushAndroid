@@ -111,6 +111,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
             else return true;
     }
 
+    /**
+     * @param shushObject provide ShushObject to update the SQLiteDatabase
+     * @implNote update certain object using the UUID key provided by the method in TimeDialog and use WHERE clause with '=?' (doesn't work otherwise - possibly API restrictions)
+     */
+
     public boolean update (ShushObject shushObject) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(DatabaseEntry.NAME, shushObject.getName());

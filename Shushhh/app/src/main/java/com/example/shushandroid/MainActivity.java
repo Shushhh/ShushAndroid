@@ -40,8 +40,6 @@ public class MainActivity extends AppCompatActivity {
     private VoicemailBottomSheetDialogFragment voicemailBottomSheetDialogFragment;
 
     private DatabaseManager databaseManager;
-    private PlaceTab placeTab;
-    private TimeTab timeTab;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -57,9 +55,6 @@ public class MainActivity extends AppCompatActivity {
         databaseManager = new DatabaseManager(this);
 
         adapter = new CustomPagerAdapter(getSupportFragmentManager(), getLifecycle());
-
-        timeTab = new TimeTab();
-        placeTab = new PlaceTab();
 
         viewPager2.setAdapter(adapter);
 
