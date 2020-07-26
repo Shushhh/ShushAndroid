@@ -126,6 +126,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        if (isServicesOK()) {
+            init();
+        }
+
+    }
+
+    private void init() {
         floatingActionButton = findViewById(R.id.floatingactionbutton);
 
         floatingActionButton.setOnClickListener(v -> {
@@ -156,9 +163,6 @@ public class MainActivity extends AppCompatActivity {
                 dialog.show(getSupportFragmentManager(), ShushObject.ShushObjectType.TIME.getDescription(), "fab");
             }
         });
-    }
-
-    private void init() {
 
     }
 
