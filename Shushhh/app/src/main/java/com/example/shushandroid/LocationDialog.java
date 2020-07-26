@@ -61,10 +61,9 @@ public class LocationDialog extends DialogFragment {
         Button action = view.findViewById(R.id.fullscreen_dialog_action);
 
         //On-Click Listener for Map Not Working
-        mapText = mapText.findViewById(R.id.location);
+        mapText = view.findViewById(R.id.location);
         mapText.setOnClickListener(v -> {
-            LocationMap locationMap = new LocationMap();
-            locationMap.show();
+
         });
 
 

@@ -2,6 +2,7 @@ package com.example.shushandroid;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
@@ -12,6 +13,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,6 +31,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * @apiNote Main Activity class
@@ -53,9 +56,6 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseManager databaseManager;
     private PlaceTab placeTab;
     private TimeTab timeTab;
-
-    FusedLocationProviderClient fusedLocationProviderClient;
-
 
     /**
      *
@@ -135,7 +135,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         floatingActionButton = findViewById(R.id.floatingactionbutton);
         /**
@@ -143,19 +142,38 @@ public class MainActivity extends AppCompatActivity {
          */
         floatingActionButton.setOnClickListener(v -> {
             if (TAG.equals(ShushObject.ShushObjectType.LOCATION.getDescription())) {
-                //Check Settings -> if you deny too many times, it will remain denied and the notification won't pop up anymore
-                if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    Log.i("Test", "Working");
+                if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) { // shows after denial
+                        new AlertDialog.Builder(MainActivity.this)
+                                .setTitle("Location Permission")
+                                .setMessage("To set location constraints to silence your phone, we will need to access your location in the foreground and the background. Note that the data stays in your phone, thereby protecting your privacy.")
+                                .setPositiveButton("Ok", (DialogInterface dialogInterface, int i) -> {
+                                    ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 44);
+                                }).create().show();
+                    } else {
+                        ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 44);
+                    }
                 } else {
-                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
+                    LocationDialog locationDialog = new LocationDialog();
+                    locationDialog.show(getSupportFragmentManager(), ShushObject.ShushObjectType.LOCATION.getDescription());
                 }
-                DialogFragment dialog = LocationDialog.newInstance();
-                dialog.show(getSupportFragmentManager(), ShushObject.ShushObjectType.LOCATION.getDescription());
             } else if (TAG.equals(ShushObject.ShushObjectType.TIME.getDescription())) {
                 TimeDialog dialog = TimeDialog.newInstance();
                 dialog.show(getSupportFragmentManager(), ShushObject.ShushObjectType.TIME.getDescription(), "fab");
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == 44) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    LocationDialog locationDialog = new LocationDialog();
+                    locationDialog.show(getSupportFragmentManager(), ShushObject.ShushObjectType.LOCATION.getDescription());
+                }
+            }
+        }
     }
 
     /**
