@@ -21,6 +21,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+        initMap();
     }
     private void initMap() {
         Log.d(TAG, "initMap: initializing map");
