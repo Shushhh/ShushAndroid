@@ -128,73 +128,96 @@ public class TimeDialog extends DialogFragment {
         });
 
         saveButton.setOnClickListener(v -> {
-            if (this.from.equals("fab")) { // if the user comes in from the fab action click
-                if (!addNameEditText.getText().toString().isEmpty()) {
-                    if (!toggleGroupManager.getToggleStateString().isEmpty()) {
-                        // set all the data to a shushObject (defined above) and insert into Database (not update)
-                        shushObject.setName(addNameEditText.getText().toString());
-                        shushObject.setData(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
-                        shushObject.setSupplementalData(toggleGroupManager.getToggleStateString()); // set the repeatable days string
-                        shushObject.setType(ShushObject.ShushObjectType.TIME.getDescription());
-                        shushObject.setUUID(UUID.randomUUID().toString());
-                        Log.i("Shush", shushObject.toString());
-                        if (databaseManager.insert(shushObject)) {
-                            TimeTab.updateRecyclerView();
-                            dismiss();
-                        } else {
-                            Toast.makeText(getActivity(), "Problem saving data. Please try again.", Toast.LENGTH_LONG).show();
-                        }
-                    } else { // if there are no repeatable days, then just push the date and not the repeatable days as done in the previous block
-                        shushObject.setName(addNameEditText.getText().toString());
-                        shushObject.setData(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
-                        shushObject.setSupplementalData(dateTextView1.getText().toString());
-                        shushObject.setType(ShushObject.ShushObjectType.TIME.getDescription());
-                        shushObject.setUUID(UUID.randomUUID().toString());
-                        Log.i("Shush", shushObject.toString());
-                        if (databaseManager.insert(shushObject)) {
-                            TimeTab.updateRecyclerView();
-                            dismiss();
-                        } else {
-                            Toast.makeText(getActivity(), "Problem saving data. Please try again.", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                } else {
-                    Toast.makeText(getActivity(), "Please enter a name for your time constraint. Ex: Work/Study.", Toast.LENGTH_LONG).show();
-                }
-            } else if (this.from.equals("click")) { // if the user comes in from a recycler item click, do the same thing as above but update the database instead of inserting data
-                if (!presetUUIDString.isEmpty()) {
+
+            String time1 = timeTextView1.getText().toString();
+            String time2 = timeTextView2.getText().toString();
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm a");
+
+            try {
+                Date date1 = simpleDateFormat.parse(time1);
+                Date date2 = simpleDateFormat.parse(time2);
+
+                if (this.from.equals("fab")) { // if the user comes in from the fab action click
                     if (!addNameEditText.getText().toString().isEmpty()) {
-                        if (!toggleGroupManager.getToggleStateString().isEmpty()) {
-                            shushObject.setName(addNameEditText.getText().toString());
-                            shushObject.setData(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
-                            shushObject.setSupplementalData(toggleGroupManager.getToggleStateString());
-                            shushObject.setType(ShushObject.ShushObjectType.TIME.getDescription());
-                            shushObject.setUUID(presetUUIDString);
-                            if (databaseManager.update(shushObject)) {
-                                TimeTab.updateRecyclerView();
-                                dismiss();
-                            } else {
-                                Toast.makeText(getActivity(), "Problem saving data. Please try again.", Toast.LENGTH_LONG).show();
+                        if (date2.after(date1)) {
+                            if (!toggleGroupManager.getToggleStateString().isEmpty()) {
+                                // set all the data to a shushObject (defined above) and insert into Database (not update)
+                                shushObject.setName(addNameEditText.getText().toString());
+                                shushObject.setData(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
+                                shushObject.setSupplementalData(toggleGroupManager.getToggleStateString()); // set the repeatable days string
+                                shushObject.setType(ShushObject.ShushObjectType.TIME.getDescription());
+                                shushObject.setUUID(UUID.randomUUID().toString());
+                                Log.i("Shush", shushObject.toString());
+                                if (databaseManager.insert(shushObject)) {
+                                    TimeTab.updateRecyclerView();
+                                    dismiss();
+                                } else {
+                                    Toast.makeText(getActivity(), "Problem saving data. Please try again.", Toast.LENGTH_LONG).show();
+                                }
+                            } else { // if there are no repeatable days, then just push the date and not the repeatable days as done in the previous block
+                                shushObject.setName(addNameEditText.getText().toString());
+                                shushObject.setData(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
+                                shushObject.setSupplementalData(dateTextView1.getText().toString());
+                                shushObject.setType(ShushObject.ShushObjectType.TIME.getDescription());
+                                shushObject.setUUID(UUID.randomUUID().toString());
+                                Log.i("Shush", shushObject.toString());
+                                if (databaseManager.insert(shushObject)) {
+                                    TimeTab.updateRecyclerView();
+                                    dismiss();
+                                } else {
+                                    Toast.makeText(getActivity(), "Problem saving data. Please try again.", Toast.LENGTH_LONG).show();
+                                }
                             }
                         } else {
-                            shushObject.setName(addNameEditText.getText().toString());
-                            shushObject.setData(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
-                            shushObject.setSupplementalData(dateTextView1.getText().toString());
-                            shushObject.setType(ShushObject.ShushObjectType.TIME.getDescription());
-                            shushObject.setUUID(presetUUIDString);
-                            Log.i("Shush", shushObject.toString());
-                            if (databaseManager.update(shushObject)) {
-                                TimeTab.updateRecyclerView();
-                                dismiss();
-                            } else {
-                                Toast.makeText(getActivity(), "Problem saving data. Please try again.", Toast.LENGTH_LONG).show();
-                            }
+                            Toast.makeText(getActivity(), "Please ensure the second time is after the first time.", Toast.LENGTH_LONG).show();
                         }
                     } else {
                         Toast.makeText(getActivity(), "Please enter a name for your time constraint. Ex: Work/Study.", Toast.LENGTH_LONG).show();
                     }
+                } else if (this.from.equals("click")) { // if the user comes in from a recycler item click, do the same thing as above but update the database instead of inserting data
+                    if (!presetUUIDString.isEmpty()) {
+                        if (!addNameEditText.getText().toString().isEmpty()) {
+                            if (date2.after(date1)) {
+                                if (!toggleGroupManager.getToggleStateString().isEmpty()) {
+                                    shushObject.setName(addNameEditText.getText().toString());
+                                    shushObject.setData(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
+                                    shushObject.setSupplementalData(toggleGroupManager.getToggleStateString());
+                                    shushObject.setType(ShushObject.ShushObjectType.TIME.getDescription());
+                                    shushObject.setUUID(presetUUIDString);
+                                    if (databaseManager.update(shushObject)) {
+                                        TimeTab.updateRecyclerView();
+                                        dismiss();
+                                    } else {
+                                        Toast.makeText(getActivity(), "Problem saving data. Please try again.", Toast.LENGTH_LONG).show();
+                                    }
+                                } else {
+                                    shushObject.setName(addNameEditText.getText().toString());
+                                    shushObject.setData(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
+                                    shushObject.setSupplementalData(dateTextView1.getText().toString());
+                                    shushObject.setType(ShushObject.ShushObjectType.TIME.getDescription());
+                                    shushObject.setUUID(presetUUIDString);
+                                    Log.i("Shush", shushObject.toString());
+                                    if (databaseManager.update(shushObject)) {
+                                        TimeTab.updateRecyclerView();
+                                        dismiss();
+                                    } else {
+                                        Toast.makeText(getActivity(), "Problem saving data. Please try again.", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            } else {
+                                Toast.makeText(getActivity(), "Please ensure the second time is after the first time.", Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            Toast.makeText(getActivity(), "Please enter a name for your time constraint. Ex: Work/Study.", Toast.LENGTH_LONG).show();
+                        }
+                    }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
+
         });
 
         /*
