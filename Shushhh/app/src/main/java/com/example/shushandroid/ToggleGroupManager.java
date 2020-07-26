@@ -50,6 +50,30 @@ public class ToggleGroupManager {
         return checkedStateString;
     }
 
+    public void setCheckedToggleButtons(String selectedDaysString) {
+        if (selectedDaysString.charAt(0) == 'S') {
+            sundayButton.setChecked(true);
+        }
+        if (selectedDaysString.contains("M")) {
+            mondayButton.setChecked(true);
+        }
+        if (selectedDaysString.contains("T")) {
+            tuesDayButton.setChecked(true);
+        }
+        if (selectedDaysString.contains("W")) {
+            wednesdayButton.setChecked(true);
+        }
+        if (selectedDaysString.contains("R")) {
+            thursdayButton.setChecked(true);
+        }
+        if (selectedDaysString.contains("F")) {
+            fridayButton.setChecked(true);
+        }
+        if (selectedDaysString.charAt(selectedDaysString.length() - 1) == 'S') {
+            saturdayButton.setChecked(true);
+        }
+    }
+
 
 
 }

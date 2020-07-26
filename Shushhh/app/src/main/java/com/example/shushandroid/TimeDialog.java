@@ -27,8 +27,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -114,9 +116,11 @@ public class TimeDialog extends DialogFragment {
 
             if (!presetDateTextString.isEmpty()) {
                 dateTextView1.setText(presetDateTextString);
+                toggleGroupManager.setCheckedToggleButtons(presetSupplementalDataString);
             } else if (!presetSupplementalDataString.isEmpty()) {
                 dateTextView1.setText(presetSupplementalDataString);
             }
+
         } else if (this.from.equals("fab")) {
             dateTextView1.setText(currentDate);
             timeTextView1.setText(currentTime1);
@@ -221,7 +225,6 @@ public class TimeDialog extends DialogFragment {
         this.from = from;
         if (from.equals("click")) {
             if (getArguments() != null) {
-
                 presetNameString = getArguments().getString(DatabaseManager.DatabaseEntry.NAME);
                 presetDataString = getArguments().getString(DatabaseManager.DatabaseEntry.DATA);
                 presetSupplementalDataString = getArguments().getString(DatabaseManager.DatabaseEntry.SUPP);
@@ -238,7 +241,6 @@ public class TimeDialog extends DialogFragment {
                     if (character == '-') {
                         presetTimeString1 = presetDataString.substring(0, index - 1);
                         presetTimeString2 = presetDataString.substring(index + 2);
-                        Log.i("Time", presetTimeString1 + "-" + presetTimeString2);
                     }
                     index = index + 1;
                 }
@@ -255,7 +257,6 @@ public class TimeDialog extends DialogFragment {
         }
         super.show(fragmentManager, tag);
     }
-
 
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
