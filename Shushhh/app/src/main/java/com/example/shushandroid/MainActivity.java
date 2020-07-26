@@ -5,7 +5,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
@@ -20,10 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -31,7 +27,6 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * @apiNote Main Activity class
@@ -41,6 +36,11 @@ import java.util.Arrays;
  * @resources
  */
 public class MainActivity extends AppCompatActivity {
+
+    public static class PermissionRequestCodes {
+        public static final int PERMISSION_FINE_LOCATION = 44;
+        public static final int PERMISSION_BACKGROUND_LOCATION = 99;
+    }
 
     public static String TAG = ShushObject.ShushObjectType.LOCATION.getDescription();
 
@@ -83,16 +83,10 @@ public class MainActivity extends AppCompatActivity {
         databaseManager = new DatabaseManager(this);
         Log.i("DB", "" + databaseManager.retrieveWithTAG(ShushObject.ShushObjectType.TIME.getDescription()).size());
 
-        /**
-         *
-         */
         bottomAppBar.setNavigationOnClickListener((View v) -> {
             voicemailBottomSheetDialogFragment.show(getSupportFragmentManager(), "dialog_fragment");
         });
 
-        /**
-         *
-         */
         new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
             if (position == 0) {
                 tab.setText("Location");
@@ -104,10 +98,7 @@ public class MainActivity extends AppCompatActivity {
         bottomAppBar.findViewById(R.id.bottomappbar);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            /**
-             *
-             * @param tab
-             */
+
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 if (tab.getText().toString().equals(ShushObject.ShushObjectType.LOCATION.getDescription())) {
@@ -117,19 +108,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            /**
-             *
-             * @param tab
-             */
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
 
             }
 
-            /**
-             *
-             * @param tab
-             */
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
 
@@ -137,21 +120,25 @@ public class MainActivity extends AppCompatActivity {
         });
 
         floatingActionButton = findViewById(R.id.floatingactionbutton);
-        /**
-         *
-         */
+
         floatingActionButton.setOnClickListener(v -> {
+            /*
+             * If the tag is location, then check if the permission is not granted, if not (when the app is launched for the first time)
+             * then then there will be no need to provide a further explanation, so ask for the user permission and if not granted and
+             * when the fab is clicked again, then provide further information as it had been denied previously and on "Ok" click,
+             * request permission again.
+             */
             if (TAG.equals(ShushObject.ShushObjectType.LOCATION.getDescription())) {
                 if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) { // shows after denial
                         new AlertDialog.Builder(MainActivity.this)
                                 .setTitle("Location Permission")
-                                .setMessage("To set location constraints to silence your phone, we will need to access your location in the foreground and the background. Note that the data stays in your phone, thereby protecting your privacy.")
+                                .setMessage("To set location constraints to silence your phone, we will need to access your location in the foreground. Note that all location data stays in your phone, thereby protecting your privacy.")
                                 .setPositiveButton("Ok", (DialogInterface dialogInterface, int i) -> {
-                                    ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 44);
+                                    ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, PermissionRequestCodes.PERMISSION_FINE_LOCATION);
                                 }).create().show();
                     } else {
-                        ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 44);
+                        ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, PermissionRequestCodes.PERMISSION_FINE_LOCATION);
                     }
                 } else {
                     LocationDialog locationDialog = new LocationDialog();
@@ -164,9 +151,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * @param requestCode respective requestCode for different permissions
+     * @param permissions list of permissions requested for
+     * @param grantResults results of the permission requests
+     * @implNote runs after the user clicks on either of the several options when permission dialog is shown
+     */
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == 44) {
+        if (requestCode == PermissionRequestCodes.PERMISSION_FINE_LOCATION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     LocationDialog locationDialog = new LocationDialog();
@@ -176,9 +170,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     *
-     */
     public static class VoicemailBottomSheetDialogFragment extends BottomSheetDialogFragment {
         /**
          *
