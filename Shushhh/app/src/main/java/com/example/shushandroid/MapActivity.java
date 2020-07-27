@@ -46,15 +46,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private EditText searchBar;
     private ImageView gpsLocate;
 
-
     private static final String TAG = "MapActivity";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        searchBar = findViewById(R.id.search_textfield);
-        gpsLocate = findViewById(R.id.gps_icon);
+        searchBar = findViewById(R.id.searchTextField);
+        gpsLocate = findViewById(R.id.currentLocationButton);
         initMap();
         search();
     }
