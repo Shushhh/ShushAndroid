@@ -19,6 +19,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -46,7 +47,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        searchBar = (EditText) findViewById(R.id.search_textfield);
+        searchBar = findViewById(R.id.search_textfield);
         initMap();
         search();
     }
@@ -75,6 +76,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             Address address = list.get(0);
             Log.d(TAG, "Found address: " + address.toString());
             //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
+            moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM, address.getAddressLine(0));
         }
     }
 
@@ -87,7 +89,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 if (task.isSuccessful()) {
                     Log.d(TAG, "found location");
                     Location myLocation = (Location) task.getResult();
-                    moveCamera(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), DEFAULT_ZOOM);
+                    moveCamera(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), DEFAULT_ZOOM, "My Location");
                 } else {
                     Log.d(TAG, "current location is not found");
                     Toast.makeText(MapActivity.this, "unable to find current location", Toast.LENGTH_SHORT).show();
@@ -98,9 +100,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
-    private void moveCamera(LatLng latLng, float zoom) {
+    private void moveCamera(LatLng latLng, float zoom, String title) {
         Log.d(TAG, "moving camera to latitude " + latLng.latitude + " and longitude " + latLng.longitude);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+
+        MarkerOptions options = new MarkerOptions().position(latLng).title(title);
+        map.addMarker(options);
     }
 
     private void initMap() {
