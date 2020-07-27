@@ -52,12 +52,23 @@
         android:id="@+id/currentLocationButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorAccent"
+
+        android:src="@drawable/ic_gpsicon"
+        app:layout_constraintBottom_toTopOf="@+id/floatingActionButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="16dp"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="32dp"
         android:layout_marginRight="16dp"
-        android:src="@drawable/ic_gpsicon"
-        android:backgroundTint="@color/colorAccent"
-        android:foregroundTint="@color/colorPrimary"/>
+        android:src="@drawable/ic_check"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
