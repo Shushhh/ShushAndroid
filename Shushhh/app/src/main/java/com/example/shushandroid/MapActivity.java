@@ -7,9 +7,11 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +42,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private FusedLocationProviderClient fusedLocationProviderClient;
 
     private EditText searchBar;
+    private ImageView gpsLocate;
 
 
     private static final String TAG = "MapActivity";
@@ -49,6 +52,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         searchBar = findViewById(R.id.search_textfield);
+        gpsLocate = findViewById(R.id.gps_icon);
         initMap();
         search();
     }
@@ -60,6 +64,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 geoLocate();
             }
             return false;
+        });
+        gpsLocate.setOnClickListener(view -> {
+            Log.d(TAG, "transferred to device location after clicking gps");
+            getDeviceLocation();
         });
         hideKeyBoard();
     }
