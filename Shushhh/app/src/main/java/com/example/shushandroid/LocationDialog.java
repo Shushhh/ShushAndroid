@@ -42,7 +42,6 @@ public class LocationDialog extends DialogFragment {
     }
 
     /**
-     *
      * @param savedInstanceState
      */
 
@@ -53,13 +52,11 @@ public class LocationDialog extends DialogFragment {
     }
 
     /**
-
      * method that creates the view that contains the dialog
      * @param inflater the layout inflater that opens the layout
      * @param container the view that the UI should attach to
      * @param savedInstanceState creates or reuses the instance state of the layout
      * @return the view shown on screen
-
      */
 
     @Nullable
@@ -98,7 +95,7 @@ public class LocationDialog extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        counter ++;
+        counter++;
         Log.i("Lifecycle", "Resume");
         if (counter > 1) {
             if (!LocationDataTransferItem.DATA.isEmpty()) {
