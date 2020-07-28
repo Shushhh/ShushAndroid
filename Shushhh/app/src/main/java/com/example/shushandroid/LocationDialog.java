@@ -83,7 +83,23 @@ public class LocationDialog extends DialogFragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (adapterView.getSelectedItem().equals("10m")) {
 
+                } else if (adapterView.getSelectedItem().equals("100m")) {
+
+                } else {
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         //On-Click Listener for Map Not Working
         mapText = view.findViewById(R.id.location);
         mapText.setOnClickListener(v -> {
