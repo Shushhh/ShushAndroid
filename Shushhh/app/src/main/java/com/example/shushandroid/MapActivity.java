@@ -27,6 +27,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,12 +49,31 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private static final String TAG = "MapActivity";
 
+    private FloatingActionButton checkFloatingActionButton;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
         searchBar = findViewById(R.id.searchTextField);
         gpsLocate = findViewById(R.id.currentLocationButton);
+        checkFloatingActionButton = findViewById(R.id.checkFloatingActionButton);
+
+        checkFloatingActionButton.setOnClickListener(view -> {
+            if (!searchBar.getText().toString().isEmpty()) {
+                LocationDialog.LocationDataTransferItem.DATA = searchBar.getText().toString();
+                finish();
+            }
+        });
+
+        // If they click on the gps button: take them to their location, update the textfield with their current location (set text of searchbar)
+        // when they load this activity, the searchbar will already have their location
+        // if they delete it on purpose check for isEmpty
+        // implement in search method and onclick for gps button
+        // always update the searchbar so that we can confidently get the text from the searchbar and update our data in the location dialog
+        // advanced feature (to do later): check how legitimate the location is
+
         initMap();
         search();
     }
@@ -100,7 +120,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 if (task.isSuccessful()) {
                     Log.d(TAG, "found location");
                     Location myLocation = (Location) task.getResult();
-                    moveCamera(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), DEFAULT_ZOOM, "My Location");
+                    if (myLocation != null)
+                        moveCamera(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), DEFAULT_ZOOM, "My Location");
+                    else Log.e("Location", "null"); //ALERT: LOOK AT THIS LATER
                 } else {
                     Log.d(TAG, "current location is not found");
                     Toast.makeText(MapActivity.this, "unable to find current location", Toast.LENGTH_SHORT).show();

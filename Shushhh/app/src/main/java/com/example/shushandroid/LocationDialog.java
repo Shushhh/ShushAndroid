@@ -3,6 +3,7 @@ package com.example.shushandroid;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,21 +29,17 @@ import androidx.fragment.app.FragmentManager;
  */
 public class LocationDialog extends DialogFragment {
 
-    TextView mapText;
-
-    private MainActivity context;
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        this.context = (MainActivity) context;
+    public static class LocationDataTransferItem {
+        public static String DATA = "";
     }
 
+    TextView mapText;
+
+    int counter = 0;
 
     public LocationDialog() {
 
     }
-
 
     /**
      *
@@ -76,19 +73,37 @@ public class LocationDialog extends DialogFragment {
         //On-Click Listener for Map Not Working
         mapText = view.findViewById(R.id.location);
         mapText.setOnClickListener(v -> {
-            Intent intent = new Intent(context, MapActivity.class);
+            Intent intent = new Intent(getActivity(), MapActivity.class);
             startActivity(intent);
         });
-
 
         close.setOnClickListener(v -> {
             dismiss();
         });
+
         action.setOnClickListener(v -> {
             dismiss();
         });
 
         return view;
 
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.i("Lifecycle", "Pause");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        counter ++;
+        Log.i("Lifecycle", "Resume");
+        if (counter > 1) {
+            if (!LocationDataTransferItem.DATA.isEmpty()) {
+                mapText.setText(LocationDataTransferItem.DATA);
+            }
+        }
     }
 }
