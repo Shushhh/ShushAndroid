@@ -11,6 +11,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -53,13 +54,15 @@ public class MainActivity extends AppCompatActivity {
 
         voicemailBottomSheetDialogFragment = new VoicemailBottomSheetDialogFragment();
         databaseManager = new DatabaseManager(this);
-
         adapter = new CustomPagerAdapter(getSupportFragmentManager(), getLifecycle());
 
         viewPager2.setAdapter(adapter);
 
         databaseManager = new DatabaseManager(this);
         Log.i("DB", "" + databaseManager.retrieveWithTAG(ShushObject.ShushObjectType.TIME.getDescription()).toString());
+
+        Intent intent = new Intent(this, BackgroundService.class);
+        startService(intent);
 
         bottomAppBar.setNavigationOnClickListener((View v) -> {
             voicemailBottomSheetDialogFragment.show(getSupportFragmentManager(), "dialog_fragment");
