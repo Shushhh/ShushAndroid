@@ -2,6 +2,7 @@ package com.example.shushandroid;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -23,6 +24,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,6 +35,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,6 +47,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private static final float DEFAULT_ZOOM = 15f;
     private GoogleMap map;
     private FusedLocationProviderClient fusedLocationProviderClient;
+    Circle circle;
 
     private EditText searchBar;
     private ImageView gpsLocate;
@@ -108,6 +113,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             Log.d(TAG, "Found address: " + address.toString());
             //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
             moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM, address.getAddressLine(0));
+            map.addCircle(new CircleOptions().center(new LatLng(address.getLatitude(), address.getLongitude())).radius(500).strokeColor(Color.RED));
+
         }
     }
 
@@ -120,9 +127,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 if (task.isSuccessful()) {
                     Log.d(TAG, "found location");
                     Location myLocation = (Location) task.getResult();
-                    if (myLocation != null)
+                    if (myLocation != null) {
                         moveCamera(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), DEFAULT_ZOOM, "My Location");
-                    else Log.e("Location", "null"); //ALERT: LOOK AT THIS LATER
+                        map.addCircle(new CircleOptions().center(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())).radius(500).strokeColor(Color.RED));
+                    } else {
+                        Log.e("Location", "null"); //ALERT: LOOK AT THIS LATER
+                    }
                 } else {
                     Log.d(TAG, "current location is not found");
                     Toast.makeText(MapActivity.this, "unable to find current location", Toast.LENGTH_SHORT).show();
@@ -171,5 +181,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             return;
         }
         map.setMyLocationEnabled(true);
+
     }
 }
