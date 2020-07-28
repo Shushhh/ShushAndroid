@@ -113,7 +113,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             Log.d(TAG, "Found address: " + address.toString());
             //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
             moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM, address.getAddressLine(0));
-            map.addCircle(new CircleOptions().center(new LatLng(address.getLatitude(), address.getLongitude())).radius(500).strokeColor(Color.RED));
+            map.addCircle(new CircleOptions().center(new LatLng(address.getLatitude(), address.getLongitude())).radius(500).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
 
         }
     }
@@ -129,7 +129,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     Location myLocation = (Location) task.getResult();
                     if (myLocation != null) {
                         moveCamera(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), DEFAULT_ZOOM, "My Location");
-                        map.addCircle(new CircleOptions().center(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())).radius(500).strokeColor(Color.RED));
+                        map.addCircle(new CircleOptions().center(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())).radius(500).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
                     } else {
                         Log.e("Location", "null"); //ALERT: LOOK AT THIS LATER
                     }
