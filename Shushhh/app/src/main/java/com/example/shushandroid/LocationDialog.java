@@ -7,12 +7,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -66,6 +72,17 @@ public class LocationDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.location_dialog, container, false);
         ImageButton close = view.findViewById(R.id.fullscreen_dialog_close);
         Button action = view.findViewById(R.id.fullscreen_dialog_action);
+        Spinner spinner = view.findViewById(R.id.radiusSpinner);
+
+        List<String> radiusList = new ArrayList<>();
+        radiusList.add("10m");
+        radiusList.add("100m");
+        radiusList.add("1000m");
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, radiusList);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
 
         //On-Click Listener for Map Not Working
         mapText = view.findViewById(R.id.location);
