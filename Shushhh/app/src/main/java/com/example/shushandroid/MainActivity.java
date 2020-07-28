@@ -116,12 +116,12 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
+        //FIX THIS
         if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.READ_PHONE_STATE)) { // shows after denial
                 new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("Location Permission")
-                        .setMessage("To set location constraints to silence your phone, we will need to access your location in the foreground. Note that all location data stays in your phone, thereby protecting your privacy.")
+                        .setTitle("Call Permission")
+                        .setMessage("To silence your phone upon calling, we will need to access your calling service. All data is kept private in your phone.")
                         .setPositiveButton("Ok", (DialogInterface dialogInterface, int i) -> {
                             ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, PermissionRequestCodes.PERMISSION_READ_PHONE_STATE);
                         }).create().show();
