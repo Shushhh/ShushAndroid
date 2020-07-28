@@ -63,14 +63,15 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     public DatabaseManager(@Nullable Context context) {
-        super(context, DatabaseEntry.TABLE_NAME, null, 3);
+        super(context, DatabaseEntry.TABLE_NAME, null, 4); // increment version by 1 if database needs changes
     }
 
     /**
      * @param sqLiteDatabase current database
      * @implNote method implemented when the database has been created for the first time
      * @apiNote onCreate is only called when a database that doesn't exist is attempted to be created
-     *          so this will be called when getWriteable or getReadable is called for the first time
+     *          so this will run when getWritable or getReadable database is called when the app is
+     *          installed for the first time
      */
 
     @Override
@@ -79,7 +80,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     /**
-     *
      * @param sqLiteDatabase current database
      * @param i old version number
      * @param i1 new version number
@@ -89,7 +89,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL(DatabaseEntry.DROP_QUERY); // Drop previous version
-        sqLiteDatabase.execSQL(DatabaseEntry.CREATE_QUERY); // Adopt with new version (still need to understand how to assign version. Maybe another constructor?)
+        sqLiteDatabase.execSQL(DatabaseEntry.CREATE_QUERY); // Adopt new database by recreating it
     }
 
     /**
