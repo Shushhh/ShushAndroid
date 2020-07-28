@@ -61,9 +61,6 @@ public class MainActivity extends AppCompatActivity {
         databaseManager = new DatabaseManager(this);
         Log.i("DB", "" + databaseManager.retrieveWithTAG(ShushObject.ShushObjectType.TIME.getDescription()).toString());
 
-        Intent intent = new Intent(this, BackgroundService.class);
-        startService(intent);
-
         bottomAppBar.setNavigationOnClickListener((View v) -> {
             voicemailBottomSheetDialogFragment.show(getSupportFragmentManager(), "dialog_fragment");
         });
