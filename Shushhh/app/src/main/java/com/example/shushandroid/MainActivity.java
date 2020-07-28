@@ -28,6 +28,14 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+<<<<<<< Updated upstream
+=======
+    public static class PermissionRequestCodes {
+        public static final int PERMISSION_FINE_LOCATION = 44;
+        public static final int PERMISSION_READ_PHONE_STATE = 99;
+    }
+
+>>>>>>> Stashed changes
     public static String TAG = ShushObject.ShushObjectType.LOCATION.getDescription();
 
     private ViewPager2 viewPager2;
@@ -96,6 +104,27 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+<<<<<<< Updated upstream
+=======
+        if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.READ_PHONE_STATE)) { // shows after denial
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Location Permission")
+                        .setMessage("To set location constraints to silence your phone, we will need to access your location in the foreground. Note that all location data stays in your phone, thereby protecting your privacy.")
+                        .setPositiveButton("Ok", (DialogInterface dialogInterface, int i) -> {
+                            ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, PermissionRequestCodes.PERMISSION_READ_PHONE_STATE);
+                        }).create().show();
+            } else {
+                ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.READ_PHONE_STATE}, PermissionRequestCodes.PERMISSION_READ_PHONE_STATE);
+            }
+        }
+
+        if (isServicesOK()) {
+            init();
+        }
+
+    }
+>>>>>>> Stashed changes
 
         floatingActionButton = findViewById(R.id.floatingactionbutton);
         floatingActionButton.setOnClickListener(v -> {
