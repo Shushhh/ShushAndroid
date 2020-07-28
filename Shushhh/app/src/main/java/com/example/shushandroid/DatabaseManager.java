@@ -137,7 +137,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
         List shushObjectArrayList = new ArrayList();
         if(cursor.moveToFirst()) {
             do {
-
                 String name = cursor.getString(cursor.getColumnIndex(DatabaseEntry.NAME));
                 String type = cursor.getString(cursor.getColumnIndex(DatabaseEntry.TYPE));
                 String data = cursor.getString(cursor.getColumnIndex(DatabaseEntry.DATA));
@@ -145,9 +144,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 String uuid = cursor.getString(cursor.getColumnIndex(DatabaseEntry.UUID));
 
                 ShushObject shushObject = new ShushObject(name, type, data, supp, uuid);
-
                 shushObjectArrayList.add(shushObject);
-
             } while (cursor.moveToNext());
         } else {
             Log.e("Database Information", "Error");
@@ -165,6 +162,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     /**
      * @implNote implement only to clear existing database with test values
      */
+
     public void deleteDatabase() {
         this.getWritableDatabase().delete(DatabaseEntry.TABLE_NAME, null, null);
     }
