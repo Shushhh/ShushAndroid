@@ -5,19 +5,17 @@ import android.view.View;
 import com.google.android.material.button.MaterialButton;
 
 /**
-<<<<<<< HEAD
+
  * Efficiently manage toggle button group via this class
  * NOTE: use the same IDs for both locationDialog and timeDialog to prevent discrepancies (store ids?)
- */
 
-=======
  * @apiNote Day of Week Toggle helper class
  * @author  Akash Veerappn
  * @version 1.0
  * @since   2020-7-18
- * @resources
+
  */
->>>>>>> LocationPermission
+
 public class ToggleGroupManager {
 
     private MaterialButton sundayButton;
@@ -43,15 +41,12 @@ public class ToggleGroupManager {
     }
 
     /**
-<<<<<<< HEAD
-     * @return string of characters for the days chosen
-     */
 
-=======
+     * @return string of characters for the days chosen
      *
      * @return
      */
->>>>>>> LocationPermission
+
     public String getToggleStateString () {
         String checkedStateString = "";
         if (sundayButton.isChecked()) {
