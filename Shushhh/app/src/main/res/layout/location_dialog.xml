@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorPrimary"
+    android:id="@+id/location_dialog">
 
     <ImageButton
         android:id="@+id/fullscreen_dialog_close"
@@ -220,6 +221,20 @@
             />
 
     </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <View
+        android:id="@+id/thirdview"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/cardview_light_background"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/repeatWeeklyToggleGroup">
+    </View>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

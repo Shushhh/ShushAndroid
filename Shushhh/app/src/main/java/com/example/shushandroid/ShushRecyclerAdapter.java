@@ -19,12 +19,22 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * @apiNote Shush Recycler helper class
+ * @author  Akash Veerappan
+ * @version 1.0
+ * @since   2020-7-18
+ * @resources
+ */
 public class ShushRecyclerAdapter extends RecyclerView.Adapter<ShushRecyclerAdapter.ShushViewHolder> {
 
     private ArrayList<ShushObject> shushObjectArrayList;
     private TimeDialog timeDialog;
     private FragmentManager fragmentManager;
 
+    /**
+     *
+     */
     public static class ShushViewHolder extends RecyclerView.ViewHolder {
 
         public TextView nameTextView;
@@ -32,6 +42,10 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<ShushRecyclerAdap
         public TextView supplementalDataTextView;
         public ConstraintLayout containerView;
 
+        /**
+         *
+         * @param itemView
+         */
         public ShushViewHolder(@NonNull View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.titletext);
@@ -41,11 +55,22 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<ShushRecyclerAdap
         }
     }
 
+    /**
+     *
+     * @param locationList
+     * @param fragmentManager
+     */
     public ShushRecyclerAdapter(ArrayList<ShushObject> locationList, FragmentManager fragmentManager){
         this.shushObjectArrayList = locationList;
         this.fragmentManager = fragmentManager;
     }
 
+    /**
+     *
+     * @param parent
+     * @param viewType
+     * @return
+     */
     @NonNull
     @Override
     public ShushViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -56,6 +81,7 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<ShushRecyclerAdap
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
+
     @Override
     public void onBindViewHolder(@NonNull ShushViewHolder holder, int position) {
         ShushObject currentItem = shushObjectArrayList.get(position);
@@ -64,6 +90,9 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<ShushRecyclerAdap
         holder.dataTextView.setText(currentItem.getData());
         holder.supplementalDataTextView.setText(currentItem.getSupplementalData());
 
+        /**
+         *
+         */
         holder.containerView.setOnClickListener(view -> {
             Bundle bundle = new Bundle(); // send data from this viewHolder to the the timeDialog via a bundle and preset string key constants
             bundle.putString(DatabaseManager.DatabaseEntry.NAME, currentItem.getName());
@@ -77,11 +106,19 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<ShushRecyclerAdap
 
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public int getItemCount() {
         return shushObjectArrayList.size();
     }
 
+    /**
+     *
+     * @param shushObjectArrayList
+     */
     public void setShushObjectArrayList(ArrayList<ShushObject> shushObjectArrayList) {
         this.shushObjectArrayList = shushObjectArrayList;
     }

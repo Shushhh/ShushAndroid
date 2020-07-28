@@ -1,11 +1,19 @@
 package com.example.shushandroid;
 
+/**
+ * @apiNote Shush Object helper class
+ * @author  Akash Veerappan
+ * @version 1.0
+ * @since   2020-7-18
+ * @resources
+ */
 public class ShushObject {
     private String name;
     private String type;
     private String data;
     private String supplementalData;
     private String UUID;
+
 
     public ShushObject(String name, String type, String data, String supplementalData, String UUID) {
         this.name = name;
@@ -15,36 +23,71 @@ public class ShushObject {
         this.UUID = UUID;
     }
 
+    /**
+     *
+     */
     public ShushObject() {}
 
+    /**
+     *
+     * @return
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     *
+     * @param name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getType() {
         return type;
     }
 
+    /**
+     *
+     * @param type
+     */
     public void setType(String type) {
         this.type = type;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getData() {
         return data;
     }
 
+    /**
+     *
+     * @param data
+     */
     public void setData(String data) {
         this.data = data;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getSupplementalData() {
         return supplementalData;
     }
 
+    /**
+     *
+     * @param supplementalData
+     */
     public void setSupplementalData(String supplementalData) {
         this.supplementalData = supplementalData;
     }
@@ -68,19 +111,34 @@ public class ShushObject {
                 '}';
     }
 
+    /**
+     *
+     */
     enum ShushObjectType {
         LOCATION("Location"), TIME("Time");
 
         private String description;
 
+        /**
+         *
+         * @param description
+         */
         ShushObjectType(String description) {
             this.description = description;
         }
 
+        /**
+         *
+         * @return
+         */
         public String getDescription() {
             return description;
         }
 
+        /**
+         *
+         * @param description
+         */
         public void setDescription(String description) {
             this.description = description;
         }

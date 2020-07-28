@@ -15,6 +15,13 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
+/**
+ * @apiNote Time Tab class
+ * @author  Sahil Sudhir and Akash Veerappan
+ * @version 1.0
+ * @since   2020-7-18
+ * @resources
+ */
 public class TimeTab extends Fragment {
 
     private static RecyclerView recyclerView;
@@ -24,6 +31,13 @@ public class TimeTab extends Fragment {
 
     private static final String TAG = ShushObject.ShushObjectType.TIME.getDescription();
 
+    /**
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -36,6 +50,10 @@ public class TimeTab extends Fragment {
         return rootView;
     }
 
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,16 +61,26 @@ public class TimeTab extends Fragment {
         databaseManager = new DatabaseManager(getActivity());
     }
 
+    /**
+     *
+     * @param shushObjectList
+     */
     public void setShushObjectArrayList(ArrayList<ShushObject> shushObjectList) {
         this.shushObjectList = shushObjectList;
     }
 
+    /**
+     *
+     */
     @Override
     public void onResume() {
         super.onResume();
         updateRecyclerView();
     }
 
+    /**
+     *
+     */
     public static void updateRecyclerView () {
         shushObjectList = databaseManager.retrieveWithTAG(TAG);
         shushRecyclerAdapter.setShushObjectArrayList(shushObjectList);

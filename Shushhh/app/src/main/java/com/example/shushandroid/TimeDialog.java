@@ -33,6 +33,13 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
+/**
+ * @apiNote Time Dialog class
+ * @author  Akash Veerappan and Sahil Sudhir
+ * @version 1.0
+ * @since   2020-7-18
+ * @resources
+ */
 public class TimeDialog extends DialogFragment {
 
     /*
@@ -75,12 +82,23 @@ public class TimeDialog extends DialogFragment {
         return new TimeDialog();
     }
 
+    /**
+     *
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullscreenDialogTheme);
     }
 
+    /**
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -98,6 +116,7 @@ public class TimeDialog extends DialogFragment {
         shushObject = new ShushObject();
         timePicker = new TimePickerFragment(getActivity());
         databaseManager = new DatabaseManager(getActivity());
+
 
         if (this.from.equals("click")) { // if user comes here with recycler item click
             if (!presetNameString.isEmpty()) { // if nameString is not empty (check bundle code in the show method)
@@ -123,10 +142,16 @@ public class TimeDialog extends DialogFragment {
             }
         }
 
+        /**
+         *
+         */
         closeButton.setOnClickListener(v -> {
             dismiss();
         });
 
+        /**
+         *
+         */
         saveButton.setOnClickListener(v -> {
 
             String time1 = timeTextView1.getText().toString();
@@ -235,6 +260,9 @@ public class TimeDialog extends DialogFragment {
             timePicker.show(getFragmentManager(), "time picker 1");
         });
 
+        /**
+         *
+         */
         timeTextView2.setOnClickListener(v -> {
             timePicker.setTextView(timeTextView2);
             timePicker.show(getFragmentManager(), "time picker 1");
@@ -244,6 +272,7 @@ public class TimeDialog extends DialogFragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
+
     public void show(FragmentManager fragmentManager, @Nullable String tag, String from) {
         presetDateTextString = "";
         this.from = from;
@@ -287,15 +316,21 @@ public class TimeDialog extends DialogFragment {
         super.show(fragmentManager, tag);
     }
 
+    /**
+     *
+     */
     public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
         private Context context;
         private TextView textView;
 
+        /**
+         *
+         * @param context
+         */
         DatePickerFragment (Context context) {
             this.context = context;
         }
-
 
         /**
          * @implNote set the current date to the calendar datepicker for ease of access and presentability
@@ -342,16 +377,26 @@ public class TimeDialog extends DialogFragment {
             }
         }
 
+        /**
+         *
+         * @param textView
+         */
         public void setTextView(TextView textView) {
             this.textView = textView;
         }
+
     }
 
     public static class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
 
+
         private Context context;
         private TextView textView;
 
+        /**
+         *
+         * @param context
+         */
         TimePickerFragment(Context context) {
             this.context = context;
         }
@@ -424,6 +469,10 @@ public class TimeDialog extends DialogFragment {
 
         }
 
+        /**
+         *
+         * @param textView
+         */
         public void setTextView(TextView textView) {
             this.textView = textView;
         }
