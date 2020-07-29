@@ -16,6 +16,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -152,16 +154,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void alarmTest () throws InterruptedException {
-        Intent intent = new Intent(this, AudioManagerBroadcastReceiver.class);
+        Intent intent = new Intent(this, AudioManagerReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0); // study this
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, pendingIntent);
-        Toast.makeText(this, "Execute in 5000 ms", Toast.LENGTH_LONG).show();
-        long t = System.currentTimeMillis();
-        while (System.currentTimeMillis() < t + 5000) {
-            Log.i("Broadcast", "Loading...");
-            Thread.sleep(1000);
-        }
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, new Date().getTime(), 10000, pendingIntent);
+
     }
 
 
