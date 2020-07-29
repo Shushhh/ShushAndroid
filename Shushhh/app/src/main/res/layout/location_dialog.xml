@@ -101,17 +101,19 @@
         android:fontFamily="@font/rubik">
     </TextView>
 
-    <androidx.appcompat.widget.AppCompatSpinner
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/radiusSpinner"
+        android:id="@+id/radiusText"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/location"
         android:layout_marginRight="50dp"
         android:layout_marginTop="30dp"
         android:textSize="19sp"
+        android:text="2 mi"
+        android:textColor="@color/cardview_light_background"
         android:fontFamily="@font/rubik">
-    </androidx.appcompat.widget.AppCompatSpinner>
+    </TextView>
 
 
     <View

@@ -72,34 +72,7 @@ public class LocationDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.location_dialog, container, false);
         ImageButton close = view.findViewById(R.id.fullscreen_dialog_close);
         Button action = view.findViewById(R.id.fullscreen_dialog_action);
-        Spinner spinner = view.findViewById(R.id.radiusSpinner);
 
-        List<String> radiusList = new ArrayList<>();
-        radiusList.add("10m");
-        radiusList.add("100m");
-        radiusList.add("1000m");
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, radiusList);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (adapterView.getSelectedItem().equals("10m")) {
-
-                } else if (adapterView.getSelectedItem().equals("100m")) {
-
-                } else {
-
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
         //On-Click Listener for Map Not Working
         mapText = view.findViewById(R.id.location);
         mapText.setOnClickListener(v -> {

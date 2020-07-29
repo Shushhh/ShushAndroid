@@ -13,8 +13,11 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +55,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private EditText searchBar;
     private ImageView gpsLocate;
 
+    Spinner spinner;
+
     private static final String TAG = "MapActivity";
 
     private FloatingActionButton checkFloatingActionButton;
@@ -71,7 +76,34 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 finish();
             }
         });
+        spinner = findViewById(R.id.radiusSpinner);
 
+        List<String> radiusList = new ArrayList<>();
+        radiusList.add("10m");
+        radiusList.add("100m");
+        radiusList.add("1000m");
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(MapActivity.this, android.R.layout.simple_spinner_item, radiusList);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (adapterView.getSelectedItem().equals("10m")) {
+                    Log.d(TAG, "10m selected");
+                } else if (adapterView.getSelectedItem().equals("100m")) {
+                    Log.d(TAG, "100m selected");
+                } else {
+                    Log.d(TAG, "1000m selected");
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         // If they click on the gps button: take them to their location, update the textfield with their current location (set text of searchbar)
         // when they load this activity, the searchbar will already have their location
         // if they delete it on purpose check for isEmpty
