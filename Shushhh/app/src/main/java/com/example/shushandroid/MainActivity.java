@@ -112,13 +112,6 @@ public class MainActivity extends AppCompatActivity {
                 dialog.show(getSupportFragmentManager(), ShushObject.ShushObjectType.TIME.getDescription(), "fab");
             }
         });
-
-        try {
-            alarmTest();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
     }
 
     public static class VoicemailBottomSheetDialogFragment extends BottomSheetDialogFragment {
@@ -146,21 +139,13 @@ public class MainActivity extends AppCompatActivity {
                 return new TimeTab();
             else return new PlaceTab();
         }
+
         @Override
         public int getItemCount() {
             return 2;
         }
 
     }
-
-    public void alarmTest () throws InterruptedException {
-        Intent intent = new Intent(this, AudioManagerReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0); // study this
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, new Date().getTime(), 10000, pendingIntent);
-
-    }
-
 
 }
 

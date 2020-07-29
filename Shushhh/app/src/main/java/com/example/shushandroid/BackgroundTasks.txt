@@ -1,0 +1,18 @@
+There are a lot of different background management APIs for Android.
+
+Service: works in the background when app is killed/alive
+    foregroundService: persistent notification (easiest method) for exact timing of service
+WorkManager: when/when not app is alive (based on phone manufacturer) to perform single or scheduled deferred tasks
+    modern wrapper class for all background tasks but can be deferred
+JobScheduler: schedule tasks even when app is killed but will have to relaunch app to schedule tasks again
+AlarmManager: when app is alive for long periodic tasks
+AsyncTask: when app is alive to do tasks in the background
+Handler/Thread: when app is alive for short periods of time
+
+Most of these work only when the app is alive in memory. The purpose of our app is to
+turn on or off the silent audio mode regardless of the state of the app, that is killed or alive.
+
+After Android O, background services have been limited to such an extent where they can no longer
+run in the background forever, and because WorkManager and JobScheduler are deferrable although
+runnable in the background after app is exited, we are bound to use foreground services with a persistent
+notification system.
