@@ -11,6 +11,8 @@ import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -107,6 +110,13 @@ public class MainActivity extends AppCompatActivity {
                 dialog.show(getSupportFragmentManager(), ShushObject.ShushObjectType.TIME.getDescription(), "fab");
             }
         });
+
+        try {
+            alarmTest();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public static class VoicemailBottomSheetDialogFragment extends BottomSheetDialogFragment {
@@ -139,6 +149,19 @@ public class MainActivity extends AppCompatActivity {
             return 2;
         }
 
+    }
+
+    public void alarmTest () throws InterruptedException {
+        Intent intent = new Intent(this, AudioManagerBroadcastReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0); // study this
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, pendingIntent);
+        Toast.makeText(this, "Execute in 5000 ms", Toast.LENGTH_LONG).show();
+        long t = System.currentTimeMillis();
+        while (System.currentTimeMillis() < t + 5000) {
+            Log.i("Broadcast", "Loading...");
+            Thread.sleep(1000);
+        }
     }
 
 
