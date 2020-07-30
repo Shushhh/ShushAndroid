@@ -8,9 +8,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -18,7 +16,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -31,16 +28,13 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -50,7 +44,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private static final float DEFAULT_ZOOM = 15f;
     private GoogleMap map;
     private FusedLocationProviderClient fusedLocationProviderClient;
-    Circle circle;
+    private int radius;
 
     private EditText searchBar;
     private ImageView gpsLocate;
@@ -72,7 +66,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         checkFloatingActionButton.setOnClickListener(view -> {
             if (!searchBar.getText().toString().isEmpty()) {
+                String radiusString = radius + "m";
                 LocationDialog.LocationDataTransferItem.DATA = searchBar.getText().toString();
+                LocationDialog.LocationDataTransferItem.SUPPLEMENTAL_DATA = radiusString;
                 finish();
             }
         });
@@ -87,23 +83,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (adapterView.getSelectedItem().equals("10m")) {
-                    Log.d(TAG, "10m selected");
-                } else if (adapterView.getSelectedItem().equals("100m")) {
-                    Log.d(TAG, "100m selected");
-                } else {
-                    Log.d(TAG, "1000m selected");
-                }
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
         // If they click on the gps button: take them to their location, update the textfield with their current location (set text of searchbar)
         // when they load this activity, the searchbar will already have their location
         // if they delete it on purpose check for isEmpty
@@ -145,7 +125,37 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             Log.d(TAG, "Found address: " + address.toString());
             //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
             moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM, address.getAddressLine(0));
-            map.addCircle(new CircleOptions().center(new LatLng(address.getLatitude(), address.getLongitude())).radius(500).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
+            radius = 500;
+            map.addCircle(new CircleOptions().center(new LatLng(address.getLatitude(), address.getLongitude())).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    if (adapterView.getSelectedItem().equals("10m")) {
+                        Log.d(TAG, "10m selected");
+                        map.clear();
+                        radius = 10;
+                        map.addCircle(new CircleOptions().center(new LatLng(address.getLatitude(), address.getLongitude())).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
+                    } else if (adapterView.getSelectedItem().equals("100m")) {
+                        Log.d(TAG, "100m selected");
+                        map.clear();
+                        radius = 100;
+                        map.addCircle(new CircleOptions().center(new LatLng(address.getLatitude(), address.getLongitude())).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
+                    } else {
+                        Log.d(TAG, "1000m selected");
+                        map.clear();
+                        radius = 1000;
+                        map.addCircle(new CircleOptions().center(new LatLng(address.getLatitude(), address.getLongitude())).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+                    map.clear();
+                    radius = 500;
+                    map.addCircle(new CircleOptions().center(new LatLng(address.getLatitude(), address.getLongitude())).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
+                }
+            });
+
 
         }
     }
@@ -161,7 +171,36 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     Location myLocation = (Location) task.getResult();
                     if (myLocation != null) {
                         moveCamera(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), DEFAULT_ZOOM, "My Location");
-                        map.addCircle(new CircleOptions().center(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())).radius(500).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
+                        radius = 500;
+                        map.addCircle(new CircleOptions().center(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
+                        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                                if (adapterView.getSelectedItem().equals("10m")) {
+                                    Log.d(TAG, "10m selected");
+                                    map.clear();
+                                    radius = 10;
+                                    map.addCircle(new CircleOptions().center(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
+                                } else if (adapterView.getSelectedItem().equals("100m")) {
+                                    Log.d(TAG, "100m selected");
+                                    map.clear();
+                                    radius = 100;
+                                    map.addCircle(new CircleOptions().center(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
+                                } else {
+                                    Log.d(TAG, "1000m selected");
+                                    map.clear();
+                                    radius = 1000;
+                                    map.addCircle(new CircleOptions().center(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
+                                }
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> adapterView) {
+                                map.clear();
+                                radius = 500;
+                                map.addCircle(new CircleOptions().center(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
+                            }
+                        });
                     } else {
                         Log.e("Location", "null"); //ALERT: LOOK AT THIS LATER
                     }

@@ -17,6 +17,8 @@ import android.widget.TextView;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,9 +39,11 @@ public class LocationDialog extends DialogFragment {
 
     public static class LocationDataTransferItem {
         public static String DATA = "";
+        public static String SUPPLEMENTAL_DATA = "";
     }
 
     TextView mapText;
+    TextView radiusText;
 
     int counter = 0;
 
@@ -73,6 +77,8 @@ public class LocationDialog extends DialogFragment {
         ImageButton close = view.findViewById(R.id.fullscreen_dialog_close);
         Button action = view.findViewById(R.id.fullscreen_dialog_action);
 
+        radiusText = view.findViewById(R.id.radiusText);
+
         //On-Click Listener for Map Not Working
         mapText = view.findViewById(R.id.location);
         mapText.setOnClickListener(v -> {
@@ -104,8 +110,9 @@ public class LocationDialog extends DialogFragment {
         counter++;
         Log.i("Lifecycle", "Resume");
         if (counter > 1) {
-            if (!LocationDataTransferItem.DATA.isEmpty()) {
+            if (!LocationDataTransferItem.DATA.isEmpty() && !LocationDataTransferItem.SUPPLEMENTAL_DATA.isEmpty()) {
                 mapText.setText(LocationDataTransferItem.DATA);
+                radiusText.setText(LocationDataTransferItem.SUPPLEMENTAL_DATA);
             }
         }
     }
