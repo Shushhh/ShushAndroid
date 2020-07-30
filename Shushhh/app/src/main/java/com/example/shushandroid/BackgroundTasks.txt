@@ -16,3 +16,17 @@ After Android O, background services have been limited to such an extent where t
 run in the background forever, and because WorkManager and JobScheduler are deferrable although
 runnable in the background after app is exited, we are bound to use foreground services with a persistent
 notification system.
+
+"WorkManager uses JobScheduler when running on API Level 23+, for older OS releases it uses a combination
+of AlarmManager and BroadcastReceivers. JobScheduler on API Level 21-22 has some implementation issues on
+some devices and this is the reason that WorkManager starts to use JobScheduler only on Marshmallow. So,
+for API Level 23+ WorkManager and JobScheduler behave in the same way. The advantage using WorkManager is
+that most of the features are available starting from API Level 14. Regarding your issue, you don't specify
+on which device you see this issue. Have you tried to run your sample on the emulator with a stock android
+image to see if the issue is still present? Another thing that may impact your background job is the 10
+minutes limit that JobScheduler (and WorkManager) imposes to background work. After 10 minutes your job
+is stopped. Some device manufacturers have decided to modify stock Android to force-stop the app. This is
+the reason why WorkManager will stop working (as will JobScheduler, alarms, broadcast receivers, etc.).
+There is no way to work around this. Some device manufacturers do this, unfortunately, so in those cases
+WorkManager will stop working until the next time the app is launched." -> Reason why we cannot use WorkManager
+
