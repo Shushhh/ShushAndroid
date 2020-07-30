@@ -6,9 +6,12 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+
+import java.sql.SQLOutput;
 
 public class ForegroundServiceManager extends Service {
 
@@ -36,7 +39,22 @@ public class ForegroundServiceManager extends Service {
                 .setContentIntent(pendingIntent)
                 .build();
         startForeground(1, notification);
-        return START_NOT_STICKY;
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < Integer.MAX_VALUE; i++) {
+                    System.out.println(i);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+
+        return START_STICKY;
     }
 
     @Nullable
