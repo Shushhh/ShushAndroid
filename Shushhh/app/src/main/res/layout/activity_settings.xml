@@ -79,17 +79,18 @@
         app:layout_constraintTop_toBottomOf="@+id/textView6">
 
         <RadioButton
-            android:id="@+id/radioButton"
+            android:id="@+id/radio_button_30"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/rubik"
             android:text="30 minutes"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
-            android:paddingLeft="16dp"/>
+            android:paddingLeft="16dp"
+            android:checked="true"/>
 
         <RadioButton
-            android:id="@+id/radioButton2"
+            android:id="@+id/radio_button_60"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/rubik"
@@ -99,7 +100,7 @@
             android:paddingLeft="16dp" />
 
         <RadioButton
-            android:id="@+id/radioButton3"
+            android:id="@+id/radio_button_120"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/rubik"

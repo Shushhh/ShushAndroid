@@ -11,7 +11,10 @@ import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,8 +44,6 @@ public class MainActivity extends AppCompatActivity {
     private BottomAppBar bottomAppBar;
     private VoicemailBottomSheetDialogFragment voicemailBottomSheetDialogFragment;
 
-    private DatabaseManager databaseManager;
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,12 +55,9 @@ public class MainActivity extends AppCompatActivity {
         bottomAppBar = findViewById(R.id.bottomappbar);
 
         voicemailBottomSheetDialogFragment = new VoicemailBottomSheetDialogFragment();
-        databaseManager = new DatabaseManager(this);
+
         adapter = new CustomPagerAdapter(getSupportFragmentManager(), getLifecycle());
-
         viewPager2.setAdapter(adapter);
-
-        databaseManager = new DatabaseManager(this);
 
         bottomAppBar.setNavigationOnClickListener((View v) -> {
             voicemailBottomSheetDialogFragment.show(getSupportFragmentManager(), getResources().getString(R.string.bottom_sheet));
@@ -107,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
         serviceTest();
 
+
     }
 
     public void serviceTest() {
@@ -129,7 +128,8 @@ public class MainActivity extends AppCompatActivity {
             aboutUsView = view.findViewById(R.id.about_us_view);
 
             settingsView.setOnClickListener(v -> {
-                startActivityForResult(new Intent(getActivity(), SettingsActivity.class), 10);
+                if (getActivity() != null)
+                    getActivity().startActivityForResult(new Intent(getActivity(), SettingsActivity.class), 10);
             });
 
             return view;
@@ -139,9 +139,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == 10) {
-            Log.i("Test", data.getStringExtra("test"));
+        Log.i("Result", "Activity");
+        if (requestCode == 10) {
+            if (resultCode == 21) {
+                Log.i("Result", "result");
+                String s = this.getSharedPreferences(getPackageName(), MODE_PRIVATE).getString(getResources().getString(R.string.settings_radio_string), null);
+                if (s != null) {
+                    Log.i("Result", s);
+                }
+            }
         }
+
     }
 
     class CustomPagerAdapter extends FragmentStateAdapter {
