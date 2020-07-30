@@ -17,5 +17,9 @@
     <string name="action">ACTION</string>
     <string name="user01_gmail_com">user01@gmail.com</string>
     <string name="event_name">Event name</string>
+    <string name="bottom_sheet">Bottom Sheet</string>
     <string name="from">From</string>
+    <string name="settings">Settings</string>
+    <string name="feedback">Send Feedback</string>
+    <string name="about">About Us</string>
 </resources>

@@ -43,14 +43,7 @@ public class ForegroundServiceManager extends Service {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                for (int i = 0; i < Integer.MAX_VALUE; i++) {
-                    System.out.println(i);
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
+
             }
         }).start();
 

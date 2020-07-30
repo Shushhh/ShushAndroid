@@ -11,19 +11,14 @@ import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.app.job.JobParameters;
-import android.app.job.JobScheduler;
-import android.app.job.JobService;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
@@ -33,7 +28,6 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
 
     private ViewPager2 viewPager2;
     private CustomPagerAdapter adapter;
-    private ArrayList<Fragment> fragmentArrayList;
     private TabLayout tabLayout;
     private FloatingActionButton floatingActionButton;
 
@@ -67,10 +60,9 @@ public class MainActivity extends AppCompatActivity {
         viewPager2.setAdapter(adapter);
 
         databaseManager = new DatabaseManager(this);
-        Log.i("DB", "" + databaseManager.retrieveWithTAG(ShushObject.ShushObjectType.TIME.getDescription()).toString());
 
         bottomAppBar.setNavigationOnClickListener((View v) -> {
-            voicemailBottomSheetDialogFragment.show(getSupportFragmentManager(), "dialog_fragment");
+            voicemailBottomSheetDialogFragment.show(getSupportFragmentManager(), getResources().getString(R.string.bottom_sheet));
         });
 
         new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
@@ -80,8 +72,6 @@ public class MainActivity extends AppCompatActivity {
                 tab.setText("Time");
             }
         }).attach();
-
-        bottomAppBar.findViewById(R.id.bottomappbar);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -104,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         floatingActionButton = findViewById(R.id.floatingactionbutton);
         floatingActionButton.setOnClickListener(v -> {
             if (TAG.equals(ShushObject.ShushObjectType.LOCATION.getDescription())) {
@@ -126,12 +115,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static class VoicemailBottomSheetDialogFragment extends BottomSheetDialogFragment {
+
+        private LinearLayout settingsView, feedbackView, aboutUsView;
+
         @Nullable
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.bottom_sheet_voicemail, container, false);
+            View view = inflater.inflate(R.layout.bottom_sheet_layout, container, false);
             getDialog().setCanceledOnTouchOutside(true);
+
+            settingsView = view.findViewById(R.id.settingsView);
+            feedbackView = view.findViewById(R.id.feedback_view);
+            aboutUsView = view.findViewById(R.id.about_us_view);
+
+            settingsView.setOnClickListener(v -> {
+                startActivityForResult(new Intent(getActivity(), SettingsActivity.class), 10);
+            });
+
             return view;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 10) {
+            Log.i("Test", data.getStringExtra("test"));
         }
     }
 
