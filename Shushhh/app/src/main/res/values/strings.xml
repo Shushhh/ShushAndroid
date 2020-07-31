@@ -17,7 +17,14 @@
     <string name="action">ACTION</string>
     <string name="user01_gmail_com">user01@gmail.com</string>
     <string name="event_name">Event name</string>
+    <string name="bottom_sheet">Bottom Sheet</string>
     <string name="from">From</string>
-
     <string name="google_maps_API_key">AIzaSyDD2LTMrNwOk5sYCfUq2mSVF5NPWbpArFk</string>
+    <string name="settings">Settings</string>
+    <string name="feedback">Send Feedback</string>
+    <string name="about">About Us</string>
+    <string name="thirty_minutes">30 minutes</string>
+    <string name="one_hour">1 hour</string>
+    <string name="two_hours">2 hours</string>
+    <string name="settings_radio_string">SettingsRadioString</string>
 </resources>

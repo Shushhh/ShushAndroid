@@ -63,7 +63,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     public DatabaseManager(@Nullable Context context) {
+
         super(context, DatabaseEntry.TABLE_NAME, null, 4); // increment version by 1 if database needs changes
+
     }
 
     /**

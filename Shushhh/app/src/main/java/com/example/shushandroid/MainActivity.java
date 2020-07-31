@@ -11,6 +11,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+
 import android.os.Build;
 import android.Manifest;
 import android.app.Dialog;
@@ -21,9 +27,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+
+import android.widget.LinearLayout;
+import android.widget.Toast;
+
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -52,14 +63,11 @@ public class MainActivity extends AppCompatActivity {
 
     private ViewPager2 viewPager2;
     private CustomPagerAdapter adapter;
-    private ArrayList<Fragment> fragmentArrayList;
     private TabLayout tabLayout;
     private FloatingActionButton floatingActionButton;
 
     private BottomAppBar bottomAppBar;
     private VoicemailBottomSheetDialogFragment voicemailBottomSheetDialogFragment;
-
-    private DatabaseManager databaseManager;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -72,17 +80,12 @@ public class MainActivity extends AppCompatActivity {
         bottomAppBar = findViewById(R.id.bottomappbar);
 
         voicemailBottomSheetDialogFragment = new VoicemailBottomSheetDialogFragment();
-        databaseManager = new DatabaseManager(this);
 
         adapter = new CustomPagerAdapter(getSupportFragmentManager(), getLifecycle());
-
         viewPager2.setAdapter(adapter);
 
-        databaseManager = new DatabaseManager(this);
-        Log.i("DB", "" + databaseManager.retrieveWithTAG(ShushObject.ShushObjectType.TIME.getDescription()).toString());
-
         bottomAppBar.setNavigationOnClickListener((View v) -> {
-            voicemailBottomSheetDialogFragment.show(getSupportFragmentManager(), "dialog_fragment");
+            voicemailBottomSheetDialogFragment.show(getSupportFragmentManager(), getResources().getString(R.string.bottom_sheet));
         });
 
         new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
@@ -92,8 +95,6 @@ public class MainActivity extends AppCompatActivity {
                 tab.setText("Time");
             }
         }).attach();
-
-        bottomAppBar.findViewById(R.id.bottomappbar);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
@@ -116,19 +117,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        //FIX THIS
-        if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.READ_PHONE_STATE)) { // shows after denial
-                new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("Call Permission")
-                        .setMessage("To silence your phone upon calling, we will need to access your calling service. All data is kept private in your phone.")
-                        .setPositiveButton("Ok", (DialogInterface dialogInterface, int i) -> {
-                            ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, PermissionRequestCodes.PERMISSION_READ_PHONE_STATE);
-                        }).create().show();
-            } else {
-                ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.READ_PHONE_STATE}, PermissionRequestCodes.PERMISSION_READ_PHONE_STATE);
-            }
-        }
 
         if (isServicesOK()) {
             init();
@@ -138,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void init() {
+
         floatingActionButton = findViewById(R.id.floatingactionbutton);
 
         floatingActionButton.setOnClickListener(v -> {
@@ -212,26 +201,50 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void serviceTest() {
+        Intent intent = new Intent(this, ForegroundServiceManager.class);
+        startService(intent);
+    }
+
     public static class VoicemailBottomSheetDialogFragment extends BottomSheetDialogFragment {
-        /**
-         *
-         * @param inflater
-         * @param container
-         * @param savedInstanceState
-         * @return
-         */
+
+        private LinearLayout settingsView, feedbackView, aboutUsView;
+
         @Nullable
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.bottom_sheet_voicemail, container, false);
+            View view = inflater.inflate(R.layout.bottom_sheet_layout, container, false);
             getDialog().setCanceledOnTouchOutside(true);
+
+            settingsView = view.findViewById(R.id.settingsView);
+            feedbackView = view.findViewById(R.id.feedback_view);
+            aboutUsView = view.findViewById(R.id.about_us_view);
+
+            settingsView.setOnClickListener(v -> {
+                if (getActivity() != null)
+                    getActivity().startActivityForResult(new Intent(getActivity(), SettingsActivity.class), 10);
+            });
+
             return view;
         }
     }
 
-    /**
-     *
-     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.i("Result", "Activity");
+        if (requestCode == 10) {
+            if (resultCode == 21) {
+                Log.i("Result", "result");
+                String s = this.getSharedPreferences(getPackageName(), MODE_PRIVATE).getString(getResources().getString(R.string.settings_radio_string), null);
+                if (s != null) {
+                    Log.i("Result", s);
+                }
+            }
+        }
+
+    }
+
     class CustomPagerAdapter extends FragmentStateAdapter {
 
         /**
@@ -258,17 +271,12 @@ public class MainActivity extends AppCompatActivity {
             else return new PlaceTab();
         }
 
-        /**
-         *
-         * @return
-         */
         @Override
         public int getItemCount() {
             return 2;
         }
 
     }
-
 
 }
 
