@@ -49,7 +49,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private EditText searchBar;
     private ImageView gpsLocate;
 
-    Spinner spinner;
+    private Spinner spinner;
 
     private static final String TAG = "MapActivity";
 
@@ -83,6 +83,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
+        spinner.setSelection(0);
 
         // If they click on the gps button: take them to their location, update the textfield with their current location (set text of searchbar)
         // when they load this activity, the searchbar will already have their location

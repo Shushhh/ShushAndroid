@@ -33,19 +33,19 @@
         android:textColor="@color/colorPrimary" />
 
     <EditText
+        android:id="@+id/addNameEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/addNameEditText"
-        app:layout_constraintTop_toBottomOf="@id/fullscreen_dialog_close"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:text="Add Name"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="20dp"
-        android:textColor="#5F6678"
+        android:background="@android:color/transparent"
         android:fontFamily="@font/rubik"
+        android:hint="Add name"
+        android:textColor="#FFF"
+        android:textColorHint="#5F6678"
         android:textSize="30sp"
-        android:background="@android:color/transparent">
-    </EditText>
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fullscreen_dialog_close"></EditText>
 
     <View
         android:id="@+id/firstview"
