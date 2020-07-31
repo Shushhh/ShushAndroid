@@ -9,139 +9,82 @@ package com.example.shushandroid;
  */
 public class ShushObject {
     private String name;
-    private String type;
-    private String data;
-    private String supplementalData;
+    private String time;
+    private String dateRep;
+    private String location;
+    private String radius;
     private String UUID;
 
+    public ShushObject() {
 
-    public ShushObject(String name, String type, String data, String supplementalData, String UUID) {
+    }
+
+    public ShushObject(String name, String time, String dateRep, String location, String radius, String UUID) {
         this.name = name;
-        this.type = type;
-        this.data = data;
-        this.supplementalData = supplementalData;
+        this.time = time;
+        this.dateRep = dateRep;
+        this.location = location;
+        this.radius = radius;
         this.UUID = UUID;
     }
 
-    /**
-     *
-     */
-    public ShushObject() {}
-
-    /**
-     *
-     * @return
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     *
-     * @param name
-     */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     *
-     * @return
-     */
-    public String getType() {
-        return type;
+    public String getTime() {
+        return time;
     }
 
-    /**
-     *
-     * @param type
-     */
-    public void setType(String type) {
-        this.type = type;
+    public void setTime(String time) {
+        this.time = time;
     }
 
-    /**
-     *
-     * @return
-     */
-    public String getData() {
-        return data;
+    public String getDateRep() {
+        return dateRep;
     }
 
-    /**
-     *
-     * @param data
-     */
-    public void setData(String data) {
-        this.data = data;
+    public void setDateRep(String dateRep) {
+        this.dateRep = dateRep;
     }
 
-    /**
-     *
-     * @return
-     */
-    public String getSupplementalData() {
-        return supplementalData;
+    public String getLocation() {
+        return location;
     }
 
-    /**
-     *
-     * @param supplementalData
-     */
-    public void setSupplementalData(String supplementalData) {
-        this.supplementalData = supplementalData;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
-    public void setUUID(String UUID) {
-        this.UUID = UUID;
+    public String getRadius() {
+        return radius;
+    }
+
+    public void setRadius(String radius) {
+        this.radius = radius;
     }
 
     public String getUUID() {
         return UUID;
     }
 
+    public void setUUID(String UUID) {
+        this.UUID = UUID;
+    }
+
     @Override
     public String toString() {
         return "ShushObject{" +
                 "name='" + name + '\'' +
-                ", type='" + type + '\'' +
-                ", data='" + data + '\'' +
-                ", supplementalData='" + supplementalData + '\'' +
-                ", uuid='" + UUID + '\'' +
+                ", time='" + time + '\'' +
+                ", dateRep='" + dateRep + '\'' +
+                ", location='" + location + '\'' +
+                ", radius='" + radius + '\'' +
+                ", UUID='" + UUID + '\'' +
                 '}';
-    }
-
-    /**
-     *
-     */
-    enum ShushObjectType {
-        LOCATION("Location"), TIME("Time");
-
-        private String description;
-
-        /**
-         *
-         * @param description
-         */
-        ShushObjectType(String description) {
-            this.description = description;
-        }
-
-        /**
-         *
-         * @return
-         */
-        public String getDescription() {
-            return description;
-        }
-
-        /**
-         *
-         * @param description
-         */
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
     }
 }

@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -53,6 +54,7 @@ public class TimeDialog extends DialogFragment {
     private TextView timeTextView1;
     private TextView timeTextView2;
     private TextInputEditText addNameEditText;
+    private TextView mapText;
 
     /*
      * Utility objects
@@ -112,6 +114,12 @@ public class TimeDialog extends DialogFragment {
         timeTextView2 = view.findViewById(R.id.secondtime);
         addNameEditText = view.findViewById(R.id.addNameEditText);
 
+        mapText = view.findViewById(R.id.locationTextView);
+        mapText.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), MapActivity.class);
+            startActivity(intent);
+        });
+
         toggleGroupManager = new ToggleGroupManager(view);
         shushObject = new ShushObject();
         timePicker = new TimePickerFragment(getActivity());
@@ -142,16 +150,10 @@ public class TimeDialog extends DialogFragment {
             }
         }
 
-        /**
-         *
-         */
         closeButton.setOnClickListener(v -> {
             dismiss();
         });
 
-        /**
-         *
-         */
         saveButton.setOnClickListener(v -> {
 
             String time1 = timeTextView1.getText().toString();
@@ -164,31 +166,31 @@ public class TimeDialog extends DialogFragment {
                 Date date2 = simpleDateFormat.parse(time2);
 
                 if (this.from.equals("fab")) { // if the user comes in from the fab action click
+                    Log.i("Dialog", "fab");
                     if (!addNameEditText.getText().toString().isEmpty()) {
                         if (date2.after(date1)) {
                             if (!toggleGroupManager.getToggleStateString().isEmpty()) {
                                 // set all the data to a shushObject (defined above) and insert into Database (not update)
+                                Log.i("Dialog", "No repeat");
                                 shushObject.setName(addNameEditText.getText().toString());
-                                shushObject.setData(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
-                                shushObject.setSupplementalData(toggleGroupManager.getToggleStateString()); // set the repeatable days string
-                                shushObject.setType(ShushObject.ShushObjectType.TIME.getDescription());
+                                shushObject.setTime(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
+                                shushObject.setDateRep(toggleGroupManager.getToggleStateString()); // set the repeatable days string
                                 shushObject.setUUID(UUID.randomUUID().toString());
                                 Log.i("Shush", shushObject.toString());
                                 if (databaseManager.insert(shushObject)) {
-                                    TimeTab.updateRecyclerView();
+                                    MainActivity.updateRecyclerView();
                                     dismiss();
                                 } else {
                                     Toast.makeText(getActivity(), "Problem saving data. Please try again.", Toast.LENGTH_LONG).show();
                                 }
                             } else { // if there are no repeatable days, then just push the date and not the repeatable days as done in the previous block
                                 shushObject.setName(addNameEditText.getText().toString());
-                                shushObject.setData(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
-                                shushObject.setSupplementalData(dateTextView1.getText().toString());
-                                shushObject.setType(ShushObject.ShushObjectType.TIME.getDescription());
+                                shushObject.setTime(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
+                                shushObject.setDateRep(dateTextView1.getText().toString());
                                 shushObject.setUUID(UUID.randomUUID().toString());
                                 Log.i("Shush", shushObject.toString());
                                 if (databaseManager.insert(shushObject)) {
-                                    TimeTab.updateRecyclerView();
+                                    MainActivity.updateRecyclerView();
                                     dismiss();
                                 } else {
                                     Toast.makeText(getActivity(), "Problem saving data. Please try again.", Toast.LENGTH_LONG).show();
@@ -206,25 +208,23 @@ public class TimeDialog extends DialogFragment {
                             if (date2.after(date1)) {
                                 if (!toggleGroupManager.getToggleStateString().isEmpty()) {
                                     shushObject.setName(addNameEditText.getText().toString());
-                                    shushObject.setData(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
-                                    shushObject.setSupplementalData(toggleGroupManager.getToggleStateString());
-                                    shushObject.setType(ShushObject.ShushObjectType.TIME.getDescription());
+                                    shushObject.setTime(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
+                                    shushObject.setDateRep(toggleGroupManager.getToggleStateString());
                                     shushObject.setUUID(presetUUIDString);
                                     if (databaseManager.update(shushObject)) {
-                                        TimeTab.updateRecyclerView();
+                                        MainActivity.updateRecyclerView();
                                         dismiss();
                                     } else {
                                         Toast.makeText(getActivity(), "Problem saving data. Please try again.", Toast.LENGTH_LONG).show();
                                     }
                                 } else {
                                     shushObject.setName(addNameEditText.getText().toString());
-                                    shushObject.setData(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
-                                    shushObject.setSupplementalData(dateTextView1.getText().toString());
-                                    shushObject.setType(ShushObject.ShushObjectType.TIME.getDescription());
+                                    shushObject.setTime(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
+                                    shushObject.setDateRep(dateTextView1.getText().toString());
                                     shushObject.setUUID(presetUUIDString);
                                     Log.i("Shush", shushObject.toString());
                                     if (databaseManager.update(shushObject)) {
-                                        TimeTab.updateRecyclerView();
+                                        MainActivity.updateRecyclerView();
                                         dismiss();
                                     } else {
                                         Toast.makeText(getActivity(), "Problem saving data. Please try again.", Toast.LENGTH_LONG).show();
@@ -279,11 +279,9 @@ public class TimeDialog extends DialogFragment {
         if (from.equals("click")) {
             if (getArguments() != null) {
 
-                // receive the bundle from the recycler adapter class's onClick
-
                 presetNameString = getArguments().getString(DatabaseManager.DatabaseEntry.NAME);
-                presetDataString = getArguments().getString(DatabaseManager.DatabaseEntry.DATA);
-                presetSupplementalDataString = getArguments().getString(DatabaseManager.DatabaseEntry.SUPP);
+                presetDataString = getArguments().getString(DatabaseManager.DatabaseEntry.TIME);
+                presetSupplementalDataString = getArguments().getString(DatabaseManager.DatabaseEntry.DATE_REP);
                 presetUUIDString = getArguments().getString(DatabaseManager.DatabaseEntry.UUID);
 
                 if (!presetSupplementalDataString.isEmpty() && !presetSupplementalDataString.contains(",")) {
@@ -291,8 +289,6 @@ public class TimeDialog extends DialogFragment {
                     SimpleDateFormat format = new SimpleDateFormat("EEE, MMM dd, yyyy");
                     presetDateTextString = format.format(calendar.getTime());
                 }
-
-                // gather separate time strings from the data string obtained from the bundle
 
                 int index = 0;
                 for (Character character: presetDataString.toCharArray()) {

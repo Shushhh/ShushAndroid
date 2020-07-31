@@ -87,8 +87,8 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<ShushRecyclerAdap
         ShushObject currentItem = shushObjectArrayList.get(position);
 
         holder.nameTextView.setText(currentItem.getName());
-        holder.dataTextView.setText(currentItem.getData());
-        holder.supplementalDataTextView.setText(currentItem.getSupplementalData());
+        holder.dataTextView.setText(currentItem.getTime());
+        holder.supplementalDataTextView.setText(currentItem.getDateRep());
 
         /**
          *
@@ -96,10 +96,9 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<ShushRecyclerAdap
         holder.containerView.setOnClickListener(view -> {
             Bundle bundle = new Bundle(); // send data from this viewHolder to the the timeDialog via a bundle and preset string key constants
             bundle.putString(DatabaseManager.DatabaseEntry.NAME, currentItem.getName());
-            bundle.putString(DatabaseManager.DatabaseEntry.DATA, currentItem.getData());
-            bundle.putString(DatabaseManager.DatabaseEntry.SUPP, currentItem.getSupplementalData());
+            bundle.putString(DatabaseManager.DatabaseEntry.TIME, currentItem.getTime());
+            bundle.putString(DatabaseManager.DatabaseEntry.DATE_REP, currentItem.getDateRep());
             bundle.putString(DatabaseManager.DatabaseEntry.UUID, currentItem.getUUID());
-            bundle.putString(DatabaseManager.DatabaseEntry.TYPE, currentItem.getType());
             timeDialog.setArguments(bundle);
             timeDialog.show(fragmentManager, "tag", "click");
         });

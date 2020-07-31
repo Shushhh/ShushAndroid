@@ -9,6 +9,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -23,6 +25,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,18 +59,19 @@ public class MainActivity extends AppCompatActivity {
         public static final int PERMISSION_READ_PHONE_STATE = 99;
     }
 
-    public static String TAG = ShushObject.ShushObjectType.LOCATION.getDescription();
     private final String CHECK = "MainActivity";
 
     private static final int ERROR_DIALOG_REQUEST = 9001;
 
-    private ViewPager2 viewPager2;
-    private CustomPagerAdapter adapter;
-    private TabLayout tabLayout;
     private FloatingActionButton floatingActionButton;
 
     private BottomAppBar bottomAppBar;
     private VoicemailBottomSheetDialogFragment voicemailBottomSheetDialogFragment;
+
+    static private RecyclerView recyclerView;
+    static private ArrayList<ShushObject> shushObjectArrayList = new ArrayList<>();
+    static private DatabaseManager databaseManager;
+    static private ShushRecyclerAdapter shushRecyclerAdapter;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -75,53 +79,32 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        viewPager2 = findViewById(R.id.tabviewpager);
-        tabLayout = findViewById(R.id.tabview);
         bottomAppBar = findViewById(R.id.bottomappbar);
 
         voicemailBottomSheetDialogFragment = new VoicemailBottomSheetDialogFragment();
-
-        adapter = new CustomPagerAdapter(getSupportFragmentManager(), getLifecycle());
-        viewPager2.setAdapter(adapter);
 
         bottomAppBar.setNavigationOnClickListener((View v) -> {
             voicemailBottomSheetDialogFragment.show(getSupportFragmentManager(), getResources().getString(R.string.bottom_sheet));
         });
 
-        new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
-            if (position == 0) {
-                tab.setText("Location");
-            } else {
-                tab.setText("Time");
-            }
-        }).attach();
+        recyclerView = findViewById(R.id.recyclerView);
+        shushRecyclerAdapter = new ShushRecyclerAdapter(shushObjectArrayList, getSupportFragmentManager());
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        databaseManager = new DatabaseManager(this);
 
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                if (tab.getText().toString().equals(ShushObject.ShushObjectType.LOCATION.getDescription())) {
-                    TAG = ShushObject.ShushObjectType.LOCATION.getDescription();
-                } else if (tab.getText().toString().equals(ShushObject.ShushObjectType.TIME.getDescription())) {
-                    TAG = ShushObject.ShushObjectType.TIME.getDescription();
-                }
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
+        updateRecyclerView();
 
         if (isServicesOK()) {
             init();
         }
 
+    }
+
+    public static void updateRecyclerView () {
+        shushObjectArrayList = databaseManager.retrieveWithCursor();
+        System.out.println(shushObjectArrayList);
+        shushRecyclerAdapter.setShushObjectArrayList(shushObjectArrayList);
+        recyclerView.setAdapter(shushRecyclerAdapter);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -136,26 +119,22 @@ public class MainActivity extends AppCompatActivity {
              * when the fab is clicked again, then provide further information as it had been denied previously and on "Ok" click,
              * request permission again.
              */
-            if (TAG.equals(ShushObject.ShushObjectType.LOCATION.getDescription())) {
-                if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) { // shows after denial
-                        new AlertDialog.Builder(MainActivity.this)
-                                .setTitle("Location Permission")
-                                .setMessage("To set location constraints to silence your phone, we will need to access your location in the foreground. Note that all location data stays in your phone, thereby protecting your privacy.")
-                                .setPositiveButton("Ok", (DialogInterface dialogInterface, int i) -> {
-                                    ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, PermissionRequestCodes.PERMISSION_FINE_LOCATION);
-                                }).create().show();
-                    } else {
-                        ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, PermissionRequestCodes.PERMISSION_FINE_LOCATION);
-                    }
+            if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) { // shows after denial
+                    new AlertDialog.Builder(MainActivity.this)
+                            .setTitle("Location Permission")
+                            .setMessage("To set location constraints to silence your phone, we will need to access your location in the foreground. Note that all location data stays in your phone, thereby protecting your privacy.")
+                            .setPositiveButton("Ok", (DialogInterface dialogInterface, int i) -> {
+                                ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, PermissionRequestCodes.PERMISSION_FINE_LOCATION);
+                            }).create().show();
                 } else {
-                    LocationDialog locationDialog = new LocationDialog();
-                    locationDialog.show(getSupportFragmentManager(), ShushObject.ShushObjectType.LOCATION.getDescription());
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, PermissionRequestCodes.PERMISSION_FINE_LOCATION);
                 }
-            } else if (TAG.equals(ShushObject.ShushObjectType.TIME.getDescription())) {
-                TimeDialog dialog = TimeDialog.newInstance();
-                dialog.show(getSupportFragmentManager(), ShushObject.ShushObjectType.TIME.getDescription(), "fab");
+            } else {
+                TimeDialog timeDialog = new TimeDialog();
+                timeDialog.show(getSupportFragmentManager(), "", "fab");
             }
+
         });
 
     }
@@ -194,8 +173,8 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == PermissionRequestCodes.PERMISSION_FINE_LOCATION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    LocationDialog locationDialog = new LocationDialog();
-                    locationDialog.show(getSupportFragmentManager(), ShushObject.ShushObjectType.LOCATION.getDescription());
+                    TimeDialog timeDialog = new TimeDialog();
+                    timeDialog.show(getSupportFragmentManager(), "t");
                 }
             }
         }
@@ -241,39 +220,6 @@ public class MainActivity extends AppCompatActivity {
                     Log.i("Result", s);
                 }
             }
-        }
-
-    }
-
-    class CustomPagerAdapter extends FragmentStateAdapter {
-
-        /**
-         *
-         * @param fm
-         * @param lifecycle
-         */
-        public CustomPagerAdapter(@NonNull FragmentManager fm, @NonNull Lifecycle lifecycle) {
-            super(fm, lifecycle);
-        }
-
-        /**
-         *
-         * @param position
-         * @return
-         */
-        @NonNull
-        @Override
-        public Fragment createFragment(int position) {
-            if (position == 0)
-                return new PlaceTab();
-            else if (position == 1)
-                return new TimeTab();
-            else return new PlaceTab();
-        }
-
-        @Override
-        public int getItemCount() {
-            return 2;
         }
 
     }

@@ -118,6 +118,60 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/firstdate" />
 
+    <TextView
+        android:id="@+id/locationdialogtimetext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/rubik"
+        android:text="LOCATION"
+        android:textColor="#969EB0"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/secondview"></TextView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/locationTextView"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/locationdialogtimetext"
+        android:text="239 Mabery Park Blvd"
+        android:textColor="@color/cardview_light_background"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="20dp"
+        android:textSize="19sp"
+        android:fontFamily="@font/rubik"/>
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="50dp"
+        android:fontFamily="@font/rubik"
+        android:text="RADIUS"
+        android:textColor="#969EB0"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginTop="20dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/secondview"></TextView>
+
+    <TextView
+        android:id="@+id/radius"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="50dp"
+        android:fontFamily="@font/rubik"
+        android:text="2 mi"
+        android:textColor="@color/cardview_light_background"
+        android:textSize="19sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView8"
+        android:layout_marginTop="20dp"/>
+
     <View
         android:id="@+id/secondview"
         android:layout_width="match_parent"
@@ -134,29 +188,38 @@
         android:id="@+id/timedialogrepeattext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="20dp"
         android:fontFamily="@font/rubik"
         android:text="REPEAT"
         android:textColor="#969EB0"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/secondview">
-    </TextView>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/thirdview"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="40dp"></TextView>
+
+    <View
+        android:id="@+id/thirdview"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/cardview_light_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/locationTextView"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"/>
 
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/repeatWeeklyToggleGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="50dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/timedialogrepeattext"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/timedialogrepeattext"
         app:selectionRequired="false"
-        app:singleSelection="false">
+        app:singleSelection="false"
+        android:layout_marginTop="20dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/sunday"

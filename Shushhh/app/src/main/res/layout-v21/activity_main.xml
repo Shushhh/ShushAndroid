@@ -19,7 +19,7 @@
         android:id="@+id/logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:fontFamily="@font/rubik"
         android:text="@string/shushhhlogo"
         android:textColor="#64DDC7"
@@ -31,76 +31,55 @@
         app:layout_constraintTop_toTopOf="@id/top_view"
         tools:text="Shushhh" />
 
-    <com.google.android.material.tabs.TabLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logo"
-        app:tabIndicatorFullWidth="true"
-        app:tabMinWidth="205dp"
-        tools:ignore="NotSibling"
-        app:tabIndicatorColor="#3E8D8F"
-        app:tabTextColor="#9499A3"
-        android:layout_marginTop="16dp"
-        app:tabSelectedTextColor="#3E8D8F"
-        android:background="@color/colorPrimary"
-        android:id="@+id/tabview">
-
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/locationtab" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-               android:text="@string/timetab" />
-
-
-    </com.google.android.material.tabs.TabLayout>
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/tabviewpager"
-        android:layout_width="match_parent"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@id/bottomcoordlayout"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="5dp"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/view2"
+        app:layout_constraintEnd_toEndOf="@+id/top_view"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabview">
+        app:layout_constraintTop_toBottomOf="@+id/logo" />
 
-    </androidx.viewpager2.widget.ViewPager2>
+    <View
+        android:id="@+id/view2"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/bottomcoordlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:id="@+id/bottomcoordlayout">
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/bottomappbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/bottomappbar"
             android:layout_gravity="bottom"
             android:backgroundTint="#3F9192"
-            app:hideOnScroll="true"
+            app:fabAlignmentMode="end"
             app:fabCradleMargin="8dp"
             app:fabCradleRoundedCornerRadius="32dp"
-            app:fabAlignmentMode="end"
+            app:hideOnScroll="true"
             app:navigationIcon="@drawable/ic_baseline_menu_24">
 
         </com.google.android.material.bottomappbar.BottomAppBar>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingactionbutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#64DDC7"
             android:src="@drawable/ic_baseline_add_24"
-            app:layout_anchor="@+id/bottomappbar"
-            android:id="@+id/floatingactionbutton">
+            app:layout_anchor="@+id/bottomappbar">
 
         </com.google.android.material.floatingactionbutton.FloatingActionButton>
 

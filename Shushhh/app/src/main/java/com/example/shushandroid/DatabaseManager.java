@@ -31,9 +31,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public class DatabaseEntry {
         public static final String NAME = "name";
-        public static final String TYPE = "type";
-        public static final String DATA = "data";
-        public static final String SUPP = "supp"; //supplemental data (radius or duration)
+        public static final String TIME = "time";
+        public static final String DATE_REP = "date_rep";
+        public static final String LOC = "loc";
+        public static final String RAD = "rad";
         public static final String UUID = "uuid";
 
         public static final String TABLE_NAME = "ShushDB";
@@ -43,9 +44,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
         public static final String CREATE_QUERY = "create table " + TABLE_NAME + "(" +
                 UUID + " varchar , " +
                 NAME + " varchar, " +
-                TYPE + " varchar, " +
-                DATA + " varchar, " +
-                SUPP + " varchar) ";
+                TIME + " varchar, " +
+                DATE_REP + " varchar, " +
+                LOC + " varchar, " +
+                RAD + " varchar) ";
+
 
         public static final String DROP_QUERY = "drop table if exists " + TABLE_NAME;
     }
@@ -64,7 +67,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public DatabaseManager(@Nullable Context context) {
 
-        super(context, DatabaseEntry.TABLE_NAME, null, 4); // increment version by 1 if database needs changes
+        super(context, DatabaseEntry.TABLE_NAME, null, 5); // increment version by 1 if database needs changes
 
     }
 
@@ -103,9 +106,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public boolean insert(ShushObject shushObject) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(DatabaseEntry.NAME, shushObject.getName());
-        contentValues.put(DatabaseEntry.TYPE, shushObject.getType());
-        contentValues.put(DatabaseEntry.DATA, shushObject.getData());
-        contentValues.put(DatabaseEntry.SUPP, shushObject.getSupplementalData());
+        contentValues.put(DatabaseEntry.TIME, shushObject.getTime());
+        contentValues.put(DatabaseEntry.DATE_REP, shushObject.getDateRep());
+        contentValues.put(DatabaseEntry.LOC, shushObject.getLocation());
+        contentValues.put(DatabaseEntry.RAD, shushObject.getRadius());
         contentValues.put(DatabaseEntry.UUID, shushObject.getUUID());
         long n = this.getWritableDatabase().insert(DatabaseEntry.TABLE_NAME, null, contentValues);
 
@@ -121,9 +125,10 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public boolean update (ShushObject shushObject) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(DatabaseEntry.NAME, shushObject.getName());
-        contentValues.put(DatabaseEntry.TYPE, shushObject.getType());
-        contentValues.put(DatabaseEntry.DATA, shushObject.getData());
-        contentValues.put(DatabaseEntry.SUPP, shushObject.getSupplementalData());
+        contentValues.put(DatabaseEntry.TIME, shushObject.getTime());
+        contentValues.put(DatabaseEntry.DATE_REP, shushObject.getDateRep());
+        contentValues.put(DatabaseEntry.LOC, shushObject.getLocation());
+        contentValues.put(DatabaseEntry.RAD, shushObject.getRadius());
         contentValues.put(DatabaseEntry.UUID, shushObject.getUUID());
         long n = this.getWritableDatabase().update(DatabaseEntry.TABLE_NAME, contentValues, DatabaseEntry.UUID + "=?", new String[] {shushObject.getUUID()});
         if (n > 0) return true;
@@ -135,17 +140,18 @@ public class DatabaseManager extends SQLiteOpenHelper {
      * @return returns list of ShushObject items from the database
      */
 
-    private ArrayList retrieveWithCursor(Cursor cursor) {
+    public ArrayList retrieveWithCursor() {
+        Cursor cursor = this.getReadableDatabase().rawQuery("select * from " + DatabaseEntry.TABLE_NAME, null);
         List shushObjectArrayList = new ArrayList();
         if(cursor.moveToFirst()) {
             do {
                 String name = cursor.getString(cursor.getColumnIndex(DatabaseEntry.NAME));
-                String type = cursor.getString(cursor.getColumnIndex(DatabaseEntry.TYPE));
-                String data = cursor.getString(cursor.getColumnIndex(DatabaseEntry.DATA));
-                String supp = cursor.getString(cursor.getColumnIndex(DatabaseEntry.SUPP));
+                String time = cursor.getString(cursor.getColumnIndex(DatabaseEntry.TIME));
+                String dateRep = cursor.getString(cursor.getColumnIndex(DatabaseEntry.DATE_REP));
+                String location = cursor.getString(cursor.getColumnIndex(DatabaseEntry.LOC));
+                String radius = cursor.getString(cursor.getColumnIndex(DatabaseEntry.RAD));
                 String uuid = cursor.getString(cursor.getColumnIndex(DatabaseEntry.UUID));
-
-                ShushObject shushObject = new ShushObject(name, type, data, supp, uuid);
+                ShushObject shushObject = new ShushObject(name, time, dateRep, location, radius, uuid);
                 shushObjectArrayList.add(shushObject);
             } while (cursor.moveToNext());
         } else {
@@ -153,12 +159,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
         }
         cursor.close();
         return (ArrayList) shushObjectArrayList;
-    }
-
-    public ArrayList retrieveWithTAG(final String TAG) {
-        Cursor cursor = this.getReadableDatabase().rawQuery("select * from " + DatabaseEntry.TABLE_NAME + " where " + DatabaseEntry.TYPE
-                + " = '" + TAG + "'", null);
-        return retrieveWithCursor(cursor);
     }
 
     /**
