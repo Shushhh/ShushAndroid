@@ -160,7 +160,7 @@
         app:layout_constraintTop_toBottomOf="@+id/secondview"></TextView>
 
     <TextView
-        android:id="@+id/radius"
+        android:id="@+id/radiusTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="50dp"

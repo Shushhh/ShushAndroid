@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/containerView"
         android:background="@drawable/ripple_effect"
         android:clickable="true"
-        android:focusable="true">
+        android:focusable="true"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
         
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/placetext"
+            app:layout_constraintBottom_toTopOf="@id/timeText"
             android:text="Work"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
@@ -36,8 +35,10 @@
             android:layout_marginLeft="16dp"
             android:textColor="@color/cardview_light_background"
             android:textSize="18sp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:fontFamily="@font/rubik"
-            android:id="@+id/placetext">
+            android:id="@+id/timeText">
         </TextView>
 
         <TextView
@@ -51,18 +52,17 @@
             android:textColor="@color/cardview_light_background"
             android:fontFamily="@font/rubik"
             android:textSize="16sp"
-            android:id="@+id/distancetext">
+            android:id="@+id/dateRepText">
         </TextView>
 
         <View android:layout_height="1dp"
             android:layout_width="match_parent"
             android:background="#9499A3"
-            app:layout_constraintTop_toBottomOf="@id/placetext"
             android:layout_marginTop="16dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/timeText"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-</androidx.cardview.widget.CardView>

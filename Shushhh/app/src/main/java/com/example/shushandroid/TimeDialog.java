@@ -3,6 +3,7 @@ package com.example.shushandroid;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -54,7 +55,8 @@ public class TimeDialog extends DialogFragment {
     private TextView timeTextView1;
     private TextView timeTextView2;
     private TextInputEditText addNameEditText;
-    private TextView mapText;
+    private TextView mapTextView;
+    private TextView radiusTextView;
 
     /*
      * Utility objects
@@ -76,6 +78,8 @@ public class TimeDialog extends DialogFragment {
     private String presetTimeString1 = ""; // modified string from presetDataString
     private String presetTimeString2 = ""; // modified string from presetDataString
     private String presetUUIDString = ""; // uuid string
+    private String presetLocationString = ""; //location string
+    private String presetRadiusString = ""; //radius string
 
     private String from = ""; // from where: fab or click
     private String currentDate = "", currentTime1 = "", currentTime2 = ""; // the current date and time to be displayed when the user launches TimeDialog with a FAB
@@ -94,13 +98,6 @@ public class TimeDialog extends DialogFragment {
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullscreenDialogTheme);
     }
 
-    /**
-     *
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
-     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -114,8 +111,9 @@ public class TimeDialog extends DialogFragment {
         timeTextView2 = view.findViewById(R.id.secondtime);
         addNameEditText = view.findViewById(R.id.addNameEditText);
 
-        mapText = view.findViewById(R.id.locationTextView);
-        mapText.setOnClickListener(v -> {
+        mapTextView = view.findViewById(R.id.locationTextView);
+        radiusTextView = view.findViewById(R.id.radiusTextView);
+        mapTextView.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), MapActivity.class);
             startActivity(intent);
         });
@@ -124,7 +122,6 @@ public class TimeDialog extends DialogFragment {
         shushObject = new ShushObject();
         timePicker = new TimePickerFragment(getActivity());
         databaseManager = new DatabaseManager(getActivity());
-
 
         if (this.from.equals("click")) { // if user comes here with recycler item click
             if (!presetNameString.isEmpty()) { // if nameString is not empty (check bundle code in the show method)
@@ -142,6 +139,10 @@ public class TimeDialog extends DialogFragment {
             } else if (!presetSupplementalDataString.isEmpty()) { // else if it is not repeatable days, it has to be a particular day, so update that
                 dateTextView1.setText(presetSupplementalDataString);
             }
+
+            mapTextView.setText((!presetLocationString.isEmpty() ? presetLocationString : "N/A"));
+            radiusTextView.setText((!presetRadiusString.isEmpty() ? presetRadiusString : "N/A"));
+
         } else if (this.from.equals("fab")) { // if user comes here from fab action, set the current date and time
             if (!currentDate.isEmpty() && !currentTime1.isEmpty() && !currentTime2.isEmpty()) {
                 dateTextView1.setText(currentDate);
@@ -166,7 +167,6 @@ public class TimeDialog extends DialogFragment {
                 Date date2 = simpleDateFormat.parse(time2);
 
                 if (this.from.equals("fab")) { // if the user comes in from the fab action click
-                    Log.i("Dialog", "fab");
                     if (!addNameEditText.getText().toString().isEmpty()) {
                         if (date2.after(date1)) {
                             if (!toggleGroupManager.getToggleStateString().isEmpty()) {
@@ -284,6 +284,11 @@ public class TimeDialog extends DialogFragment {
                 presetSupplementalDataString = getArguments().getString(DatabaseManager.DatabaseEntry.DATE_REP);
                 presetUUIDString = getArguments().getString(DatabaseManager.DatabaseEntry.UUID);
 
+                if (tag != null && tag.equals("double")) {
+                    presetLocationString = getArguments().getString(DatabaseManager.DatabaseEntry.LOC);
+                    presetRadiusString = getArguments().getString(DatabaseManager.DatabaseEntry.RAD);
+                }
+
                 if (!presetSupplementalDataString.isEmpty() && !presetSupplementalDataString.contains(",")) {
                     Calendar calendar = Calendar.getInstance();
                     SimpleDateFormat format = new SimpleDateFormat("EEE, MMM dd, yyyy");
@@ -320,10 +325,6 @@ public class TimeDialog extends DialogFragment {
         private Context context;
         private TextView textView;
 
-        /**
-         *
-         * @param context
-         */
         DatePickerFragment (Context context) {
             this.context = context;
         }
