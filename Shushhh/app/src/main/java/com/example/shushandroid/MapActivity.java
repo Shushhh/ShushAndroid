@@ -24,7 +24,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -41,33 +40,32 @@ import androidx.core.app.ActivityCompat;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private static final float DEFAULT_ZOOM = 15f;
-    private GoogleMap map;
-    private FusedLocationProviderClient fusedLocationProviderClient;
-    private int radius;
-
-    private EditText searchBar;
-    private ImageView gpsLocate;
-
+    private FloatingActionButton checkFloatingActionButton;
+    private ImageView gpsLocateImageView;
+    private EditText searchEditText;
     private Spinner spinner;
 
-    private static final String TAG = "MapActivity";
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private Location myLocation;
+    private GoogleMap map;
 
-    private FloatingActionButton checkFloatingActionButton;
+    private static final String TAG = "MapActivity";
+    private static final float DEFAULT_ZOOM = 15f;
+    private int radius;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        searchBar = findViewById(R.id.searchTextField);
-        gpsLocate = findViewById(R.id.currentLocationButton);
+        searchEditText = findViewById(R.id.searchTextField);
+        gpsLocateImageView = findViewById(R.id.currentLocationButton);
         checkFloatingActionButton = findViewById(R.id.checkFloatingActionButton);
 
         checkFloatingActionButton.setOnClickListener(view -> {
-            if (!searchBar.getText().toString().isEmpty()) {
+            if (!searchEditText.getText().toString().isEmpty()) {
                 String radiusString = radius + "m";
-                TimeDialog.LocationDataTransferItem.LOCATION = searchBar.getText().toString();
+                TimeDialog.LocationDataTransferItem.LOCATION = searchEditText.getText().toString();
                 TimeDialog.LocationDataTransferItem.RADIUS = radiusString;
                 finish();
             }
@@ -98,13 +96,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private void search() {
         Log.d(TAG, "starting search services");
-        searchBar.setOnEditorActionListener((textView, i, keyEvent) -> {
+        searchEditText.setOnEditorActionListener((textView, i, keyEvent) -> {
             if (i == EditorInfo.IME_ACTION_SEARCH || i == EditorInfo.IME_ACTION_DONE || keyEvent.getAction() == keyEvent.ACTION_DOWN || keyEvent.getAction() == keyEvent.KEYCODE_ENTER) {
                 geoLocate();
             }
             return false;
         });
-        gpsLocate.setOnClickListener(view -> {
+        gpsLocateImageView.setOnClickListener(view -> {
             Log.d(TAG, "transferred to device location after clicking gps");
             getDeviceLocation();
         });
@@ -113,7 +111,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private void geoLocate() {
         Log.d(TAG, "geolocating");
-        String searchField = searchBar.getText().toString();
+        String searchField = searchEditText.getText().toString();
         Geocoder geocoder = new Geocoder(MapActivity.this);
         List<Address> list = new ArrayList<>();
         try {
@@ -162,19 +160,19 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
-    public void getDeviceLocation() {
-        Log.d(TAG, "getting the device's location");
+    private void getDeviceLocation() {
+        Log.i("Context", this.toString());
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         try {
             Task getLocation = fusedLocationProviderClient.getLastLocation();
             getLocation.addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     Log.d(TAG, "found location");
-                    Location myLocation = (Location) task.getResult();
+                    myLocation = (Location) task.getResult();
                     if (myLocation != null) {
                         moveCamera(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), DEFAULT_ZOOM, "My Location");
                         map.clear();
-                        radius = 500;
+                        radius = 100;
                         map.addCircle(new CircleOptions().center(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
                         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
@@ -229,7 +227,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private void hideKeyBoard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(searchBar.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
     }
 
     private void initMap() {
@@ -257,4 +255,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         map.setMyLocationEnabled(true);
 
     }
+
+    public Integer getRadius () {
+        return radius;
+    }
+
 }

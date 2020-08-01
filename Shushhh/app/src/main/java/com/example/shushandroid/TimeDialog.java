@@ -7,6 +7,9 @@ import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -43,6 +46,8 @@ import androidx.fragment.app.FragmentManager;
  * @resources
  */
 public class TimeDialog extends DialogFragment {
+
+    private LocationManager locationManager;
 
     public static class LocationDataTransferItem {
         public static String LOCATION = "";
@@ -97,6 +102,10 @@ public class TimeDialog extends DialogFragment {
      *
      * @param savedInstanceState
      */
+
+
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -200,7 +209,8 @@ public class TimeDialog extends DialogFragment {
                                 shushObject.setTime(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
                                 shushObject.setDateRep(toggleGroupManager.getToggleStateString()); // set the repeatable days string
                                 shushObject.setUUID(UUID.randomUUID().toString());
-                                Log.i("Shush", shushObject.toString());
+                                shushObject.setLocation(mapTextView.getText().toString());
+                                shushObject.setRadius(radiusTextView.getText().toString());
                                 if (databaseManager.insert(shushObject)) {
                                     MainActivity.updateRecyclerView();
                                     dismiss();
@@ -212,6 +222,8 @@ public class TimeDialog extends DialogFragment {
                                 shushObject.setTime(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
                                 shushObject.setDateRep(dateTextView1.getText().toString());
                                 shushObject.setUUID(UUID.randomUUID().toString());
+                                shushObject.setLocation(mapTextView.getText().toString());
+                                shushObject.setRadius(radiusTextView.getText().toString());
                                 Log.i("Shush", shushObject.toString());
                                 if (databaseManager.insert(shushObject)) {
                                     MainActivity.updateRecyclerView();
