@@ -44,6 +44,11 @@ import androidx.fragment.app.FragmentManager;
  */
 public class TimeDialog extends DialogFragment {
 
+    public static class LocationDataTransferItem {
+        public static String LOCATION = "";
+        public static String RADIUS = "";
+    }
+
     /*
      * View definitions for TimeDialog
      */
@@ -96,6 +101,25 @@ public class TimeDialog extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullscreenDialogTheme);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mapTextView != null) {
+            if (LocationDataTransferItem.LOCATION.isEmpty()) {
+                mapTextView.setText("Update LOC");
+            } else {
+                mapTextView.setText(LocationDataTransferItem.LOCATION);
+            }
+        }
+        if (radiusTextView != null) {
+            if (LocationDataTransferItem.RADIUS.isEmpty()) {
+                radiusTextView.setText("SET RAD");
+            } else {
+                radiusTextView.setText(LocationDataTransferItem.RADIUS);
+            }
+        }
     }
 
     @Nullable
