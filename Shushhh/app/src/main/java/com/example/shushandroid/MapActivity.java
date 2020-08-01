@@ -1,6 +1,7 @@
 package com.example.shushandroid;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
@@ -18,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -28,10 +30,17 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -42,6 +51,7 @@ import androidx.core.app.ActivityCompat;
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private FloatingActionButton checkFloatingActionButton;
+    private FloatingActionButton searchFloatingActionButton;
     private ImageView gpsLocateImageView;
     private EditText searchEditText;
     private Spinner spinner;
@@ -62,6 +72,26 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         searchEditText = findViewById(R.id.searchTextField);
         gpsLocateImageView = findViewById(R.id.currentLocationButton);
         checkFloatingActionButton = findViewById(R.id.checkFloatingActionButton);
+        searchFloatingActionButton = findViewById(R.id.searchLocationButton);
+
+        String apiKey = getString(R.string.google_maps_API_key);
+
+        /**
+         * Initialize Places. For simplicity, the API key is hard-coded. In a production
+         * environment we recommend using a secure mechanism to manage API keys.
+         */
+        if (!Places.isInitialized()) {
+            Places.initialize(getApplicationContext(), apiKey);
+        }
+        searchEditText.setFocusable(false);
+        searchEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                List<Place.Field> fieldList = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.NAME);
+                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldList).build(MapActivity.this);
+                startActivityForResult(intent, 100);
+            }
+        });
 
         checkFloatingActionButton.setOnClickListener(view -> {
             if (!searchEditText.getText().toString().isEmpty()) {
@@ -69,6 +99,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 TimeDialog.LocationDataTransferItem.LOCATION = searchEditText.getText().toString();
                 TimeDialog.LocationDataTransferItem.RADIUS = radiusString;
                 finish();
+            }
+        });
+
+        searchFloatingActionButton.setOnClickListener(view -> {
+            if (!searchEditText.getText().toString().isEmpty()) {
+                geoLocate();
             }
         });
         spinner = findViewById(R.id.radiusSpinner);
@@ -93,6 +129,18 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         initMap();
         search();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100 && resultCode == RESULT_OK) {
+            Place place = Autocomplete.getPlaceFromIntent(data);
+            searchEditText.setText(place.getAddress());
+        } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+            Status status = Autocomplete.getStatusFromIntent(data);
+            Toast.makeText(getApplicationContext(), status.getStatusMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void search() {
