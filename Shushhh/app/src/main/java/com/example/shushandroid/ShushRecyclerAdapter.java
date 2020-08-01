@@ -2,12 +2,14 @@ package com.example.shushandroid;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -81,6 +83,8 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public ShushRecyclerAdapter(ArrayList<ShushObject> shushObjectArrayList, FragmentManager fragmentManager){
         this.shushObjectArrayList = shushObjectArrayList;
+        shushObjectArrayList.add(new ShushObject("Akash", "1:10 AM - 2:20 AM", "STF", "1005 Cameron Bridge Way", "100m", UUID.randomUUID().toString()));
+        System.out.println(shushObjectArrayList);
         this.fragmentManager = fragmentManager;
         timeDialog = new TimeDialog();
     }
@@ -101,6 +105,7 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+
         if (getItemViewType(position) == SINGLE_TYPE) {
             ShushObject currentItem = shushObjectArrayList.get(position);
             SingleViewHolder singleViewHolder = (SingleViewHolder) holder;
@@ -144,9 +149,11 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemViewType(int position) {
+        Log.i("List", position + " " + shushObjectArrayList.get(position));
         if (shushObjectArrayList.get(position).getLocation() ==  null || shushObjectArrayList.get(position).getTime() == null) {
             return SINGLE_TYPE;
         } else {
+            Log.i("List", shushObjectArrayList.get(position).toString());
             return DOUBLE_TYPE;
         }
     }
