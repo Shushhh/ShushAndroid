@@ -51,7 +51,6 @@ import androidx.core.app.ActivityCompat;
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private FloatingActionButton checkFloatingActionButton;
-    private FloatingActionButton searchFloatingActionButton;
     private ImageView gpsLocateImageView;
     private EditText searchEditText;
     private Spinner spinner;
@@ -72,7 +71,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         searchEditText = findViewById(R.id.searchTextField);
         gpsLocateImageView = findViewById(R.id.currentLocationButton);
         checkFloatingActionButton = findViewById(R.id.checkFloatingActionButton);
-        searchFloatingActionButton = findViewById(R.id.searchLocationButton);
 
         String apiKey = getString(R.string.google_maps_API_key);
 
@@ -99,12 +97,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 TimeDialog.LocationDataTransferItem.LOCATION = searchEditText.getText().toString();
                 TimeDialog.LocationDataTransferItem.RADIUS = radiusString;
                 finish();
-            }
-        });
-
-        searchFloatingActionButton.setOnClickListener(view -> {
-            if (!searchEditText.getText().toString().isEmpty()) {
-                geoLocate();
             }
         });
         spinner = findViewById(R.id.radiusSpinner);
@@ -137,6 +129,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         if (requestCode == 100 && resultCode == RESULT_OK) {
             Place place = Autocomplete.getPlaceFromIntent(data);
             searchEditText.setText(place.getAddress());
+            geoLocate();
         } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
             Status status = Autocomplete.getStatusFromIntent(data);
             Toast.makeText(getApplicationContext(), status.getStatusMessage(), Toast.LENGTH_SHORT).show();
