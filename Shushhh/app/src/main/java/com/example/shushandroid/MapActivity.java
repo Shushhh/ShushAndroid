@@ -33,6 +33,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -125,7 +126,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
             moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM, address.getAddressLine(0));
             map.clear();
-            radius = 500;
+            radius = 10;
             map.addCircle(new CircleOptions().center(new LatLng(address.getLatitude(), address.getLongitude())).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -170,9 +171,24 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     Log.d(TAG, "found location");
                     myLocation = (Location) task.getResult();
                     if (myLocation != null) {
+                        String cityName = null;
+                        Geocoder gcd = new Geocoder(getBaseContext(), Locale.getDefault());
+                        List<Address> addresses;
+                        try {
+                            addresses = gcd.getFromLocation(myLocation.getLatitude(),
+                                    myLocation.getLongitude(), 1);
+                            if (addresses.size() > 0) {
+                                System.out.println(addresses.get(0).getLocality());
+                                cityName = addresses.get(0).getAddressLine(0);
+                            }
+                        }
+                        catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        searchEditText.setText(cityName);
                         moveCamera(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), DEFAULT_ZOOM, "My Location");
                         map.clear();
-                        radius = 100;
+                        radius = 10;
                         map.addCircle(new CircleOptions().center(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
                         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
