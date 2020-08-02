@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -38,6 +37,7 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
         public TextView nameTextView;
         public TextView dataTextView;
         public TextView supplementalDataTextView;
+        private TextView repTextView;
         public ConstraintLayout containerView;
 
         /**
@@ -49,6 +49,7 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
             nameTextView = itemView.findViewById(R.id.titletext);
             dataTextView = itemView.findViewById(R.id.timeText);
             supplementalDataTextView = itemView.findViewById(R.id.dateRepText);
+            repTextView = itemView.findViewById(R.id.repTextView);
             containerView = itemView.findViewById(R.id.containerView);
         }
     }
@@ -58,16 +59,18 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         private TextView nameTextView;
         private TextView timeTextView;
-        private TextView dateRepTextView;
+        private TextView dateTextView;
         private TextView locationTextView;
         private TextView radiusTextView;
+        private TextView repTextView;
         private ConstraintLayout containerView;
 
         public DoubleViewHolder(@NonNull View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.titletext);
             timeTextView = itemView.findViewById(R.id.timeTextView);
-            dateRepTextView = itemView.findViewById(R.id.dateRepTextView);
+            dateTextView = itemView.findViewById(R.id.dateTextView);
+            repTextView = itemView.findViewById(R.id.repTextView);
             locationTextView = itemView.findViewById(R.id.locationTextView);
             radiusTextView = itemView.findViewById(R.id.radiusTextView);
             containerView = itemView.findViewById(R.id.containerView);
@@ -83,8 +86,6 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public ShushRecyclerAdapter(ArrayList<ShushObject> shushObjectArrayList, FragmentManager fragmentManager){
         this.shushObjectArrayList = shushObjectArrayList;
-        shushObjectArrayList.add(new ShushObject("Akash", "1:10 AM - 2:20 AM", "STF", "1005 Cameron Bridge Way", "100m", UUID.randomUUID().toString()));
-        System.out.println(shushObjectArrayList);
         this.fragmentManager = fragmentManager;
         timeDialog = new TimeDialog();
     }
@@ -113,12 +114,14 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
             if (currentItem.getLocation().equals("N/A")) {
                 singleViewHolder.nameTextView.setText(currentItem.getName());
                 singleViewHolder.dataTextView.setText(currentItem.getTime());
-                singleViewHolder.supplementalDataTextView.setText(currentItem.getDateRep());
+                singleViewHolder.supplementalDataTextView.setText(currentItem.getDate());
+                singleViewHolder.repTextView.setText(currentItem.getRep());
                 singleViewHolder.containerView.setOnClickListener(view -> {
                     Bundle bundle = new Bundle(); // send data from this viewHolder to the the timeDialog via a bundle and preset string key constants
                     bundle.putString(DatabaseManager.DatabaseEntry.NAME, currentItem.getName());
                     bundle.putString(DatabaseManager.DatabaseEntry.TIME, currentItem.getTime());
-                    bundle.putString(DatabaseManager.DatabaseEntry.DATE_REP, currentItem.getDateRep());
+                    bundle.putString(DatabaseManager.DatabaseEntry.DATE, currentItem.getDate());
+                    bundle.putString(DatabaseManager.DatabaseEntry.REP, currentItem.getRep());
                     bundle.putString(DatabaseManager.DatabaseEntry.UUID, currentItem.getUUID());
                     timeDialog.setArguments(bundle);
                     timeDialog.show(fragmentManager, "single", "click");
@@ -126,12 +129,14 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
             } else {
                 singleViewHolder.nameTextView.setText(currentItem.getName());
                 singleViewHolder.dataTextView.setText(currentItem.getLocation());
+                singleViewHolder.repTextView.setText(currentItem.getRep());
                 singleViewHolder.supplementalDataTextView.setText(currentItem.getRadius());
                 singleViewHolder.containerView.setOnClickListener(view -> {
                     Bundle bundle = new Bundle(); // send data from this viewHolder to the the timeDialog via a bundle and preset string key constants
                     bundle.putString(DatabaseManager.DatabaseEntry.NAME, currentItem.getName());
-                    bundle.putString(DatabaseManager.DatabaseEntry.TIME, currentItem.getLocation());
-                    bundle.putString(DatabaseManager.DatabaseEntry.DATE_REP, currentItem.getRadius());
+                    bundle.putString(DatabaseManager.DatabaseEntry.LOC, currentItem.getLocation());
+                    bundle.putString(DatabaseManager.DatabaseEntry.RAD, currentItem.getRadius());
+                    bundle.putString(DatabaseManager.DatabaseEntry.REP, currentItem.getRep());
                     bundle.putString(DatabaseManager.DatabaseEntry.UUID, currentItem.getUUID());
                     timeDialog.setArguments(bundle);
                     timeDialog.show(fragmentManager, "single", "click");
@@ -146,7 +151,8 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             doubleViewHolder.nameTextView.setText(currentItem.getName());
             doubleViewHolder.timeTextView.setText(currentItem.getTime());
-            doubleViewHolder.dateRepTextView.setText(currentItem.getDateRep());
+            doubleViewHolder.dateTextView.setText(currentItem.getDate());
+            doubleViewHolder.repTextView.setText(currentItem.getRep());
             doubleViewHolder.locationTextView.setText(currentItem.getLocation());
             doubleViewHolder.radiusTextView.setText(currentItem.getRadius());
 
@@ -154,7 +160,8 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
                 Bundle bundle = new Bundle(); // send data from this viewHolder to the the timeDialog via a bundle and preset string key constants
                 bundle.putString(DatabaseManager.DatabaseEntry.NAME, currentItem.getName());
                 bundle.putString(DatabaseManager.DatabaseEntry.TIME, currentItem.getTime());
-                bundle.putString(DatabaseManager.DatabaseEntry.DATE_REP, currentItem.getDateRep());
+                bundle.putString(DatabaseManager.DatabaseEntry.DATE, currentItem.getDate());
+                bundle.putString(DatabaseManager.DatabaseEntry.REP, currentItem.getRep());
                 bundle.putString(DatabaseManager.DatabaseEntry.LOC, currentItem.getLocation());
                 bundle.putString(DatabaseManager.DatabaseEntry.RAD, currentItem.getRadius());
                 bundle.putString(DatabaseManager.DatabaseEntry.UUID, currentItem.getUUID());

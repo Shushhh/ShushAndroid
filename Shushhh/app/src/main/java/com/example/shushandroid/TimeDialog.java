@@ -85,9 +85,9 @@ public class TimeDialog extends DialogFragment {
      */
 
     private String presetNameString = ""; // string for name
-    private String presetDataString = ""; // string for time
-    private String presetSupplementalDataString = ""; // string for either the date or the repeatedDates
-    private String presetDateTextString = ""; // current date string for when the data string is repeatable days instead of a date
+    private String presetTimeString = ""; // string for time
+    private String presetDateString = ""; // string for either the date or the repeatedDates
+    private String presetRepString = ""; // current date string for when the data string is repeatable days instead of a date
     private String presetTimeString1 = ""; // modified string from presetDataString
     private String presetTimeString2 = ""; // modified string from presetDataString
     private String presetUUIDString = ""; // uuid string
@@ -198,13 +198,19 @@ public class TimeDialog extends DialogFragment {
             if (!presetTimeString1.isEmpty() && !presetTimeString2.isEmpty()) { // if time strings aren't empty, update time text views
                 timeTextView1.setText(presetTimeString1);
                 timeTextView2.setText(presetTimeString2);
+            } else {
+                timeTextView1.setText("N/A");
+                timeTextView2.setText("N/A");
             }
-            if (!presetDateTextString.isEmpty()) { // if the preset date string is not empty (this item has repeatable days)
-                dateTextView1.setText(presetDateTextString); // set the repeatable days string
-                toggleGroupManager.setCheckedToggleButtons(presetSupplementalDataString); // check toggle buttons
-            } else if (!presetSupplementalDataString.isEmpty()) { // else if it is not repeatable days, it has to be a particular day, so update that
-                dateTextView1.setText(presetSupplementalDataString);
-            }
+
+            toggleGroupManager.setCheckedToggleButtons(presetRepString);
+            dateTextView1.setText((!presetDateString.isEmpty() ? presetDateString : "N/A"));
+//            if (!presetDateTextString.isEmpty()) { // if the preset date string is not empty (this item has repeatable days)
+//                dateTextView1.setText(presetDateTextString); // set the repeatable days string
+//                toggleGroupManager.setCheckedToggleButtons(presetSupplementalDataString); // check toggle buttons
+//            } else if (!presetSupplementalDataString.isEmpty()) { // else if it is not repeatable days, it has to be a particular day, so update that
+//                dateTextView1.setText(presetSupplementalDataString);
+//            }
 
             mapTextView.setText((!presetLocationString.isEmpty() ? presetLocationString : "N/A"));
             radiusTextView.setText((!presetRadiusString.isEmpty() ? presetRadiusString : "N/A"));
@@ -262,11 +268,7 @@ public class TimeDialog extends DialogFragment {
                             } else {
                                 shushObject.setName(name);
                                 shushObject.setTime(time1 + " - " + time2);
-                                if (!toggleGroupManager.getToggleStateString().isEmpty()) {
-                                    shushObject.setDateRep(toggleGroupManager.getToggleStateString()); // check later
-                                } else {
-                                    shushObject.setDateRep(date);
-                                }
+                                shushObject.setDate(date);
                                 goTime = true;
                             }
                         } else {
@@ -326,11 +328,12 @@ public class TimeDialog extends DialogFragment {
             }
 
             if (goTime && goLocation) {
-                shushObject.setName(addNameEditText.getText().toString());
-                shushObject.setTime(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
-                shushObject.setDateRep((toggleGroupManager.getToggleStateString().isEmpty()) ? dateTextView1.getText().toString() : toggleGroupManager.getToggleStateString()); // set the repeatable days string
-                shushObject.setLocation(mapTextView.getText().toString());
-                shushObject.setRadius(radiusTextView.getText().toString());
+                shushObject.setName(name);
+                shushObject.setTime(time1 + " - " + time2);
+                shushObject.setDate(date);
+                shushObject.setRep(toggleGroupManager.getToggleStateString());
+                shushObject.setLocation(location);
+                shushObject.setRadius(radius);
 
                 if (this.from.equals("fab")) {
                     shushObject.setUUID(UUID.randomUUID().toString());
@@ -378,30 +381,24 @@ public class TimeDialog extends DialogFragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
 
     public void show(FragmentManager fragmentManager, @Nullable String tag, String from) {
-        presetDateTextString = "";
         this.from = from;
         if (from.equals("click")) {
             if (getArguments() != null) {
 
                 presetNameString = (getArguments().getString(DatabaseManager.DatabaseEntry.NAME) == null ? "" : getArguments().getString(DatabaseManager.DatabaseEntry.NAME));
-                presetDataString = (getArguments().getString(DatabaseManager.DatabaseEntry.TIME) == null ? "" : getArguments().getString(DatabaseManager.DatabaseEntry.TIME));
-                presetSupplementalDataString = (getArguments().getString(DatabaseManager.DatabaseEntry.DATE_REP) == null ? "" : getArguments().getString(DatabaseManager.DatabaseEntry.DATE_REP));
+                presetTimeString = (getArguments().getString(DatabaseManager.DatabaseEntry.TIME) == null ? "" : getArguments().getString(DatabaseManager.DatabaseEntry.TIME));
+                presetDateString = (getArguments().getString(DatabaseManager.DatabaseEntry.DATE) == null ? "" : getArguments().getString(DatabaseManager.DatabaseEntry.DATE));
+                presetRepString = (getArguments().getString(DatabaseManager.DatabaseEntry.REP) == null ? "" : getArguments().getString(DatabaseManager.DatabaseEntry.REP));
                 presetUUIDString = (getArguments().getString(DatabaseManager.DatabaseEntry.UUID) == null ? "" : getArguments().getString(DatabaseManager.DatabaseEntry.UUID));
                 presetLocationString = (getArguments().getString(DatabaseManager.DatabaseEntry.LOC) == null ? "" : getArguments().getString(DatabaseManager.DatabaseEntry.LOC));
                 presetRadiusString = (getArguments().getString(DatabaseManager.DatabaseEntry.RAD) == null ? "" : getArguments().getString(DatabaseManager.DatabaseEntry.RAD));
 
-                if (!presetSupplementalDataString.isEmpty() && !presetSupplementalDataString.contains(",")) {
-                    Calendar calendar = Calendar.getInstance();
-                    SimpleDateFormat format = new SimpleDateFormat("EEE, MMM dd, yyyy");
-                    presetDateTextString = format.format(calendar.getTime());
-                }
-
                 int index = 0;
-                if (!presetDataString.isEmpty()) {
-                    for (Character character : presetDataString.toCharArray()) {
+                if (!presetTimeString.isEmpty()) {
+                    for (Character character : presetTimeString.toCharArray()) {
                         if (character == '-') {
-                            presetTimeString1 = presetDataString.substring(0, index - 1);
-                            presetTimeString2 = presetDataString.substring(index + 2);
+                            presetTimeString1 = presetTimeString.substring(0, index - 1);
+                            presetTimeString2 = presetTimeString.substring(index + 2);
                         }
                         index = index + 1;
                     }

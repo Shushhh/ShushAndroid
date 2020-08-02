@@ -2,6 +2,7 @@
 
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/containerView"
@@ -39,18 +40,17 @@
     </TextView>
 
     <TextView
+        android:id="@+id/dateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="WTF"
-        app:layout_constraintTop_toBottomOf="@+id/titletext"
         android:layout_marginTop="16dp"
-        app:layout_constraintRight_toRightOf="parent"
         android:layout_marginRight="16dp"
-        android:textColor="@color/cardview_light_background"
         android:fontFamily="@font/rubik"
+        android:text="Mon, July 20, 2020"
+        android:textColor="@color/cardview_light_background"
         android:textSize="16sp"
-        android:id="@+id/dateRepTextView">
-    </TextView>
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titletext"></TextView>
 
     <TextView
         android:layout_width="wrap_content"
@@ -70,7 +70,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="10mi"
-        app:layout_constraintTop_toBottomOf="@id/dateRepTextView"
+        app:layout_constraintTop_toBottomOf="@id/dateTextView"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"
@@ -89,5 +89,19 @@
         app:layout_constraintTop_toBottomOf="@id/locationTextView"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"/>
+
+    <TextView
+        android:id="@+id/repTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:fontFamily="@font/rubik"
+        android:text="WRF"
+        android:textColor="#9499A3"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

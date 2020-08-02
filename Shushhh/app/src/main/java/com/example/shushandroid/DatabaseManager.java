@@ -32,10 +32,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public class DatabaseEntry {
         public static final String NAME = "name";
         public static final String TIME = "time";
-        public static final String DATE_REP = "date_rep";
+        public static final String DATE = "date";
         public static final String LOC = "loc";
         public static final String RAD = "rad";
         public static final String UUID = "uuid";
+        public static final String REP = "rep";
 
         public static final String TABLE_NAME = "ShushDB";
 
@@ -45,7 +46,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 UUID + " varchar , " +
                 NAME + " varchar, " +
                 TIME + " varchar, " +
-                DATE_REP + " varchar, " +
+                DATE + " varchar, " +
+                REP + " varchar, " +
                 LOC + " varchar, " +
                 RAD + " varchar) ";
 
@@ -67,7 +69,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public DatabaseManager(@Nullable Context context) {
 
-        super(context, DatabaseEntry.TABLE_NAME, null, 5); // increment version by 1 if database needs changes
+        super(context, DatabaseEntry.TABLE_NAME, null, 6); // increment version by 1 if database needs changes
 
     }
 
@@ -107,7 +109,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(DatabaseEntry.NAME, shushObject.getName());
         contentValues.put(DatabaseEntry.TIME, shushObject.getTime());
-        contentValues.put(DatabaseEntry.DATE_REP, shushObject.getDateRep());
+        contentValues.put(DatabaseEntry.DATE, shushObject.getDate());
+        contentValues.put(DatabaseEntry.REP, shushObject.getRep());
         contentValues.put(DatabaseEntry.LOC, shushObject.getLocation());
         contentValues.put(DatabaseEntry.RAD, shushObject.getRadius());
         contentValues.put(DatabaseEntry.UUID, shushObject.getUUID());
@@ -126,7 +129,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(DatabaseEntry.NAME, shushObject.getName());
         contentValues.put(DatabaseEntry.TIME, shushObject.getTime());
-        contentValues.put(DatabaseEntry.DATE_REP, shushObject.getDateRep());
+        contentValues.put(DatabaseEntry.DATE, shushObject.getDate());
+        contentValues.put(DatabaseEntry.REP, shushObject.getRep());
         contentValues.put(DatabaseEntry.LOC, shushObject.getLocation());
         contentValues.put(DatabaseEntry.RAD, shushObject.getRadius());
         contentValues.put(DatabaseEntry.UUID, shushObject.getUUID());
@@ -147,11 +151,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
             do {
                 String name = cursor.getString(cursor.getColumnIndex(DatabaseEntry.NAME));
                 String time = cursor.getString(cursor.getColumnIndex(DatabaseEntry.TIME));
-                String dateRep = cursor.getString(cursor.getColumnIndex(DatabaseEntry.DATE_REP));
+                String date = cursor.getString(cursor.getColumnIndex(DatabaseEntry.DATE));
+                String rep = cursor.getString(cursor.getColumnIndex(DatabaseEntry.REP));
                 String location = cursor.getString(cursor.getColumnIndex(DatabaseEntry.LOC));
                 String radius = cursor.getString(cursor.getColumnIndex(DatabaseEntry.RAD));
                 String uuid = cursor.getString(cursor.getColumnIndex(DatabaseEntry.UUID));
-                ShushObject shushObject = new ShushObject(name, time, dateRep, location, radius, uuid);
+                ShushObject shushObject = new ShushObject(name, time, date, rep, location, radius, uuid);
                 shushObjectArrayList.add(shushObject);
             } while (cursor.moveToNext());
         } else {

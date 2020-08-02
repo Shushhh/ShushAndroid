@@ -10,22 +10,40 @@ package com.example.shushandroid;
 public class ShushObject {
     private String name;
     private String time;
-    private String dateRep;
+    private String date;
     private String location;
     private String radius;
     private String UUID;
+    private String rep;
 
     public ShushObject() {
 
     }
 
-    public ShushObject(String name, String time, String dateRep, String location, String radius, String UUID) {
+    public ShushObject(String name, String time, String date, String rep, String location, String radius, String UUID) {
         this.name = name;
         this.time = time;
-        this.dateRep = dateRep;
+        this.date = date;
+        this.rep = rep;
         this.location = location;
         this.radius = radius;
         this.UUID = UUID;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getRep() {
+        return rep;
+    }
+
+    public void setRep(String rep) {
+        this.rep = rep;
     }
 
     public String getName() {
@@ -42,14 +60,6 @@ public class ShushObject {
 
     public void setTime(String time) {
         this.time = time;
-    }
-
-    public String getDateRep() {
-        return dateRep;
-    }
-
-    public void setDateRep(String dateRep) {
-        this.dateRep = dateRep;
     }
 
     public String getLocation() {
@@ -81,7 +91,8 @@ public class ShushObject {
         return "ShushObject{" +
                 "name='" + name + '\'' +
                 ", time='" + time + '\'' +
-                ", dateRep='" + dateRep + '\'' +
+                ", date='" + date + '\'' +
+                ", rep='" + rep + '\'' +
                 ", location='" + location + '\'' +
                 ", radius='" + radius + '\'' +
                 ", UUID='" + UUID + '\'' +
