@@ -110,18 +110,35 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
             ShushObject currentItem = shushObjectArrayList.get(position);
             SingleViewHolder singleViewHolder = (SingleViewHolder) holder;
 
-            singleViewHolder.nameTextView.setText(currentItem.getName());
-            singleViewHolder.dataTextView.setText(currentItem.getTime());
-            singleViewHolder.supplementalDataTextView.setText(currentItem.getDateRep());
-            singleViewHolder.containerView.setOnClickListener(view -> {
-                Bundle bundle = new Bundle(); // send data from this viewHolder to the the timeDialog via a bundle and preset string key constants
-                bundle.putString(DatabaseManager.DatabaseEntry.NAME, currentItem.getName());
-                bundle.putString(DatabaseManager.DatabaseEntry.TIME, currentItem.getTime());
-                bundle.putString(DatabaseManager.DatabaseEntry.DATE_REP, currentItem.getDateRep());
-                bundle.putString(DatabaseManager.DatabaseEntry.UUID, currentItem.getUUID());
-                timeDialog.setArguments(bundle);
-                timeDialog.show(fragmentManager, "single", "click");
-            });
+            if (currentItem.getLocation().equals("N/A")) {
+                singleViewHolder.nameTextView.setText(currentItem.getName());
+                singleViewHolder.dataTextView.setText(currentItem.getTime());
+                singleViewHolder.supplementalDataTextView.setText(currentItem.getDateRep());
+                singleViewHolder.containerView.setOnClickListener(view -> {
+                    Bundle bundle = new Bundle(); // send data from this viewHolder to the the timeDialog via a bundle and preset string key constants
+                    bundle.putString(DatabaseManager.DatabaseEntry.NAME, currentItem.getName());
+                    bundle.putString(DatabaseManager.DatabaseEntry.TIME, currentItem.getTime());
+                    bundle.putString(DatabaseManager.DatabaseEntry.DATE_REP, currentItem.getDateRep());
+                    bundle.putString(DatabaseManager.DatabaseEntry.UUID, currentItem.getUUID());
+                    timeDialog.setArguments(bundle);
+                    timeDialog.show(fragmentManager, "single", "click");
+                });
+            } else {
+                singleViewHolder.nameTextView.setText(currentItem.getName());
+                singleViewHolder.dataTextView.setText(currentItem.getLocation());
+                singleViewHolder.supplementalDataTextView.setText(currentItem.getRadius());
+                singleViewHolder.containerView.setOnClickListener(view -> {
+                    Bundle bundle = new Bundle(); // send data from this viewHolder to the the timeDialog via a bundle and preset string key constants
+                    bundle.putString(DatabaseManager.DatabaseEntry.NAME, currentItem.getName());
+                    bundle.putString(DatabaseManager.DatabaseEntry.TIME, currentItem.getLocation());
+                    bundle.putString(DatabaseManager.DatabaseEntry.DATE_REP, currentItem.getRadius());
+                    bundle.putString(DatabaseManager.DatabaseEntry.UUID, currentItem.getUUID());
+                    timeDialog.setArguments(bundle);
+                    timeDialog.show(fragmentManager, "single", "click");
+                });
+            }
+
+
 
         } else if (getItemViewType(position) == DOUBLE_TYPE) {
             ShushObject currentItem = shushObjectArrayList.get(position);
@@ -150,7 +167,7 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public int getItemViewType(int position) {
         Log.i("List", position + " " + shushObjectArrayList.get(position));
-        if (shushObjectArrayList.get(position).getLocation() ==  null || shushObjectArrayList.get(position).getTime() == null) {
+        if (shushObjectArrayList.get(position).getLocation().equals("N/A")|| shushObjectArrayList.get(position).getTime().equals("N/A - N/A")) {
             return SINGLE_TYPE;
         } else {
             Log.i("List", shushObjectArrayList.get(position).toString());

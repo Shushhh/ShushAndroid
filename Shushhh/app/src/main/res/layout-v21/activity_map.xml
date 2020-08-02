@@ -108,11 +108,10 @@
         android:id="@+id/checkFloatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="32dp"
         android:backgroundTint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="32dp"
-        android:layout_marginRight="16dp"
-        android:src="@drawable/ic_check"/>
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

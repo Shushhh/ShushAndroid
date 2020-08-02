@@ -1,11 +1,14 @@
 package com.example.shushandroid;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
@@ -47,11 +50,9 @@ import androidx.fragment.app.FragmentManager;
  */
 public class TimeDialog extends DialogFragment {
 
-    private LocationManager locationManager;
-
     public static class LocationDataTransferItem {
-        public static String LOCATION = "";
-        public static String RADIUS = "";
+        public static String LOCATION = "LOCATION";
+        public static String RADIUS = "RADIUS";
     }
 
     /*
@@ -67,6 +68,8 @@ public class TimeDialog extends DialogFragment {
     private TextInputEditText addNameEditText;
     private TextView mapTextView;
     private TextView radiusTextView;
+    private Button timeClearButton;
+    private Button locationClearButton;
 
     /*
      * Utility objects
@@ -92,7 +95,6 @@ public class TimeDialog extends DialogFragment {
     private String presetRadiusString = ""; //radius string
 
     private String from = ""; // from where: fab or click
-    private String currentDate = "", currentTime1 = "", currentTime2 = ""; // the current date and time to be displayed when the user launches TimeDialog with a FAB
 
     static TimeDialog newInstance() {
         return new TimeDialog();
@@ -115,18 +117,36 @@ public class TimeDialog extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (mapTextView != null) {
-            if (LocationDataTransferItem.LOCATION.isEmpty()) {
-                mapTextView.setText("Update LOC");
-            } else {
-                mapTextView.setText(LocationDataTransferItem.LOCATION);
-            }
-        }
-        if (radiusTextView != null) {
-            if (LocationDataTransferItem.RADIUS.isEmpty()) {
-                radiusTextView.setText("SET RAD");
-            } else {
-                radiusTextView.setText(LocationDataTransferItem.RADIUS);
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 10) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (data != null) {
+                    String location = data.getStringExtra(LocationDataTransferItem.LOCATION);
+                    String radius = data.getStringExtra(LocationDataTransferItem.RADIUS);
+                    Log.i("Activity Result", location + " " + radius);
+                    if (mapTextView != null) {
+                        if (location == null) {
+                            mapTextView.setText("N/A");
+                        } else {
+                            mapTextView.setText(location);
+                        }
+                    }
+                    if (radiusTextView != null) {
+                        if (radius == null) {
+                            radiusTextView.setText("N/A");
+                        } else {
+                            radiusTextView.setText(radius);
+                        }
+                    }
+                } else {
+                    mapTextView.setText("N/A");
+                    radiusTextView.setText("N/A");
+                }
             }
         }
     }
@@ -143,12 +163,25 @@ public class TimeDialog extends DialogFragment {
         timeTextView1 = view.findViewById(R.id.firsttime);
         timeTextView2 = view.findViewById(R.id.secondtime);
         addNameEditText = view.findViewById(R.id.addNameEditText);
+        timeClearButton = view.findViewById(R.id.timeClearButton);
+        locationClearButton = view.findViewById(R.id.locationClearButton);
+
+        timeClearButton.setOnClickListener(v -> {
+            timeTextView1.setText("N/A");
+            timeTextView2.setText("N/A");
+            dateTextView1.setText("N/A");
+        });
+
+        locationClearButton.setOnClickListener(v -> {
+            mapTextView.setText("N/A");
+            radiusTextView.setText("N/A");
+        });
 
         mapTextView = view.findViewById(R.id.locationTextView);
         radiusTextView = view.findViewById(R.id.radiusTextView);
         mapTextView.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), MapActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, 10);
         });
 
         toggleGroupManager = new ToggleGroupManager(view);
@@ -177,11 +210,11 @@ public class TimeDialog extends DialogFragment {
             radiusTextView.setText((!presetRadiusString.isEmpty() ? presetRadiusString : "N/A"));
 
         } else if (this.from.equals("fab")) { // if user comes here from fab action, set the current date and time
-            if (!currentDate.isEmpty() && !currentTime1.isEmpty() && !currentTime2.isEmpty()) {
-                dateTextView1.setText(currentDate);
-                timeTextView1.setText(currentTime1);
-                timeTextView2.setText(currentTime2);
-            }
+            dateTextView1.setText("N/A");
+            timeTextView1.setText("N/A");
+            timeTextView2.setText("N/A");
+            mapTextView.setText("N/A");
+            radiusTextView.setText("N/A");
         }
 
         closeButton.setOnClickListener(v -> {
@@ -192,92 +225,127 @@ public class TimeDialog extends DialogFragment {
 
             String time1 = timeTextView1.getText().toString();
             String time2 = timeTextView2.getText().toString();
+            String name = addNameEditText.getText().toString();
+            String date = dateTextView1.getText().toString();
+            String location = mapTextView.getText().toString();
+            String radius = radiusTextView.getText().toString();
+
+            ShushObject shushObject = new ShushObject();
+
+            Date date1 = null;
+            Date date2 = null;
+
+            Boolean goTime = false;
+            Boolean goLocation = false;
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm a");
 
             try {
-                Date date1 = simpleDateFormat.parse(time1);
-                Date date2 = simpleDateFormat.parse(time2);
-
-                if (this.from.equals("fab")) { // if the user comes in from the fab action click
-                    if (!addNameEditText.getText().toString().isEmpty()) {
-                        if (date2.after(date1)) {
-                            if (!toggleGroupManager.getToggleStateString().isEmpty()) {
-                                // set all the data to a shushObject (defined above) and insert into Database (not update)
-                                Log.i("Dialog", "No repeat");
-                                shushObject.setName(addNameEditText.getText().toString());
-                                shushObject.setTime(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
-                                shushObject.setDateRep(toggleGroupManager.getToggleStateString()); // set the repeatable days string
-                                shushObject.setUUID(UUID.randomUUID().toString());
-                                shushObject.setLocation(mapTextView.getText().toString());
-                                shushObject.setRadius(radiusTextView.getText().toString());
-                                if (databaseManager.insert(shushObject)) {
-                                    MainActivity.updateRecyclerView();
-                                    dismiss();
+                if (!name.isEmpty()) {
+                    if (date.equals("N/A") && time1.equals("N/A") && time2.equals("N/A") && location.equals("N/A") && radius.equals("N/A")) {
+                        new AlertDialog.Builder(getActivity()).setTitle("Location and time fields left blank")
+                                .setMessage("Please fill either or both location and time fields to provide a constraint for silencing your phone.")
+                                .setPositiveButton("Ok", null)
+                                .create().show();
+                        goLocation = false;
+                        goTime = false;
+                    } else {
+                        if (!date.equals("N/A") && !time1.equals("N/A") && !time2.equals("N/A")) {
+                            date1 = simpleDateFormat.parse(time1);
+                            date2 = simpleDateFormat.parse(time2);
+                            if (date2 != null && !date2.after(date1)) {
+                                new AlertDialog.Builder(getActivity()).setTitle("From time is after to time")
+                                        .setMessage("Please enter a valid time-frame for your constraint. Ensure your to-time is after your from-time.")
+                                        .setPositiveButton("Ok", null)
+                                        .create().show();
+                                goTime = false;
+                            } else {
+                                shushObject.setName(name);
+                                shushObject.setTime(time1 + " - " + time2);
+                                if (!toggleGroupManager.getToggleStateString().isEmpty()) {
+                                    shushObject.setDateRep(toggleGroupManager.getToggleStateString()); // check later
                                 } else {
-                                    Toast.makeText(getActivity(), "Problem saving data. Please try again.", Toast.LENGTH_LONG).show();
+                                    shushObject.setDateRep(date);
                                 }
-                            } else { // if there are no repeatable days, then just push the date and not the repeatable days as done in the previous block
-                                shushObject.setName(addNameEditText.getText().toString());
-                                shushObject.setTime(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
-                                shushObject.setDateRep(dateTextView1.getText().toString());
-                                shushObject.setUUID(UUID.randomUUID().toString());
-                                shushObject.setLocation(mapTextView.getText().toString());
-                                shushObject.setRadius(radiusTextView.getText().toString());
-                                Log.i("Shush", shushObject.toString());
-                                if (databaseManager.insert(shushObject)) {
-                                    MainActivity.updateRecyclerView();
-                                    dismiss();
-                                } else {
-                                    Toast.makeText(getActivity(), "Problem saving data. Please try again.", Toast.LENGTH_LONG).show();
-                                }
+                                goTime = true;
                             }
                         } else {
-                            Toast.makeText(getActivity(), "Please ensure the second time is after the first time.", Toast.LENGTH_LONG).show();
-                        }
-                    } else {
-                        Toast.makeText(getActivity(), "Please enter a name for your time constraint. Ex: Work/Study.", Toast.LENGTH_LONG).show();
-                    }
-                } else if (this.from.equals("click")) { // if the user comes in from a recycler item click, do the same thing as above but update the database instead of inserting data
-                    if (!presetUUIDString.isEmpty()) {
-                        if (!addNameEditText.getText().toString().isEmpty()) {
-                            if (date2.after(date1)) {
-                                if (!toggleGroupManager.getToggleStateString().isEmpty()) {
-                                    shushObject.setName(addNameEditText.getText().toString());
-                                    shushObject.setTime(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
-                                    shushObject.setDateRep(toggleGroupManager.getToggleStateString());
-                                    shushObject.setUUID(presetUUIDString);
-                                    if (databaseManager.update(shushObject)) {
-                                        MainActivity.updateRecyclerView();
-                                        dismiss();
-                                    } else {
-                                        Toast.makeText(getActivity(), "Problem saving data. Please try again.", Toast.LENGTH_LONG).show();
-                                    }
-                                } else {
-                                    shushObject.setName(addNameEditText.getText().toString());
-                                    shushObject.setTime(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
-                                    shushObject.setDateRep(dateTextView1.getText().toString());
-                                    shushObject.setUUID(presetUUIDString);
-                                    Log.i("Shush", shushObject.toString());
-                                    if (databaseManager.update(shushObject)) {
-                                        MainActivity.updateRecyclerView();
-                                        dismiss();
-                                    } else {
-                                        Toast.makeText(getActivity(), "Problem saving data. Please try again.", Toast.LENGTH_LONG).show();
-                                    }
+                            goTime = false;
+                            if (!(date.equals("N/A") && time1.equals("N/A") && time2.equals("N/A"))) {
+                                if (date.equals("N/A")) {
+                                    new AlertDialog.Builder(getActivity()).setTitle("Date field left blank")
+                                            .setMessage("Please enter a date for your constraint. Click on the date field to access a date picker.")
+                                            .setPositiveButton("Ok", null)
+                                            .create().show();
+                                    goTime = false;
+                                } else if (time1.equals("N/A") || time2.equals("N/A")) {
+                                    new AlertDialog.Builder(getActivity()).setTitle("Time field left blank")
+                                            .setMessage("Please enter a time for your constraint. Click on the time field to access the time picker.")
+                                            .setPositiveButton("Ok", null)
+                                            .create().show();
+                                    goTime = false;
                                 }
                             } else {
-                                Toast.makeText(getActivity(), "Please ensure the second time is after the first time.", Toast.LENGTH_LONG).show();
+                                goTime = true;
+                            }
+                        }
+                        if (!location.equals("N/A") && !radius.equals("N/A")) {
+                            shushObject.setLocation(location);
+                            shushObject.setRadius(radius);
+                            goLocation = true;
+                        } else if (!(location.equals("N/A") && radius.equals("N/A"))) {
+                            if (location.equals("N/A")) {
+                                new AlertDialog.Builder(getActivity()).setTitle("Location field left blank")
+                                        .setMessage("Please enter a location for your constraint. Click on the location field to access the map.")
+                                        .setPositiveButton("Ok", null)
+                                        .create().show();
+                                goLocation = false;
+                            } else {
+                                if (radius.equals("N/A")) {
+                                    new AlertDialog.Builder(getActivity()).setTitle("Radius field left blank")
+                                            .setMessage("Please enter a radius for your constraint. Click on the location field to access the radius options.")
+                                            .setPositiveButton("Ok", null)
+                                            .create().show();
+                                    goLocation = false;
+                                }
                             }
                         } else {
-                            Toast.makeText(getActivity(), "Please enter a name for your time constraint. Ex: Work/Study.", Toast.LENGTH_LONG).show();
+                            goLocation = true;
                         }
                     }
+                } else {
+                    new AlertDialog.Builder(getActivity()).setTitle("Name field left blank")
+                            .setMessage("Please enter a name for your constraint. For example: Work/Study, etc.")
+                            .setPositiveButton("Ok", null)
+                            .create().show();
+                    goLocation = false;
+                    goTime = false;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
+            if (goTime && goLocation) {
+                shushObject.setName(addNameEditText.getText().toString());
+                shushObject.setTime(timeTextView1.getText().toString() + " - " + timeTextView2.getText().toString());
+                shushObject.setDateRep((toggleGroupManager.getToggleStateString().isEmpty()) ? dateTextView1.getText().toString() : toggleGroupManager.getToggleStateString()); // set the repeatable days string
+                shushObject.setLocation(mapTextView.getText().toString());
+                shushObject.setRadius(radiusTextView.getText().toString());
+
+                if (this.from.equals("fab")) {
+                    shushObject.setUUID(UUID.randomUUID().toString());
+                    if (databaseManager.insert(shushObject)) {
+                        MainActivity.updateRecyclerView();
+                        dismiss();
+                    }
+                } else if (this.from.equals("click")) {
+                    shushObject.setUUID(presetUUIDString);
+                    if (databaseManager.update(shushObject)) {
+                        MainActivity.updateRecyclerView();
+                        dismiss();
+                    }
+                }
+            }
 
         });
 
@@ -315,15 +383,12 @@ public class TimeDialog extends DialogFragment {
         if (from.equals("click")) {
             if (getArguments() != null) {
 
-                presetNameString = getArguments().getString(DatabaseManager.DatabaseEntry.NAME);
-                presetDataString = getArguments().getString(DatabaseManager.DatabaseEntry.TIME);
-                presetSupplementalDataString = getArguments().getString(DatabaseManager.DatabaseEntry.DATE_REP);
-                presetUUIDString = getArguments().getString(DatabaseManager.DatabaseEntry.UUID);
-
-                if (tag != null && tag.equals("double")) {
-                    presetLocationString = getArguments().getString(DatabaseManager.DatabaseEntry.LOC);
-                    presetRadiusString = getArguments().getString(DatabaseManager.DatabaseEntry.RAD);
-                }
+                presetNameString = (getArguments().getString(DatabaseManager.DatabaseEntry.NAME) == null ? "" : getArguments().getString(DatabaseManager.DatabaseEntry.NAME));
+                presetDataString = (getArguments().getString(DatabaseManager.DatabaseEntry.TIME) == null ? "" : getArguments().getString(DatabaseManager.DatabaseEntry.TIME));
+                presetSupplementalDataString = (getArguments().getString(DatabaseManager.DatabaseEntry.DATE_REP) == null ? "" : getArguments().getString(DatabaseManager.DatabaseEntry.DATE_REP));
+                presetUUIDString = (getArguments().getString(DatabaseManager.DatabaseEntry.UUID) == null ? "" : getArguments().getString(DatabaseManager.DatabaseEntry.UUID));
+                presetLocationString = (getArguments().getString(DatabaseManager.DatabaseEntry.LOC) == null ? "" : getArguments().getString(DatabaseManager.DatabaseEntry.LOC));
+                presetRadiusString = (getArguments().getString(DatabaseManager.DatabaseEntry.RAD) == null ? "" : getArguments().getString(DatabaseManager.DatabaseEntry.RAD));
 
                 if (!presetSupplementalDataString.isEmpty() && !presetSupplementalDataString.contains(",")) {
                     Calendar calendar = Calendar.getInstance();
@@ -332,24 +397,18 @@ public class TimeDialog extends DialogFragment {
                 }
 
                 int index = 0;
-                for (Character character: presetDataString.toCharArray()) {
-                    if (character == '-') {
-                        presetTimeString1 = presetDataString.substring(0, index - 1);
-                        presetTimeString2 = presetDataString.substring(index + 2);
+                if (!presetDataString.isEmpty()) {
+                    for (Character character : presetDataString.toCharArray()) {
+                        if (character == '-') {
+                            presetTimeString1 = presetDataString.substring(0, index - 1);
+                            presetTimeString2 = presetDataString.substring(index + 2);
+                        }
+                        index = index + 1;
                     }
-                    index = index + 1;
                 }
             }
-        } else if (from.equals("fab")) { // if the user comes from the fab, then set the current date and time
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, MMM dd, yyyy");
-            currentDate = simpleDateFormat.format(new Date());
-            SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a");
-            Calendar c = Calendar.getInstance();
-            c.setTime(new Date());
-            c.add(Calendar.HOUR_OF_DAY, 1); // set toTime to 1 hour after fromTime
-            currentTime1 = timeFormat.format(new Date());
-            currentTime2 = timeFormat.format(c.getTime());
         }
+
         super.show(fragmentManager, tag);
     }
 
@@ -379,14 +438,16 @@ public class TimeDialog extends DialogFragment {
 
             if (textView != null) {
                 String text = textView.getText().toString();
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, MMM dd, yyyy");
-                try {
-                    Date date = simpleDateFormat.parse(text);
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(date);
-                    datePickerDialog.updateDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
-                } catch (ParseException e) {
-                    e.printStackTrace();
+                if (!text.equals("N/A")) {
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, MMM dd, yyyy");
+                    try {
+                        Date date = simpleDateFormat.parse(text);
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTime(date);
+                        datePickerDialog.updateDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
@@ -445,14 +506,16 @@ public class TimeDialog extends DialogFragment {
             int minute = c.get(Calendar.MINUTE);
             TimePickerDialog timePickerDialog = new TimePickerDialog(context, this, hour, minute, false);
             String text = textView.getText().toString();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm a");
-            try {
-                Date date = simpleDateFormat.parse(text);
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(date);
-                timePickerDialog.updateTime(calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE));
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (!text.equals("N/A")) {
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm a");
+                try {
+                    Date date = simpleDateFormat.parse(text);
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(date);
+                    timePickerDialog.updateTime(calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
             return timePickerDialog;
         }

@@ -1,6 +1,8 @@
 package com.example.shushandroid;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
@@ -58,6 +60,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        radius = 10;
+
         searchEditText = findViewById(R.id.searchTextField);
         gpsLocateImageView = findViewById(R.id.currentLocationButton);
         checkFloatingActionButton = findViewById(R.id.checkFloatingActionButton);
@@ -65,11 +69,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         checkFloatingActionButton.setOnClickListener(view -> {
             if (!searchEditText.getText().toString().isEmpty()) {
                 String radiusString = radius + "m";
-                TimeDialog.LocationDataTransferItem.LOCATION = searchEditText.getText().toString();
-                TimeDialog.LocationDataTransferItem.RADIUS = radiusString;
+                Intent intent = new Intent();
+                Log.i("Data", searchEditText.getText().toString());
+                intent.putExtra(TimeDialog.LocationDataTransferItem.LOCATION, searchEditText.getText().toString());
+                intent.putExtra(TimeDialog.LocationDataTransferItem.RADIUS, radiusString);
+                setResult(Activity.RESULT_OK, intent);
                 finish();
             }
         });
+
         spinner = findViewById(R.id.radiusSpinner);
 
         List<String> radiusList = new ArrayList<>();
@@ -125,7 +133,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
             moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM, address.getAddressLine(0));
             map.clear();
-            radius = 500;
             map.addCircle(new CircleOptions().center(new LatLng(address.getLatitude(), address.getLongitude())).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -151,7 +158,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 @Override
                 public void onNothingSelected(AdapterView<?> adapterView) {
                     map.clear();
-                    radius = 500;
+                    radius = 10;
                     map.addCircle(new CircleOptions().center(new LatLng(address.getLatitude(), address.getLongitude())).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
                 }
             });
@@ -172,7 +179,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     if (myLocation != null) {
                         moveCamera(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), DEFAULT_ZOOM, "My Location");
                         map.clear();
-                        radius = 100;
+                        radius = 10;
                         map.addCircle(new CircleOptions().center(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
                         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
@@ -198,7 +205,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                             @Override
                             public void onNothingSelected(AdapterView<?> adapterView) {
                                 map.clear();
-                                radius = 500;
+                                radius = 10;
                                 map.addCircle(new CircleOptions().center(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
                             }
                         });

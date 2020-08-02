@@ -102,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
 
     public static void updateRecyclerView () {
         shushObjectArrayList = databaseManager.retrieveWithCursor();
-        System.out.println(shushObjectArrayList);
         shushRecyclerAdapter.setShushObjectArrayList(shushObjectArrayList);
         recyclerView.setAdapter(shushRecyclerAdapter);
     }
