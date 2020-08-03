@@ -204,6 +204,9 @@ public class MainActivity extends AppCompatActivity {
                     getActivity().startActivityForResult(new Intent(getActivity(), SettingsActivity.class), 10);
             });
 
+            feedbackView.setOnClickListener(view1 -> {
+
+            });
             return view;
         }
     }
