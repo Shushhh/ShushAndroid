@@ -80,7 +80,7 @@
         android:textColor="@color/cardview_dark_background"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="32dp"
-        android:backgroundTint="@color/colorAccentDarker" />
+        android:backgroundTint="@color/colorAccent" />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -93,7 +93,7 @@
         android:textColor="@color/cardview_dark_background"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="12dp"
-        android:backgroundTint="@color/colorAccentDarker"/>
+        android:backgroundTint="@color/colorAccent"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -107,7 +107,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="32dp"
-        android:backgroundTint="@color/colorAccentDarker"/>
+        android:backgroundTint="@color/colorAccent"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
