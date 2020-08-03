@@ -113,7 +113,6 @@
         android:backgroundTint="@color/colorAccent"
         android:src="@drawable/ic_check"
         android:tint="#3C3F41"
-        app:backgroundTint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

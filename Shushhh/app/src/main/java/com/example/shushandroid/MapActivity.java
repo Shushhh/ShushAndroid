@@ -1,6 +1,7 @@
 package com.example.shushandroid;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -103,6 +104,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 intent.putExtra(TimeDialog.LocationDataTransferItem.RADIUS, radiusString);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
+            } else {
+                new AlertDialog.Builder(MapActivity.this).setTitle("No Location Found")
+                        .setMessage("Please search for a valid location so that our services can mute your phone appropriately.")
+                        .setPositiveButton("Ok", null)
+                        .create().show();
             }
         });
 
