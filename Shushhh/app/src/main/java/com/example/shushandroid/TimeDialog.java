@@ -105,8 +105,6 @@ public class TimeDialog extends DialogFragment {
      * @param savedInstanceState
      */
 
-
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

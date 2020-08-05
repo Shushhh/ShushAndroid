@@ -34,7 +34,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
@@ -53,7 +52,7 @@ import androidx.core.app.ActivityCompat;
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private FloatingActionButton checkFloatingActionButton;
-    private ImageView gpsLocateImageView;
+    private FloatingActionButton gpsLocationFab;
     private EditText searchEditText;
     private Spinner spinner;
 
@@ -73,7 +72,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         radius = 10;
 
         searchEditText = findViewById(R.id.searchTextField);
-        gpsLocateImageView = findViewById(R.id.currentLocationButton);
+        gpsLocationFab = findViewById(R.id.currentLocationButton);
         checkFloatingActionButton = findViewById(R.id.checkFloatingActionButton);
 
         String apiKey = getString(R.string.google_maps_API_key);
@@ -157,8 +156,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
             return false;
         });
-        gpsLocateImageView.setOnClickListener(view -> {
-            Log.d(TAG, "transferred to device location after clicking gps");
+        gpsLocationFab.setOnClickListener(view -> {
             getDeviceLocation();
         });
         hideKeyBoard();
@@ -242,6 +240,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         moveCamera(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), DEFAULT_ZOOM, "My Location");
                         map.clear();
                         radius = 10;
+                        spinner.setSelection(0);
                         map.addCircle(new CircleOptions().center(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
                         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override

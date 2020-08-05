@@ -15,6 +15,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -44,6 +46,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * @apiNote Main Activity class
@@ -98,6 +101,23 @@ public class MainActivity extends AppCompatActivity {
             init();
         }
 
+        ShushQueryScheduler shushQueryScheduler = new ShushQueryScheduler();
+        shushQueryScheduler.schedule(databaseManager.retrieveWithCursor());
+
+        alarmTest();
+
+    }
+
+    public void alarmTest () {
+        ArrayList<Integer> arrayList = new ArrayList<>(Arrays.asList(5, 10, 15, 20));
+        Intent intent = new Intent(this, SilencerReciever.class);
+        int i = 0;
+        for (Integer minutes: arrayList) {
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, i, intent, 0);
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), minutes * 60 * 1000, pendingIntent);
+            i++;
+        }
     }
 
     public static void updateRecyclerView () {
