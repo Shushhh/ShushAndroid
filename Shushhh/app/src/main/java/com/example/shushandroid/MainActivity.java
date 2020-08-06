@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
             init();
         }
 
-        ShushQueryScheduler shushQueryScheduler = new ShushQueryScheduler();
+        ShushQueryScheduler shushQueryScheduler = new ShushQueryScheduler(this);
         shushQueryScheduler.schedule(databaseManager.retrieveWithCursor());
 
         alarmTest();
