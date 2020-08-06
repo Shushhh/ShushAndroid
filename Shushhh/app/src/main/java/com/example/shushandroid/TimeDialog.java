@@ -181,6 +181,7 @@ public class TimeDialog extends DialogFragment {
         radiusTextView = view.findViewById(R.id.radiusTextView);
         mapTextView.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), MapActivity.class);
+            intent.putExtra("Location", mapTextView.getText().toString());
             startActivityForResult(intent, 10);
         });
 
