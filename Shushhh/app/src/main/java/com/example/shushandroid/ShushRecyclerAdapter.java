@@ -26,7 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class ShushRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private ArrayList<ShushObject> shushObjectArrayList;
-    private TimeDialog timeDialog;
+    private ShushDialog timeDialog;
     private FragmentManager fragmentManager;
 
     private static final int SINGLE_TYPE = 0;
@@ -87,7 +87,7 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
     public ShushRecyclerAdapter(ArrayList<ShushObject> shushObjectArrayList, FragmentManager fragmentManager){
         this.shushObjectArrayList = shushObjectArrayList;
         this.fragmentManager = fragmentManager;
-        timeDialog = new TimeDialog();
+        timeDialog = new ShushDialog();
     }
 
     @NonNull

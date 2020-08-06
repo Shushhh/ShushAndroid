@@ -101,10 +101,14 @@ public class MainActivity extends AppCompatActivity {
             init();
         }
 
+        Log.i("Package Name", this.getPackageName());
+
         ShushQueryScheduler shushQueryScheduler = new ShushQueryScheduler(this);
         shushQueryScheduler.schedule(databaseManager.retrieveWithCursor());
 
-        alarmTest();
+        //alarmTest();
+
+
 
     }
 
@@ -150,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
                     ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, PermissionRequestCodes.PERMISSION_FINE_LOCATION);
                 }
             } else {
-                TimeDialog timeDialog = new TimeDialog();
+                ShushDialog timeDialog = new ShushDialog();
                 timeDialog.show(getSupportFragmentManager(), "", "fab");
             }
 
@@ -192,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == PermissionRequestCodes.PERMISSION_FINE_LOCATION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    TimeDialog timeDialog = new TimeDialog();
+                    ShushDialog timeDialog = new ShushDialog();
                     timeDialog.show(getSupportFragmentManager(), "t");
                 }
             }

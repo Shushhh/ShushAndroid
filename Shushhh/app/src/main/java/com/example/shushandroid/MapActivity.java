@@ -99,8 +99,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 String radiusString = radius + "m";
                 Intent intent = new Intent();
                 Log.i("Data", searchEditText.getText().toString());
-                intent.putExtra(TimeDialog.LocationDataTransferItem.LOCATION, searchEditText.getText().toString());
-                intent.putExtra(TimeDialog.LocationDataTransferItem.RADIUS, radiusString);
+                intent.putExtra(ShushDialog.LocationDataTransferItem.LOCATION, searchEditText.getText().toString());
+                intent.putExtra(ShushDialog.LocationDataTransferItem.RADIUS, radiusString);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
             } else {
