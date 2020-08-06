@@ -86,13 +86,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             Places.initialize(getApplicationContext(), apiKey);
         }
         searchEditText.setFocusable(false);
-        searchEditText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                List<Place.Field> fieldList = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.NAME);
-                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldList).build(MapActivity.this);
-                startActivityForResult(intent, 100);
-            }
+        searchEditText.setOnClickListener(view -> {
+            List<Place.Field> fieldList = Arrays.asList(Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.NAME);
+            Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldList).build(MapActivity.this);
+            startActivityForResult(intent, 100);
         });
 
         checkFloatingActionButton.setOnClickListener(view -> {
@@ -317,7 +314,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Toast.makeText(this, "Map is Ready", Toast.LENGTH_SHORT).show();
         Log.d(TAG, "onMapReady: map is ready");
         map = googleMap;
-        getDeviceLocation();
+        // string has the location data from the dialog activity
+        if (getIntent().getStringExtra("Location").equals("N/A")) {
+            getDeviceLocation();
+        } else {
+            Log.i("Location", getIntent().getStringExtra("Location"));
+            searchEditText.setText(getIntent().getStringExtra("Location"));
+            geoLocate();
+        }
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
