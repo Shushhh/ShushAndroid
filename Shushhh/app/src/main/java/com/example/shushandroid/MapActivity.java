@@ -132,12 +132,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         initMap();
         search();
 
-        // string has the location data from the dialog activity
-        if (getIntent().getStringExtra("Location") != null) {
-            Log.i("Location", getIntent().getStringExtra("Location"));
-            searchEditText.setText(getIntent().getStringExtra("Location"));
-        }
-
     }
 
     @Override
