@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.text.format.DateFormat;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -26,6 +27,18 @@ import java.util.Date;
 import java.util.Locale;
 
 public class ShushQueryScheduler {
+
+    public static final String SCHEDULE_TYPE = "SCHEDULE_TYPE";
+
+    public static class Key {
+        public static final String LOCATION_REPEAT = "LOCATION_REPEAT";
+        public static final String LOCATION_NO_REPEAT = "LOCATION_NO_REPEAT";
+        public static final String LOCATION_TIME_REPEAT = "LOCATION_TIME_REPEAT";
+        public static final String LOCATION_TIME_NO_REPEAT = "LOCATION_TIME_NO_REPEAT";
+        public static final String TIME_REPEAT = "TIME_REPEAT";
+        public static final String TIME_NO_REPEAT = "TIME_NO_REPEAT";
+
+    }
 
     private Context context;
     private double hours;
@@ -53,40 +66,78 @@ public class ShushQueryScheduler {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void schedule (ArrayList<ShushObject> shushObjectArrayList) throws ParseException {
         id = 0;
+
         for (ShushObject shushObject: shushObjectArrayList) {
+            Log.i("Alarm", shushObject.toString());
             if (shushObject.getDate().equals(ShushObject.Key.NULL)) { // only location setting with possible repeats
+
                 if (!shushObject.getRep().isEmpty()) { // no time -> location at a certain interval
-                    for (Character day: shushObject.getRep().toCharArray()) {
+
+                    char[] repArray = shushObject.getRep().toCharArray();
+                    for (int index = 0; index < repArray.length; index++) {
+
+                        String day = "";
+                        //SnMRSt
+                        if (Character.isUpperCase(shushObject.getRep().toCharArray()[index])) {
+                            if (index == repArray.length - 1) {
+                                day = "" + repArray[index];
+                            } else {
+                                if (Character.isLowerCase(shushObject.getRep().toCharArray()[index + 1])) {
+                                    day = "" + repArray[index] + repArray[index + 1];
+                                } else {
+                                    day = "" + repArray[index];
+                                }
+                            }
+
+                            Log.i("Alarm Day", day);
+
+                            Calendar[] calendars = getSelectedDayCalendars(shushObject.getDate(), shushObject.getTime(), day.toString());
+                            AlarmManager fromAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                            Intent intent = new Intent(context, SilencerReciever.class);
+                            intent.putExtra(SCHEDULE_TYPE, Key.LOCATION_REPEAT);
+                            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
+                            fromAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendars[0].getTimeInMillis(), (7 * 24 * 60 * 60 * 1000), pendingIntent); // set to silent
+
+                            id++;
+
+                            AlarmManager toAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                            PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context, id, intent, 0);
+                            toAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendars[1].getTimeInMillis() + (long) (hours * 60 * 60 *  1000), (7 * 24 * 60 * 60 * 1000), pendingIntent2); // set to ring
+
+                            Log.i("Alarm Data", calendars[0].getTime().toString() + " || " + calendars[1].getTime().toString());
+                            Log.i("Alarm Schedule", "Location repeat executing...");
+
+                            id++;
+                        }
+
 
                     }
                 } else {
                     //everyday just check every x minutes
                     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                     Intent intent = new Intent(context, SilencerReciever.class);
+                    intent.putExtra(SCHEDULE_TYPE, Key.LOCATION_NO_REPEAT);
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
                     alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), (long) ((hours * 60 * 60 * 1000)), pendingIntent);
-                    Log.i("Alarm Schedule", "Location no repeat " + id);
-
-                    boolean alarmUp = (PendingIntent.getBroadcast(context, id,
-                            new Intent("com.my.package.MY_UNIQUE_ACTION"),
-                            PendingIntent.FLAG_NO_CREATE) != null);
-
-                    Log.i("alarm set", "" + alarmUp);
-
-                    id ++;
+                    Log.i("Alarm Schedule", "Location no repeat executing...");
+                    id++;
                     // perform GeoFencing processing in SilencerReceiver
                 }
-            } else if (shushObject.getLocation().equals(ShushObject.Key.NULL)) { // only time setting with possible repeats
+            } else if (shushObject.getLocation().equals(ShushObject.Key.NULL)) {
                 if (!shushObject.getRep().isEmpty()) {
                     for (Character day: shushObject.getRep().toCharArray()) {
                         Calendar[] calendars = getSelectedDayCalendars(shushObject.getDate(), shushObject.getTime(), day.toString());
                         AlarmManager fromAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                         Intent intent = new Intent(context, SilencerReciever.class);
+                        intent.putExtra(SCHEDULE_TYPE, Key.TIME_REPEAT);
                         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
                         fromAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendars[0].getTimeInMillis(), (7 * 24 * 60 * 60 * 1000), pendingIntent); // set to silent
 
+                        id++;
+
                         AlarmManager toAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                        toAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendars[1].getTimeInMillis(), (7 * 24 * 60 * 60 * 1000), pendingIntent); // set to ring
+                        PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context, id, intent, 0);
+                        toAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendars[1].getTimeInMillis(), (7 * 24 * 60 * 60 * 1000), pendingIntent2); // set to ring
 
                         Log.i("Alarm Schedule", "Time repeat " + id);
 
@@ -96,35 +147,15 @@ public class ShushQueryScheduler {
                     Calendar[] calendars = getSelectedDayCalendars(shushObject.getDate(), shushObject.getTime(), shushObject.getRep());
                     AlarmManager fromAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                     Intent intent = new Intent(context, SilencerReciever.class);
+                    intent.putExtra(SCHEDULE_TYPE, Key.TIME_NO_REPEAT);
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
                     fromAlarmManager.set(AlarmManager.RTC_WAKEUP, calendars[0].getTimeInMillis(), pendingIntent); // set to silent
-
-                    boolean alarmUp = (PendingIntent.getBroadcast(context, 0,
-                            new Intent("com.my.package.MY_UNIQUE_ACTION"),
-                            PendingIntent.FLAG_NO_CREATE) != null);
-
-                    if (alarmUp) {
-                        Log.d("Alarm Schedule Check", "Alarm is already active");
-                    }
 
                     id++;
 
                     AlarmManager toAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                    toAlarmManager.set(AlarmManager.RTC_WAKEUP, calendars[1].getTimeInMillis(), pendingIntent); // set to ring
-
-                    boolean alarm = (PendingIntent.getBroadcast(context, 0,
-                            new Intent("com.my.package.MY_UNIQUE_ACTION"),
-                            PendingIntent.FLAG_NO_CREATE) != null);
-
-                    if (alarm) {
-                        Log.d("Alarm Schedule Check", "Alarm is already active");
-                    }
-
-                    // Quick note: if the times are separated by a small time limit then notify the user with a message -> add to bugs but feature works
-
-                    Log.i("Alarm Schedule", "Time no repeat " + id);
-                    Log.i("Alarm Calendar", calendars[0].getTime().toString());
-                    Log.i("Alarm Calendar", calendars[1].getTime().toString());
+                    PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context, id, intent, 0);
+                    toAlarmManager.set(AlarmManager.RTC_WAKEUP, calendars[1].getTimeInMillis(), pendingIntent2); // set to ring
 
                     id++;
                 }
@@ -140,6 +171,7 @@ public class ShushQueryScheduler {
         Calendar calendarTo = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat(ShushDialog.DateFormatStringKey.dateFormatString, Locale.getDefault()); // check for other countries
         SimpleDateFormat timeFormat = new SimpleDateFormat(ShushDialog.DateFormatStringKey.timeFormatString, Locale.getDefault());
+
         String time1String = null;
         String time2String = null;
         Date date = null;
@@ -147,8 +179,13 @@ public class ShushQueryScheduler {
         Date time2 = null;
         LocalDate localDate = null;
 
-        if (!dateString.equals(ShushObject.Key.NULL))
+        if (!dateString.equals(ShushObject.Key.NULL)) {
             date = dateFormat.parse(dateString);
+        } else {
+            date = new Date();
+        }
+
+        localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
         int index = 0;
         for (Character character: timeString.toCharArray()) {
@@ -159,35 +196,66 @@ public class ShushQueryScheduler {
             index = index + 1;
         }
 
-        if (!timeString.equals(ShushObject.Key.NULL))
+        if (!time1String.equals(ShushObject.Key.NULL) && !time2String.equals(ShushObject.Key.NULL)) {
             time1 = timeFormat.parse(time1String);
-        if (!timeString.equals(ShushObject.Key.NULL))
             time2 = timeFormat.parse(time2String);
+        } else {
+            time1 = new Date();
+            time2 = new Date();
+        }
 
         if (time1 != null && time2 != null && date != null) {
             LocalTime localTime1 = time1.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
             LocalTime localTime2 = time2.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
 
-            if (dayString != null && !dayString.equals(""))
-                localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().with(TemporalAdjusters.next(getDayOfWeek(dayString)));
-            else
-                localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            if (localDate != null) {
+                if (dayString != null && !dayString.equals("")) {
+                    if (checkSimilarDays(localDate, dayString)) {
+                        localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    } else {
+                        localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().with(TemporalAdjusters.next(getDayOfWeek(dayString)));
+                    }
+                } else {
+                    localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                }
+            }
 
             calendarFrom.set(Calendar.YEAR, localDate.getYear());
             calendarFrom.set(Calendar.MONTH, localDate.getMonthValue() - 1);
             calendarFrom.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth());
-            calendarFrom.set(Calendar.HOUR, localTime1.getHour());
+            calendarFrom.set(Calendar.HOUR_OF_DAY, localTime1.getHour());
             calendarFrom.set(Calendar.MINUTE, localTime1.getMinute());
+
+            Log.i("Alarm Calendar", "" + localDate.getDayOfMonth());
 
             calendarTo.set(Calendar.YEAR, localDate.getYear());
             calendarTo.set(Calendar.MONTH, localDate.getMonthValue() - 1);
             calendarTo.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth());
-            calendarTo.set(Calendar.HOUR, localTime2.getHour());
+            calendarTo.set(Calendar.HOUR_OF_DAY, localTime2.getHour());
             calendarTo.set(Calendar.MINUTE, localTime2.getMinute());
 
         }
 
         return new Calendar[] {calendarFrom, calendarTo};
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private boolean checkSimilarDays (LocalDate localDate, String dayString) {
+        if (localDate.getDayOfWeek() == DayOfWeek.SUNDAY && dayString.equals("Sn")) {
+            return true;
+        } else if (localDate.getDayOfWeek() == DayOfWeek.MONDAY && dayString.equals("M")) {
+            return true;
+        } else if (localDate.getDayOfWeek() == DayOfWeek.TUESDAY && dayString.equals("T")) {
+            return true;
+        } else if (localDate.getDayOfWeek() == DayOfWeek.WEDNESDAY && dayString.equals("W")) {
+            return true;
+        } else if (localDate.getDayOfWeek() == DayOfWeek.THURSDAY && dayString.equals("R")) {
+            return true;
+        } else if (localDate.getDayOfWeek() == DayOfWeek.FRIDAY && dayString.equals("F")) {
+            return true;
+        } else if (localDate.getDayOfWeek() == DayOfWeek.SATURDAY && dayString.equals("St")) {
+            return true;
+        } else return false;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

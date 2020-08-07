@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import java.util.Objects;
+
 public class SilencerReciever extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -12,5 +14,8 @@ public class SilencerReciever extends BroadcastReceiver {
         /*
          * If the user mentions a location, perform GeoFencing processing here *
          */
+        if (intent.getStringExtra(ShushQueryScheduler.Key.LOCATION_REPEAT) != null) {
+            Log.i("Alarm Data", Objects.requireNonNull(intent.getStringExtra(ShushQueryScheduler.Key.LOCATION_REPEAT)));
+        }
     }
 }
