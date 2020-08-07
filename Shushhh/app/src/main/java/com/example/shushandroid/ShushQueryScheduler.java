@@ -92,6 +92,8 @@ public class ShushQueryScheduler {
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
                     fromAlarmManager.set(AlarmManager.RTC_WAKEUP, calendars[0].getTimeInMillis(), pendingIntent); // set to silent
 
+                    id++;
+
                     AlarmManager toAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                     toAlarmManager.set(AlarmManager.RTC_WAKEUP, calendars[1].getTimeInMillis(), pendingIntent); // set to ring
 
