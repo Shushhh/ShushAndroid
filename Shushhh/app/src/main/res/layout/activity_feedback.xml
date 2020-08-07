@@ -1,6 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:background="@color/colorPrimary">
+
+<TextView
+    android:id="@+id/feedbackTitle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="30dp"
+    android:fontFamily="@font/rubik"
+    android:text="Shush Feedback"
+    android:textColor="@color/colorAccent"
+    android:textSize="24sp"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    android:layout_marginLeft="32dp"/>
+
+<Button
+    android:id="@+id/sendButton"
+    style="@style/Widget.MaterialComponents.Button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    android:layout_marginRight="32dp"
+    android:backgroundTint="@color/colorAccent"
+    android:fontFamily="@font/rubik"
+    android:text="Send"
+    android:textAllCaps="false"
+    android:textColor="@color/colorPrimary"
+    android:textSize="16sp"
+    android:textStyle="bold"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toTopOf="parent"/>
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/intro_feedback_text"
+    app:layout_constraintTop_toBottomOf="@id/feedbackTitle"
+    app:layout_constraintLeft_toLeftOf="parent"
+    android:text="We would love your feedback to improve our app!"
+    android:textColor="@color/cardview_light_background"
+    android:fontFamily="@font/rubik"
+    android:layout_marginTop="20dp"
+    android:layout_marginLeft="40dp"/>
+
+<View
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:id="@+id/viewfirst"
+    app:layout_constraintTop_toBottomOf="@id/intro_feedback_text"
+    android:background="@color/cardview_light_background"
+    android:layout_marginTop="20dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"/>
+
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/feedback_type_text"
+    app:layout_constraintTop_toBottomOf="@id/viewfirst"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    android:text="Please send your feedback to sudhirsahil2001@gmail.com and provide feedback within the Message box."
+    android:textColor="@color/colorAccentDarker"
+    android:textSize="16sp"
+    android:fontFamily="@font/rubik"
+    android:layout_marginTop="20dp"
+    android:paddingLeft="40dp"
+    android:paddingRight="40dp"/>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:id="@+id/to_linearlayout"
+        android:background="@drawable/feedback_round"
+        app:layout_constraintTop_toBottomOf="@id/feedback_type_text"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp" >
+
+        <TextView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="To:"
+            android:textColor="@color/colorAccent"
+            android:textSize="16sp"
+            android:gravity="center"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/colorAccent"
+            android:id="@+id/to_edittext"/>
+
+    </LinearLayout>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:id="@+id/subject_edittext"
+        app:layout_constraintTop_toBottomOf="@id/to_linearlayout"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/feedback_round"
+        android:textSize="16sp"
+        android:textColor="@color/colorAccent"
+        android:hint="Subject"
+        android:textColorHint="@color/colorAccent"/>
+    
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintVertical_weight="1"
+        android:id="@+id/message_edittext"
+        app:layout_constraintTop_toBottomOf="@id/subject_edittext"
+        android:padding="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/feedback_round"
+        android:textSize="16sp"
+        android:textColor="@color/colorAccent"
+        android:hint="Message"
+        android:textColorHint="@color/colorAccent"/>
+
+
+
+
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
