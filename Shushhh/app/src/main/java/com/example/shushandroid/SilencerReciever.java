@@ -14,8 +14,17 @@ public class SilencerReciever extends BroadcastReceiver {
         /*
          * If the user mentions a location, perform GeoFencing processing here *
          */
-        if (intent.getStringExtra(ShushQueryScheduler.Key.LOCATION_REPEAT) != null) {
-            Log.i("Alarm Data", Objects.requireNonNull(intent.getStringExtra(ShushQueryScheduler.Key.LOCATION_REPEAT)));
+        if (intent.getStringExtra(ShushQueryScheduler.SCHEDULE_TYPE) != null) {
+            String extra = Objects.requireNonNull(intent.getStringExtra(ShushQueryScheduler.SCHEDULE_TYPE));
+            if (extra.equals(ShushQueryScheduler.Key.LOCATION_REPEAT)) {
+                Log.i("Alarm Message", "location repeat");
+            } else if (extra.equals(ShushQueryScheduler.Key.LOCATION_NO_REPEAT)) {
+                Log.i("Alarm Message", "Location No Repeat");
+            } else if (extra.equals(ShushQueryScheduler.Key.TIME_REPEAT)) {
+                Log.i("Alarm Message", "Time Repeat");
+            } else if (extra.equals(ShushQueryScheduler.Key.TIME_NO_REPEAT)) {
+                Log.i("Alarm Message", "Time No Repeat");
+            }
         }
     }
 }
