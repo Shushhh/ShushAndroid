@@ -112,15 +112,8 @@ public class MainActivity extends AppCompatActivity {
         //alarmTest();
 
         try {
-            for (ShushObject shushObject: shushObjects) {
-                if (!shushObject.getDate().equals(ShushObject.Key.NULL)) {
-                    for (Character c: shushObject.getRep().toCharArray()) {
-                        Calendar[] calendars = shushQueryScheduler.getCurrentDayMillis(shushObject.getDate(), shushObject.getTime(), c.toString());
-                        Log.i("Calendar", calendars[0].getTime().toString() + " || " + calendars[1].getTime().toString());
-                    }
-                }
-            }
-        } catch (ParseException e) {
+            shushQueryScheduler.schedule(shushObjects);
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

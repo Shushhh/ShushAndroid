@@ -30,6 +30,7 @@ public class ShushQueryScheduler {
     private Context context;
     private double hours;
     private SharedPreferenceManager sharedPreferenceManager;
+    private int id = 0;
 
     public ShushQueryScheduler (Context context) {
         this.context = context;
@@ -49,7 +50,9 @@ public class ShushQueryScheduler {
     time -> only that time
      */
 
-    public void schedule (ArrayList<ShushObject> shushObjectArrayList) {
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void schedule (ArrayList<ShushObject> shushObjectArrayList) throws ParseException {
+        id = 0;
         for (ShushObject shushObject: shushObjectArrayList) {
             if (shushObject.getDate().equals(ShushObject.Key.NULL)) { // only location setting with possible repeats
                 if (!shushObject.getRep().isEmpty()) { // no time -> location at a certain interval
@@ -60,12 +63,46 @@ public class ShushQueryScheduler {
                     //everyday just check every x minutes
                     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                     Intent intent = new Intent(context, SilencerReciever.class);
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
                     alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), (long) ((hours * 60 * 60 * 1000)), pendingIntent);
+                    Log.i("Alarm Schedule", "Location no repeat " + id);
+                    id ++;
                     // perform GeoFencing processing in SilencerReceiver
                 }
             } else if (shushObject.getLocation().equals(ShushObject.Key.NULL)) { // only time setting with possible repeats
+                if (!shushObject.getRep().isEmpty()) {
+                    for (Character day: shushObject.getRep().toCharArray()) {
+                        Calendar[] calendars = getSelectedDayCalendars(shushObject.getDate(), shushObject.getTime(), day.toString());
+                        AlarmManager fromAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                        Intent intent = new Intent(context, SilencerReciever.class);
+                        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
+                        fromAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendars[0].getTimeInMillis(), (7 * 24 * 60 * 60 * 1000), pendingIntent); // set to silent
 
+                        AlarmManager toAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                        toAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendars[1].getTimeInMillis(), (7 * 24 * 60 * 60 * 1000), pendingIntent); // set to ring
+
+                        Log.i("Alarm Schedule", "Time repeat " + id);
+
+                        id++;
+                    }
+                } else {
+                    Calendar[] calendars = getSelectedDayCalendars(shushObject.getDate(), shushObject.getTime(), shushObject.getRep());
+                    AlarmManager fromAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                    Intent intent = new Intent(context, SilencerReciever.class);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
+                    fromAlarmManager.set(AlarmManager.RTC_WAKEUP, calendars[0].getTimeInMillis(), pendingIntent); // set to silent
+
+                    AlarmManager toAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                    toAlarmManager.set(AlarmManager.RTC_WAKEUP, calendars[1].getTimeInMillis(), pendingIntent); // set to ring
+
+                    // Quick note: if the times are separated by a small time limit then notify the user with a message -> add to bugs but feature works
+
+                    Log.i("Alarm Schedule", "Time no repeat " + id);
+                    Log.i("Alarm Calendar", calendars[0].getTime().toString());
+                    Log.i("Alarm Calendar", calendars[1].getTime().toString());
+
+                    id++;
+                }
             }
         }
     }
@@ -73,7 +110,7 @@ public class ShushQueryScheduler {
     //first just time
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public Calendar[] getCurrentDayMillis (@Nullable String dateString, @Nullable String timeString, @Nullable String dayString) throws ParseException {
+    public Calendar[] getSelectedDayCalendars (String dateString, String timeString, String dayString) throws ParseException {
         Calendar calendarFrom = Calendar.getInstance();
         Calendar calendarTo = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat(ShushDialog.DateFormatStringKey.dateFormatString, Locale.getDefault()); // check for other countries
@@ -85,7 +122,7 @@ public class ShushQueryScheduler {
         Date time2 = null;
         LocalDate localDate = null;
 
-        if (dateString != null)
+        if (!dateString.equals(ShushObject.Key.NULL))
             date = dateFormat.parse(dateString);
 
         int index = 0;
@@ -97,9 +134,9 @@ public class ShushQueryScheduler {
             index = index + 1;
         }
 
-        if (time1String != null)
+        if (!timeString.equals(ShushObject.Key.NULL))
             time1 = timeFormat.parse(time1String);
-        if (time2String != null)
+        if (!timeString.equals(ShushObject.Key.NULL))
             time2 = timeFormat.parse(time2String);
 
         if (time1 != null && time2 != null && date != null) {
@@ -113,17 +150,18 @@ public class ShushQueryScheduler {
 
             calendarFrom.set(Calendar.YEAR, localDate.getYear());
             calendarFrom.set(Calendar.MONTH, localDate.getMonthValue() - 1);
-            calendarFrom.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth() - 1);
+            calendarFrom.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth());
             calendarFrom.set(Calendar.HOUR, localTime1.getHour());
             calendarFrom.set(Calendar.MINUTE, localTime1.getMinute());
 
             calendarTo.set(Calendar.YEAR, localDate.getYear());
             calendarTo.set(Calendar.MONTH, localDate.getMonthValue() - 1);
-            calendarTo.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth() - 1);
+            calendarTo.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth());
             calendarTo.set(Calendar.HOUR, localTime2.getHour());
             calendarTo.set(Calendar.MINUTE, localTime2.getMinute());
 
         }
+
         return new Calendar[] {calendarFrom, calendarTo};
     }
 
