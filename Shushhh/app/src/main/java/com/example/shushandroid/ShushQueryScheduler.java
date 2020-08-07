@@ -13,9 +13,14 @@ import androidx.annotation.RequiresApi;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -36,9 +41,12 @@ public class ShushQueryScheduler {
     location, time, repeat
     location, time -> that particular day
     location, repeat
-    time, repeat
+    time, repeat -> only that time repeated on specified days
+        alarm manager for from time to activate silent with repeat for that day
+        alarm manager for to time to deactivate silent with repeat for that day
+            Repeat this for all days
     location -> everyday
-    time -> only that day
+    time -> only that time
      */
 
     public void schedule (ArrayList<ShushObject> shushObjectArrayList) {
@@ -50,11 +58,11 @@ public class ShushQueryScheduler {
                     }
                 } else {
                     //everyday just check every x minutes
-                    Log.i("Alarm", "Active " + hours);
                     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                    Intent intent = new Intent(context, BroadcastReceiver.class);
+                    Intent intent = new Intent(context, SilencerReciever.class);
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (long) ((hours * 60 * 60 * 1000)), (long) ((hours * 60 * 60 * 1000)), pendingIntent);
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), (long) ((hours * 60 * 60 * 1000)), pendingIntent);
+                    // perform GeoFencing processing in SilencerReceiver
                 }
             } else if (shushObject.getLocation().equals(ShushObject.Key.NULL)) { // only time setting with possible repeats
 
@@ -65,8 +73,9 @@ public class ShushQueryScheduler {
     //first just time
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private Calendar getCurrentDayMillis (@Nullable String dateString, @Nullable String timeString, @Nullable String dayString) throws ParseException {
-        Calendar calendar = Calendar.getInstance();
+    public Calendar[] getCurrentDayMillis (@Nullable String dateString, @Nullable String timeString, @Nullable String dayString) throws ParseException {
+        Calendar calendarFrom = Calendar.getInstance();
+        Calendar calendarTo = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat(ShushDialog.DateFormatStringKey.dateFormatString, Locale.getDefault()); // check for other countries
         SimpleDateFormat timeFormat = new SimpleDateFormat(ShushDialog.DateFormatStringKey.timeFormatString, Locale.getDefault());
         String time1String = null;
@@ -74,6 +83,7 @@ public class ShushQueryScheduler {
         Date date = null;
         Date time1 = null;
         Date time2 = null;
+        LocalDate localDate = null;
 
         if (dateString != null)
             date = dateFormat.parse(dateString);
@@ -93,17 +103,52 @@ public class ShushQueryScheduler {
             time2 = timeFormat.parse(time2String);
 
         if (time1 != null && time2 != null && date != null) {
-            LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            LocalDate localTime1 = time1.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            LocalDate localTime2 = time2.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalTime localTime1 = time1.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
+            LocalTime localTime2 = time2.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
 
-            calendar.set(Calendar.YEAR, localDate.getYear());
-            calendar.set(Calendar.MONTH, localDate.getMonthValue());
-            calendar.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth());
-            calendar.set(Calendar.HOUR, localTime1.getYear());
+            if (dayString != null && !dayString.equals(""))
+                localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().with(TemporalAdjusters.next(getDayOfWeek(dayString)));
+            else
+                localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            calendarFrom.set(Calendar.YEAR, localDate.getYear());
+            calendarFrom.set(Calendar.MONTH, localDate.getMonthValue() - 1);
+            calendarFrom.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth() - 1);
+            calendarFrom.set(Calendar.HOUR, localTime1.getHour());
+            calendarFrom.set(Calendar.MINUTE, localTime1.getMinute());
+
+            calendarTo.set(Calendar.YEAR, localDate.getYear());
+            calendarTo.set(Calendar.MONTH, localDate.getMonthValue() - 1);
+            calendarTo.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth() - 1);
+            calendarTo.set(Calendar.HOUR, localTime2.getHour());
+            calendarTo.set(Calendar.MINUTE, localTime2.getMinute());
 
         }
-        return null;
+        return new Calendar[] {calendarFrom, calendarTo};
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private DayOfWeek getDayOfWeek (String dayString) {
+        if (dayString != null) {
+            switch (dayString) {
+                case "Sn":
+                    return DayOfWeek.SUNDAY;
+                case "M":
+                    return DayOfWeek.MONDAY;
+                case "T":
+                    return DayOfWeek.TUESDAY;
+                case "W":
+                    return DayOfWeek.WEDNESDAY;
+                case "R":
+                    return DayOfWeek.THURSDAY;
+                case "F":
+                    return DayOfWeek.FRIDAY;
+                case "St":
+                    return DayOfWeek.SATURDAY;
+                default:
+                    return null;
+            }
+        } else return null;
     }
 
 }

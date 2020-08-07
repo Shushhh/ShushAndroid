@@ -50,7 +50,7 @@ public class ToggleGroupManager {
     public String getToggleStateString () {
         String checkedStateString = "";
         if (sundayButton.isChecked()) {
-            checkedStateString += "S";
+            checkedStateString += "Sn";
         }
         if (mondayButton.isChecked()) {
             checkedStateString += "M";
@@ -68,7 +68,7 @@ public class ToggleGroupManager {
             checkedStateString += "F";
         }
         if (saturdayButton.isChecked()) {
-            checkedStateString += "S";
+            checkedStateString += "St";
         }
         return checkedStateString;
     }
@@ -80,7 +80,7 @@ public class ToggleGroupManager {
 
     public void setCheckedToggleButtons(String selectedDaysString) {
         if (selectedDaysString.length() > 0) {
-            if (selectedDaysString.charAt(0) == 'S') {
+            if (selectedDaysString.contains("Sn")) {
                 sundayButton.setChecked(true);
             }
             if (selectedDaysString.contains("M")) {
@@ -98,7 +98,7 @@ public class ToggleGroupManager {
             if (selectedDaysString.contains("F")) {
                 fridayButton.setChecked(true);
             }
-            if (selectedDaysString.charAt(selectedDaysString.length() - 1) == 'S') {
+            if (selectedDaysString.contains("St")) {
                 saturdayButton.setChecked(true);
             }
         }

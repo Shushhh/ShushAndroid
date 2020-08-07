@@ -45,8 +45,11 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 
 /**
  * @apiNote Main Activity class
@@ -104,10 +107,22 @@ public class MainActivity extends AppCompatActivity {
         Log.i("Package Name", this.getPackageName());
 
         ShushQueryScheduler shushQueryScheduler = new ShushQueryScheduler(this);
-        shushQueryScheduler.schedule(databaseManager.retrieveWithCursor());
+        ArrayList<ShushObject> shushObjects = databaseManager.retrieveWithCursor();
 
         //alarmTest();
 
+        try {
+            for (ShushObject shushObject: shushObjects) {
+                if (!shushObject.getDate().equals(ShushObject.Key.NULL)) {
+                    for (Character c: shushObject.getRep().toCharArray()) {
+                        Calendar[] calendars = shushQueryScheduler.getCurrentDayMillis(shushObject.getDate(), shushObject.getTime(), c.toString());
+                        Log.i("Calendar", calendars[0].getTime().toString() + " || " + calendars[1].getTime().toString());
+                    }
+                }
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
 
     }

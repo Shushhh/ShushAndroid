@@ -124,6 +124,8 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
                     bundle.putString(DatabaseManager.DatabaseEntry.REP, currentItem.getRep());
                     bundle.putString(DatabaseManager.DatabaseEntry.UUID, currentItem.getUUID());
                     timeDialog.setArguments(bundle);
+                    if (timeDialog.isAdded())
+                        return;
                     timeDialog.show(fragmentManager, "single", "click");
                 });
             } else {
@@ -139,6 +141,8 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
                     bundle.putString(DatabaseManager.DatabaseEntry.REP, currentItem.getRep());
                     bundle.putString(DatabaseManager.DatabaseEntry.UUID, currentItem.getUUID());
                     timeDialog.setArguments(bundle);
+                    if (timeDialog.isAdded())
+                        return;
                     timeDialog.show(fragmentManager, "single", "click");
                 });
             }
@@ -166,6 +170,8 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
                 bundle.putString(DatabaseManager.DatabaseEntry.RAD, currentItem.getRadius());
                 bundle.putString(DatabaseManager.DatabaseEntry.UUID, currentItem.getUUID());
                 timeDialog.setArguments(bundle);
+                if (timeDialog.isAdded())
+                    return;
                 timeDialog.show(fragmentManager, "double", "click");
             });
         }
