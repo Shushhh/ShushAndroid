@@ -66,6 +66,13 @@ public class ShushQueryScheduler {
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
                     alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), (long) ((hours * 60 * 60 * 1000)), pendingIntent);
                     Log.i("Alarm Schedule", "Location no repeat " + id);
+
+                    boolean alarmUp = (PendingIntent.getBroadcast(context, id,
+                            new Intent("com.my.package.MY_UNIQUE_ACTION"),
+                            PendingIntent.FLAG_NO_CREATE) != null);
+
+                    Log.i("alarm set", "" + alarmUp);
+
                     id ++;
                     // perform GeoFencing processing in SilencerReceiver
                 }
@@ -92,10 +99,26 @@ public class ShushQueryScheduler {
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
                     fromAlarmManager.set(AlarmManager.RTC_WAKEUP, calendars[0].getTimeInMillis(), pendingIntent); // set to silent
 
+                    boolean alarmUp = (PendingIntent.getBroadcast(context, 0,
+                            new Intent("com.my.package.MY_UNIQUE_ACTION"),
+                            PendingIntent.FLAG_NO_CREATE) != null);
+
+                    if (alarmUp) {
+                        Log.d("Alarm Schedule Check", "Alarm is already active");
+                    }
+
                     id++;
 
                     AlarmManager toAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                     toAlarmManager.set(AlarmManager.RTC_WAKEUP, calendars[1].getTimeInMillis(), pendingIntent); // set to ring
+
+                    boolean alarm = (PendingIntent.getBroadcast(context, 0,
+                            new Intent("com.my.package.MY_UNIQUE_ACTION"),
+                            PendingIntent.FLAG_NO_CREATE) != null);
+
+                    if (alarm) {
+                        Log.d("Alarm Schedule Check", "Alarm is already active");
+                    }
 
                     // Quick note: if the times are separated by a small time limit then notify the user with a message -> add to bugs but feature works
 
