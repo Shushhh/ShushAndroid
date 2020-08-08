@@ -66,7 +66,7 @@ android:background="@color/colorPrimary">
     android:text="Please send your feedback to sudhirsahil2001@gmail.com and provide feedback within the Message box."
     android:textColor="@color/colorAccent"
     android:textSize="16sp"
-    android:fontFamily="@font/rubik"
+    android:fontFamily="@font/rubik_light"
     android:layout_marginTop="20dp"
     android:paddingLeft="40dp"
     android:paddingRight="40dp"/>
@@ -88,7 +88,8 @@ android:background="@color/colorPrimary">
             android:text="To:"
             android:textColor="@color/colorAccent"
             android:textSize="16sp"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:fontFamily="@font/rubik"/>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -97,7 +98,8 @@ android:background="@color/colorPrimary">
             android:id="@+id/to_edittext"
             android:text="sudhirsahil2001@gmail.com"
             android:inputType="text"
-            android:imeOptions="actionDone"/>
+            android:imeOptions="actionDone"
+            android:fontFamily="@font/rubik"/>
 
     </LinearLayout>
 
@@ -118,7 +120,8 @@ android:background="@color/colorPrimary">
             android:text="Subject: "
             android:textColor="@color/colorAccent"
             android:textSize="16sp"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:fontFamily="@font/rubik"/>
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -126,7 +129,8 @@ android:background="@color/colorPrimary">
             android:textColor="@color/cardview_light_background"
             android:id="@+id/subject_edittext"
             android:inputType="text"
-            android:imeOptions="actionDone"/>
+            android:imeOptions="actionDone"
+            android:fontFamily="@font/rubik"/>
 
     </LinearLayout>
 
@@ -146,7 +150,8 @@ android:background="@color/colorPrimary">
         android:hint="Message"
         android:textColorHint="@color/colorAccent"
         android:inputType="text"
-        android:imeOptions="actionDone"/>
+        android:imeOptions="actionDone"
+        android:fontFamily="@font/rubik"/>
 
 
 
