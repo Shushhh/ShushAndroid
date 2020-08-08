@@ -29,6 +29,7 @@ import java.util.Locale;
 public class ShushQueryScheduler {
 
     public static final String SCHEDULE_TYPE = "SCHEDULE_TYPE";
+    public static final String TOGGLE_KEY = "TOGGLE_KEY";
 
     public static class Key {
         public static final String LOCATION_REPEAT = "LOCATION_REPEAT";
@@ -38,6 +39,8 @@ public class ShushQueryScheduler {
         public static final String TIME_REPEAT = "TIME_REPEAT";
         public static final String TIME_NO_REPEAT = "TIME_NO_REPEAT";
 
+        public static final String SILENT = "SILENT";
+        public static final String RING = "RING";
     }
 
     private Context context;
@@ -51,24 +54,13 @@ public class ShushQueryScheduler {
         this.hours = sharedPreferenceManager.retrieveLocationInterval();
     }
 
-    /*
-    location, time, repeat
-    location, time -> that particular day
-    location, repeat
-    time, repeat -> only that time repeated on specified days
-        alarm manager for from time to activate silent with repeat for that day
-        alarm manager for to time to deactivate silent with repeat for that day
-            Repeat this for all days
-    location -> everyday
-    time -> only that time
-     */
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void schedule (ArrayList<ShushObject> shushObjectArrayList) throws ParseException {
         id = 0;
 
         for (ShushObject shushObject: shushObjectArrayList) {
             Log.i("Alarm", shushObject.toString());
+
             if (shushObject.getDate().equals(ShushObject.Key.NULL)) { // only location setting with possible repeats
 
                 if (!shushObject.getRep().isEmpty()) { // no time -> location at a certain interval
@@ -78,23 +70,23 @@ public class ShushQueryScheduler {
                         Calendar[] calendars = getSelectedDayCalendars(shushObject.getDate(), shushObject.getTime(), day);
                         AlarmManager fromAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                         Intent intent = new Intent(context, SilencerReciever.class);
+                        intent.putExtra(TOGGLE_KEY, Key.SILENT);
                         intent.putExtra(SCHEDULE_TYPE, Key.LOCATION_REPEAT);
                         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
                         fromAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendars[0].getTimeInMillis(), (7 * 24 * 60 * 60 * 1000), pendingIntent); // set to silent
 
                         id++;
 
+                        Intent intent2 = new Intent(context, SilencerReciever.class);
+                        intent2.putExtra(TOGGLE_KEY, Key.RING);
+                        intent2.putExtra(SCHEDULE_TYPE, Key.LOCATION_REPEAT);
                         AlarmManager toAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                        PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context, id, intent, 0);
+                        PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context, id, intent2, 0);
                         toAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendars[1].getTimeInMillis() + (long) (hours * 60 * 60 * 1000), (7 * 24 * 60 * 60 * 1000), pendingIntent2); // set to ring
-
-                        Log.i("Alarm Data", calendars[0].getTime().toString() + " || " + calendars[1].getTime().toString());
-                        Log.i("Alarm Schedule", "Location repeat executing...");
 
                         id++;
 
                     }
-
 
                 } else {
                     //everyday just check every x minutes
@@ -107,23 +99,31 @@ public class ShushQueryScheduler {
                     id++;
                     // perform GeoFencing processing in SilencerReceiver
                 }
-            } else if (shushObject.getLocation().equals(ShushObject.Key.NULL)) {
+            } else if (shushObject.getLocation().equals(ShushObject.Key.NULL) || !shushObject.getLocation().equals(ShushObject.Key.NULL)) {
                 if (!shushObject.getRep().isEmpty()) {
                     for (String day: getDaysFromRep(shushObject.getRep())) {
-                        Calendar[] calendars = getSelectedDayCalendars(shushObject.getDate(), shushObject.getTime(), day.toString());
+                        Calendar[] calendars = getSelectedDayCalendars(shushObject.getDate(), shushObject.getTime(), day);
                         AlarmManager fromAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                         Intent intent = new Intent(context, SilencerReciever.class);
-                        intent.putExtra(SCHEDULE_TYPE, Key.TIME_REPEAT);
+                        if (shushObject.getLocation().equals(ShushObject.Key.NULL))
+                            intent.putExtra(SCHEDULE_TYPE, Key.TIME_REPEAT);
+                        else
+                            intent.putExtra(SCHEDULE_TYPE, Key.LOCATION_TIME_REPEAT);
+                        intent.putExtra(TOGGLE_KEY, Key.SILENT);
                         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
                         fromAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendars[0].getTimeInMillis(), (7 * 24 * 60 * 60 * 1000), pendingIntent); // set to silent
 
                         id++;
 
+                        Intent intent2 = new Intent(context, SilencerReciever.class);
+                        if (shushObject.getLocation().equals(ShushObject.Key.NULL))
+                            intent2.putExtra(SCHEDULE_TYPE, Key.TIME_REPEAT);
+                        else
+                            intent2.putExtra(SCHEDULE_TYPE, Key.LOCATION_TIME_REPEAT);
+                        intent.putExtra(TOGGLE_KEY, Key.RING);
                         AlarmManager toAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                        PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context, id, intent, 0);
+                        PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context, id, intent2, 0);
                         toAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendars[1].getTimeInMillis(), (7 * 24 * 60 * 60 * 1000), pendingIntent2); // set to ring
-
-                        Log.i("Alarm Schedule", "Time repeat " + id);
 
                         id++;
                     }
@@ -131,14 +131,24 @@ public class ShushQueryScheduler {
                     Calendar[] calendars = getSelectedDayCalendars(shushObject.getDate(), shushObject.getTime(), shushObject.getRep());
                     AlarmManager fromAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                     Intent intent = new Intent(context, SilencerReciever.class);
-                    intent.putExtra(SCHEDULE_TYPE, Key.TIME_NO_REPEAT);
+                    if (shushObject.getLocation().equals(ShushObject.Key.NULL))
+                        intent.putExtra(SCHEDULE_TYPE, Key.TIME_NO_REPEAT);
+                    else
+                        intent.putExtra(SCHEDULE_TYPE, Key.LOCATION_TIME_NO_REPEAT);
+                    intent.putExtra(TOGGLE_KEY, Key.SILENT);
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
                     fromAlarmManager.set(AlarmManager.RTC_WAKEUP, calendars[0].getTimeInMillis(), pendingIntent); // set to silent
 
                     id++;
 
                     AlarmManager toAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                    PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context, id, intent, 0);
+                    Intent intent2 = new Intent(context, SilencerReciever.class);
+                    if (shushObject.getLocation().equals(ShushObject.Key.NULL))
+                        intent2.putExtra(SCHEDULE_TYPE, Key.TIME_NO_REPEAT);
+                    else
+                        intent2.putExtra(SCHEDULE_TYPE, Key.LOCATION_TIME_NO_REPEAT);
+                    intent2.putExtra(TOGGLE_KEY, Key.RING);
+                    PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context, id, intent2, 0);
                     toAlarmManager.set(AlarmManager.RTC_WAKEUP, calendars[1].getTimeInMillis(), pendingIntent2); // set to ring
 
                     id++;
@@ -162,8 +172,8 @@ public class ShushQueryScheduler {
                         day = "" + repArray[index];
                     }
                 }
+                days.add(day);
             }
-            days.add(day);
         }
         return days;
     }
