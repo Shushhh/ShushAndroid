@@ -202,6 +202,9 @@ public class MainActivity extends AppCompatActivity {
                 if (getActivity() != null)
                     getActivity().startActivityForResult(new Intent(getActivity(), SettingsActivity.class), 10);
             });
+            feedbackView.setOnClickListener(v -> {
+                getActivity().startActivity(new Intent (getActivity(), EmailActivity.class));
+            });
 
             return view;
         }
