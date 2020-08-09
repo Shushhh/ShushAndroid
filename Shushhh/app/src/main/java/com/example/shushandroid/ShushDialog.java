@@ -75,6 +75,7 @@ public class ShushDialog extends DialogFragment {
     private TextView radiusTextView;
     private Button timeClearButton;
     private Button locationClearButton;
+    private Button deleteButton;
 
     /*
      * Utility objects
@@ -168,6 +169,7 @@ public class ShushDialog extends DialogFragment {
         addNameEditText = view.findViewById(R.id.addNameEditText);
         timeClearButton = view.findViewById(R.id.timeClearButton);
         locationClearButton = view.findViewById(R.id.locationClearButton);
+        deleteButton = view.findViewById(R.id.deleteButton);
 
         timeClearButton.setOnClickListener(v -> {
             timeTextView1.setText("N/A");
@@ -178,6 +180,17 @@ public class ShushDialog extends DialogFragment {
         locationClearButton.setOnClickListener(v -> {
             mapTextView.setText("N/A");
             radiusTextView.setText("N/A");
+        });
+
+        deleteButton.setOnClickListener(v -> {
+            if (presetUUIDString != null && !presetUUIDString.isEmpty()) {
+                if (!databaseManager.delete(presetUUIDString)) {
+                    Log.e("DB Error", "Error deleting " + presetUUIDString + " ShushObject");
+                } else {
+                    MainActivity.updateRecyclerView();
+                    dismiss();
+                }
+            }
         });
 
         mapTextView = view.findViewById(R.id.locationTextView);
