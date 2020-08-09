@@ -120,7 +120,7 @@ public class ShushQueryScheduler {
                             intent2.putExtra(SCHEDULE_TYPE, Key.TIME_REPEAT);
                         else
                             intent2.putExtra(SCHEDULE_TYPE, Key.LOCATION_TIME_REPEAT);
-                        intent.putExtra(TOGGLE_KEY, Key.RING);
+                        intent2.putExtra(TOGGLE_KEY, Key.RING);
                         AlarmManager toAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                         PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context, id, intent2, 0);
                         toAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendars[1].getTimeInMillis(), (7 * 24 * 60 * 60 * 1000), pendingIntent2); // set to ring
