@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -59,6 +60,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Location myLocation;
     private GoogleMap map;
+
+    private GeofencingClient geofencingClient;
 
     private static final String TAG = "MapActivity";
     private static final float DEFAULT_ZOOM = 15f;

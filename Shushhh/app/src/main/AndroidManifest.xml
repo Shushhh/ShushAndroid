@@ -46,6 +46,8 @@
         android:theme="@style/AppTheme">
 
 
+        <receiver android:name=".GeofenceBroadcastReceiver"/>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDD2LTMrNwOk5sYCfUq2mSVF5NPWbpArFk"/>
