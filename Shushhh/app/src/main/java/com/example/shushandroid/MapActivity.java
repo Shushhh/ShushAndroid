@@ -12,6 +12,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -60,6 +61,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private FloatingActionButton checkFloatingActionButton;
     private FloatingActionButton gpsLocationFab;
+    private FloatingActionButton closeFab;
     private EditText searchEditText;
     private Spinner spinner;
 
@@ -69,6 +71,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private LatLng latLng;
 
+    private Geofence geofence;
     private GeofencingClient geofencingClient;
     private GeofenceHelper geofenceHelper;
 
@@ -91,6 +94,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         searchEditText = findViewById(R.id.searchTextField);
         gpsLocationFab = findViewById(R.id.currentLocationButton);
         checkFloatingActionButton = findViewById(R.id.checkFloatingActionButton);
+        closeFab = findViewById(R.id.closeFloatingActionButton);
 
         String apiKey = getString(R.string.google_maps_API_key);
 
@@ -124,6 +128,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         .setPositiveButton("Ok", null)
                         .create().show();
             }
+        });
+
+        closeFab.setOnClickListener(view -> {
+            removeGeofence();
+            finish();
         });
 
         spinner = findViewById(R.id.radiusSpinner);
@@ -165,7 +174,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
     private void addGeofence(LatLng latLng, float radius) {
 
-        Geofence geofence = geofenceHelper.getGeofence(GEOFENCE_ID, latLng, radius, Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_DWELL | Geofence.GEOFENCE_TRANSITION_EXIT);
+        geofence = geofenceHelper.getGeofence(GEOFENCE_ID, latLng, radius, Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_DWELL | Geofence.GEOFENCE_TRANSITION_EXIT);
         GeofencingRequest geofencingRequest = geofenceHelper.getGeofencingRequest(geofence);
         PendingIntent pendingIntent = geofenceHelper.getPendingIntent();
 
@@ -182,6 +191,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         geofencingClient.addGeofences(geofencingRequest, pendingIntent)
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "onSuccess: Geofence Added..."))
                 .addOnFailureListener(e -> {
+                    String errorMessage = geofenceHelper.getErrorString(e);
+                    Log.d(TAG, "onFailure: " + errorMessage);
+                });
+    }
+
+    private void removeGeofence() {
+        PendingIntent pendingIntent = geofenceHelper.getPendingIntent();
+        geofencingClient.removeGeofences(pendingIntent)
+                .addOnSuccessListener(this, aVoid -> {
+                    // Geofences removed
+                    Log.d(TAG, "onSuccess: Geofence Removed...");
+                })
+                .addOnFailureListener(this, e -> {
+                    // Failed to remove geofences
                     String errorMessage = geofenceHelper.getErrorString(e);
                     Log.d(TAG, "onFailure: " + errorMessage);
                 });
