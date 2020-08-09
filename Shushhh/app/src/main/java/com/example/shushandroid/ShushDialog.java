@@ -48,11 +48,16 @@ import androidx.fragment.app.FragmentManager;
  * @since   2020-7-18
  * @resources
  */
-public class TimeDialog extends DialogFragment {
+public class ShushDialog extends DialogFragment {
 
     public static class LocationDataTransferItem {
         public static String LOCATION = "LOCATION";
         public static String RADIUS = "RADIUS";
+    }
+
+    public static class DateFormatStringKey {
+        public static String dateFormatString = "EEE, MMM dd, yyyy";
+        public static String timeFormatString = "hh:mm a";
     }
 
     /*
@@ -96,16 +101,14 @@ public class TimeDialog extends DialogFragment {
 
     private String from = ""; // from where: fab or click
 
-    static TimeDialog newInstance() {
-        return new TimeDialog();
+    static ShushDialog newInstance() {
+        return new ShushDialog();
     }
 
     /**
      *
      * @param savedInstanceState
      */
-
-
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override

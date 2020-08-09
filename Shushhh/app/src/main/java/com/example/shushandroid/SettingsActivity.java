@@ -19,6 +19,7 @@ public class SettingsActivity extends AppCompatActivity {
     private String resultString;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor sharedPreferenceEditor;
+    private SharedPreferenceManager sharedPreferenceManager;
 
     @SuppressLint("CommitPrefEdits")
     @Override
@@ -30,6 +31,16 @@ public class SettingsActivity extends AppCompatActivity {
         radioButton30 = findViewById(R.id.radio_button_30);
         radioButton60 = findViewById(R.id.radio_button_60);
         radioButton120 = findViewById(R.id.radio_button_120);
+
+        sharedPreferenceManager = new SharedPreferenceManager(this);
+
+        if (sharedPreferenceManager.retrieveLocationInterval() == 0.5) {
+            radioButton30.setChecked(true);
+        } else if (sharedPreferenceManager.retrieveLocationInterval() == 1) {
+            radioButton60.setChecked(true);
+        } else if (sharedPreferenceManager.retrieveLocationInterval() == 2) {
+            radioButton120.setChecked(true);
+        }
 
         saveButton.setOnClickListener(view -> {
 
