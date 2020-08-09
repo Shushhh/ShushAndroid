@@ -13,5 +13,6 @@ public class LocationReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.i("Location", "Processed");
+        // check for location with geofences if there is repeat
     }
 }
