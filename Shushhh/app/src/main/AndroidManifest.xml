@@ -71,6 +71,8 @@
         <activity android:name=".MapActivity"/>
 
         <service android:name=".ForegroundServiceManager" />
+        <receiver android:name=".LocationReceiver"/>
+        <receiver android:name=".SilencerReciever"/>
     </application>
 
 </manifest>

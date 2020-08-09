@@ -15,6 +15,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -43,7 +45,11 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 
 /**
  * @apiNote Main Activity class
@@ -98,6 +104,32 @@ public class MainActivity extends AppCompatActivity {
             init();
         }
 
+        Log.i("Package Name", this.getPackageName());
+
+        ShushQueryScheduler shushQueryScheduler = new ShushQueryScheduler(this);
+        ArrayList<ShushObject> shushObjects = databaseManager.retrieveWithCursor();
+
+        //alarmTest();
+
+        try {
+            shushQueryScheduler.schedule(shushObjects);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public void alarmTest () {
+        ArrayList<Integer> arrayList = new ArrayList<>(Arrays.asList(5, 10, 15, 20));
+        Intent intent = new Intent(this, SilencerReciever.class);
+        int i = 0;
+        for (Integer minutes: arrayList) {
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, i, intent, 0);
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), minutes * 60 * 1000, pendingIntent);
+            i++;
+        }
     }
 
     public static void updateRecyclerView () {
@@ -130,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
                     ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, PermissionRequestCodes.PERMISSION_FINE_LOCATION);
                 }
             } else {
-                TimeDialog timeDialog = new TimeDialog();
+                ShushDialog timeDialog = new ShushDialog();
                 timeDialog.show(getSupportFragmentManager(), "", "fab");
             }
 
@@ -172,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == PermissionRequestCodes.PERMISSION_FINE_LOCATION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    TimeDialog timeDialog = new TimeDialog();
+                    ShushDialog timeDialog = new ShushDialog();
                     timeDialog.show(getSupportFragmentManager(), "t");
                 }
             }

@@ -8,6 +8,11 @@ package com.example.shushandroid;
  * @resources
  */
 public class ShushObject {
+
+    public static class Key {
+        public static final String NULL = "N/A";
+    }
+
     private String name;
     private String time;
     private String date;
