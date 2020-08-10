@@ -17,10 +17,12 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
 
     private static final String TAG = "geofences";
 
+    GeofencingEvent geofencingEvent;
+
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
+        geofencingEvent = GeofencingEvent.fromIntent(intent);
 
         if (geofencingEvent.hasError()) {
             String errorMessage = GeofenceStatusCodes.getStatusCodeString(geofencingEvent.getErrorCode());
@@ -48,5 +50,12 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                 break;
         }
 
+    }
+    public boolean isEntered() {
+        if (geofencingEvent.getGeofenceTransition() == Geofence.GEOFENCE_TRANSITION_ENTER) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
