@@ -72,9 +72,7 @@ public class SilencerReciever extends BroadcastReceiver {
                 AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                 Intent locationIntent = new Intent (context, LocationReceiver.class);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, locationIntent, 0);
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), (long)(hours * 60 * 60 * 1000), pendingIntent);
-
-
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), (long) (hours * 60 * 60 * 1000), pendingIntent);
             }
         }
     }

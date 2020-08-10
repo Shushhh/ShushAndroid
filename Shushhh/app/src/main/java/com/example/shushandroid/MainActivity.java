@@ -220,18 +220,18 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         Log.i("lifecycle", "destroy");
         Intent intent = new Intent(this, ForegroundServiceManager.class);
         startService(intent);
+        super.onDestroy();
     }
 
     @Override
     protected void onStart() {
-        super.onStart();
         Log.i("lifecycle", "start");
         Intent intent = new Intent(this, ForegroundServiceManager.class);
         stopService(intent);
+        super.onStart();
     }
 
     public static class VoicemailBottomSheetDialogFragment extends BottomSheetDialogFragment {

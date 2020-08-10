@@ -128,7 +128,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/rubik_light"
-        android:text="Location Monitoring Frequency"
+        android:text="Audio Toggle State"
         android:textColor="#FFF"
         android:textSize="16sp"
         android:textStyle="bold"
