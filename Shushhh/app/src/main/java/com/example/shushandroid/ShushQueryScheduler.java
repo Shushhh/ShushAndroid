@@ -43,30 +43,22 @@ public class ShushQueryScheduler {
         public static final String RING = "RING";
     }
 
-    private Context context;
-    private double hours;
-    private SharedPreferenceManager sharedPreferenceManager;
-    private int id = 0;
-
-    public ShushQueryScheduler (Context context) {
-        this.context = context;
-        this.sharedPreferenceManager = new SharedPreferenceManager(context);
-        this.hours = sharedPreferenceManager.retrieveLocationInterval();
-    }
+    private static double hours;
+    private static SharedPreferenceManager sharedPreferenceManager;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void schedule (ArrayList<ShushObject> shushObjectArrayList) throws ParseException {
-        id = 0;
+    public static void schedule (ArrayList<ShushObject> shushObjectArrayList, Context context) throws ParseException {
+
+        int id = 0;
+
+        sharedPreferenceManager = new SharedPreferenceManager(context);
+        hours = sharedPreferenceManager.retrieveLocationInterval();
 
         for (ShushObject shushObject: shushObjectArrayList) {
             Log.i("Alarm", shushObject.toString());
-
             if (shushObject.getDate().equals(ShushObject.Key.NULL)) { // only location setting with possible repeats
-
                 if (!shushObject.getRep().isEmpty()) { // no time -> location at a certain interval
-
                     for (String day: getDaysFromRep(shushObject.getRep())) {
-
                         Calendar[] calendars = getSelectedDayCalendars(shushObject.getDate(), shushObject.getTime(), day);
                         AlarmManager fromAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                         Intent intent = new Intent(context, SilencerReciever.class);
@@ -157,7 +149,7 @@ public class ShushQueryScheduler {
         }
     }
 
-    public ArrayList<String> getDaysFromRep (String repString) {
+    private static ArrayList<String> getDaysFromRep (String repString) {
         char[] repArray = repString.toCharArray();
         ArrayList<String> days = new ArrayList();
         for (int index = 0; index < repArray.length; index++) {
@@ -181,7 +173,7 @@ public class ShushQueryScheduler {
     //first just time
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public Calendar[] getSelectedDayCalendars (String dateString, String timeString, String dayString) throws ParseException {
+    private static Calendar[] getSelectedDayCalendars (String dateString, String timeString, String dayString) throws ParseException {
         Calendar calendarFrom = Calendar.getInstance();
         Calendar calendarTo = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat(ShushDialog.DateFormatStringKey.dateFormatString, Locale.getDefault()); // check for other countries
@@ -255,7 +247,7 @@ public class ShushQueryScheduler {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private boolean checkSimilarDays (LocalDate localDate, String dayString) {
+    private static boolean checkSimilarDays (LocalDate localDate, String dayString) {
         if (localDate.getDayOfWeek() == DayOfWeek.SUNDAY && dayString.equals("Sn")) {
             return true;
         } else if (localDate.getDayOfWeek() == DayOfWeek.MONDAY && dayString.equals("M")) {
@@ -274,7 +266,7 @@ public class ShushQueryScheduler {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private DayOfWeek getDayOfWeek (String dayString) {
+    private static DayOfWeek getDayOfWeek (String dayString) {
         if (dayString != null) {
             switch (dayString) {
                 case "Sn":

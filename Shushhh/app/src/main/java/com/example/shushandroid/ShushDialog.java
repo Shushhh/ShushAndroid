@@ -31,6 +31,7 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
@@ -155,6 +156,7 @@ public class ShushDialog extends DialogFragment {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -188,6 +190,12 @@ public class ShushDialog extends DialogFragment {
                     Log.e("DB Error", "Error deleting " + presetUUIDString + " ShushObject");
                 } else {
                     MainActivity.updateRecyclerView();
+                    ArrayList<ShushObject> shushObjects = databaseManager.retrieveWithCursor();
+                    try {
+                        ShushQueryScheduler.schedule(shushObjects, getContext());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                     dismiss();
                 }
             }
@@ -356,12 +364,24 @@ public class ShushDialog extends DialogFragment {
                     shushObject.setUUID(UUID.randomUUID().toString());
                     if (databaseManager.insert(shushObject)) {
                         MainActivity.updateRecyclerView();
+                        ArrayList<ShushObject> shushObjects = databaseManager.retrieveWithCursor();
+                        try {
+                            ShushQueryScheduler.schedule(shushObjects, getContext());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                         dismiss();
                     }
                 } else if (this.from.equals("click")) {
                     shushObject.setUUID(presetUUIDString);
                     if (databaseManager.update(shushObject)) {
                         MainActivity.updateRecyclerView();
+                        ArrayList<ShushObject> shushObjects = databaseManager.retrieveWithCursor();
+                        try {
+                            ShushQueryScheduler.schedule(shushObjects, getContext());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                         dismiss();
                     }
                 }

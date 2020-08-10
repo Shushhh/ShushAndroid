@@ -107,12 +107,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Log.i("Package Name", this.getPackageName());
-
-        ShushQueryScheduler shushQueryScheduler = new ShushQueryScheduler(this);
-        ArrayList<ShushObject> shushObjects = databaseManager.retrieveWithCursor();
-
         try {
-            shushQueryScheduler.schedule(shushObjects);
+            ShushQueryScheduler.schedule(databaseManager.retrieveWithCursor(), this);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        try {
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -217,9 +218,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void serviceTest() {
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i("lifecycle", "destroy");
         Intent intent = new Intent(this, ForegroundServiceManager.class);
         startService(intent);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i("lifecycle", "start");
+        Intent intent = new Intent(this, ForegroundServiceManager.class);
+        stopService(intent);
     }
 
     public static class VoicemailBottomSheetDialogFragment extends BottomSheetDialogFragment {
