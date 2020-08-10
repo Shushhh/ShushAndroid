@@ -31,6 +31,7 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
@@ -75,6 +76,7 @@ public class ShushDialog extends DialogFragment {
     private TextView radiusTextView;
     private Button timeClearButton;
     private Button locationClearButton;
+    private Button deleteButton;
 
     /*
      * Utility objects
@@ -154,6 +156,7 @@ public class ShushDialog extends DialogFragment {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -168,6 +171,7 @@ public class ShushDialog extends DialogFragment {
         addNameEditText = view.findViewById(R.id.addNameEditText);
         timeClearButton = view.findViewById(R.id.timeClearButton);
         locationClearButton = view.findViewById(R.id.locationClearButton);
+        deleteButton = view.findViewById(R.id.deleteButton);
 
         timeClearButton.setOnClickListener(v -> {
             timeTextView1.setText("N/A");
@@ -178,6 +182,23 @@ public class ShushDialog extends DialogFragment {
         locationClearButton.setOnClickListener(v -> {
             mapTextView.setText("N/A");
             radiusTextView.setText("N/A");
+        });
+
+        deleteButton.setOnClickListener(v -> {
+            if (presetUUIDString != null && !presetUUIDString.isEmpty()) {
+                if (!databaseManager.delete(presetUUIDString)) {
+                    Log.e("DB Error", "Error deleting " + presetUUIDString + " ShushObject");
+                } else {
+                    MainActivity.updateRecyclerView();
+                    ArrayList<ShushObject> shushObjects = databaseManager.retrieveWithCursor();
+                    try {
+                        ShushQueryScheduler.schedule(shushObjects, getContext());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    dismiss();
+                }
+            }
         });
 
         mapTextView = view.findViewById(R.id.locationTextView);
@@ -343,12 +364,24 @@ public class ShushDialog extends DialogFragment {
                     shushObject.setUUID(UUID.randomUUID().toString());
                     if (databaseManager.insert(shushObject)) {
                         MainActivity.updateRecyclerView();
+                        ArrayList<ShushObject> shushObjects = databaseManager.retrieveWithCursor();
+                        try {
+                            ShushQueryScheduler.schedule(shushObjects, getContext());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                         dismiss();
                     }
                 } else if (this.from.equals("click")) {
                     shushObject.setUUID(presetUUIDString);
                     if (databaseManager.update(shushObject)) {
                         MainActivity.updateRecyclerView();
+                        ArrayList<ShushObject> shushObjects = databaseManager.retrieveWithCursor();
+                        try {
+                            ShushQueryScheduler.schedule(shushObjects, getContext());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                         dismiss();
                     }
                 }

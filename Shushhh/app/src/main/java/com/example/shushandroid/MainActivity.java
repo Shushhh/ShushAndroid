@@ -16,6 +16,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -28,6 +29,7 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -105,30 +107,35 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Log.i("Package Name", this.getPackageName());
-
-        ShushQueryScheduler shushQueryScheduler = new ShushQueryScheduler(this);
-        ArrayList<ShushObject> shushObjects = databaseManager.retrieveWithCursor();
-
-        //alarmTest();
-
         try {
-            shushQueryScheduler.schedule(shushObjects);
+            ShushQueryScheduler.schedule(databaseManager.retrieveWithCursor(), this);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        try {
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        requestAudioPermissions();
 
     }
 
-    public void alarmTest () {
-        ArrayList<Integer> arrayList = new ArrayList<>(Arrays.asList(5, 10, 15, 20));
-        Intent intent = new Intent(this, SilencerReciever.class);
-        int i = 0;
-        for (Integer minutes: arrayList) {
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, i, intent, 0);
-            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), minutes * 60 * 1000, pendingIntent);
-            i++;
+    public void requestAudioPermissions () {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !notificationManager.isNotificationPolicyAccessGranted()) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Grant Notification access")
+                    .setMessage("In order for Shush to silence and de-silence your phone, it will need notification policy access.")
+                    .setPositiveButton("Grant Access", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent intent = new Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                            startActivity(intent);
+                        }
+                    })
+                    .create().show();
         }
     }
 
@@ -211,9 +218,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void serviceTest() {
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i("lifecycle", "destroy");
         Intent intent = new Intent(this, ForegroundServiceManager.class);
         startService(intent);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i("lifecycle", "start");
+        Intent intent = new Intent(this, ForegroundServiceManager.class);
+        stopService(intent);
     }
 
     public static class VoicemailBottomSheetDialogFragment extends BottomSheetDialogFragment {

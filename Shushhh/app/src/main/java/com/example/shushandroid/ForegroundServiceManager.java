@@ -15,16 +15,6 @@ import java.sql.SQLOutput;
 
 public class ForegroundServiceManager extends Service {
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -35,18 +25,16 @@ public class ForegroundServiceManager extends Service {
         Notification notification = new Notification.Builder(this, "service")
                 .setContentTitle("Service")
                 .setContentText("Test")
-                .setSmallIcon(R.drawable.ic_baseline_close_24)
+                .setSmallIcon(R.drawable.ic_shush_notif_icon)
                 .setContentIntent(pendingIntent)
                 .build();
         startForeground(1, notification);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        }).start();
-
+        try {
+            ShushQueryScheduler.schedule(new DatabaseManager(getApplicationContext()).retrieveWithCursor(), getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return START_STICKY;
     }
 

@@ -135,8 +135,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
         contentValues.put(DatabaseEntry.RAD, shushObject.getRadius());
         contentValues.put(DatabaseEntry.UUID, shushObject.getUUID());
         long n = this.getWritableDatabase().update(DatabaseEntry.TABLE_NAME, contentValues, DatabaseEntry.UUID + "=?", new String[] {shushObject.getUUID()});
-        if (n > 0) return true;
-            else return false;
+        return n > 0;
+    }
+
+    public boolean delete (String UUID) {
+        long n = this.getWritableDatabase().delete(DatabaseEntry.TABLE_NAME, DatabaseEntry.UUID + "=?", new String[] {UUID});
+        return n > 0;
     }
 
     /**

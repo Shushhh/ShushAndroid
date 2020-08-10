@@ -7,6 +7,20 @@
     android:orientation="vertical"
     android:background="@color/colorPrimary">
 
+    <View
+        android:id="@+id/thirdview2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@color/cardview_light_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/repeatWeeklyToggleGroup" />
+
     <ImageButton
         android:id="@+id/fullscreen_dialog_close"
         android:layout_width="wrap_content"
@@ -307,5 +321,21 @@
 
 
     </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <Button
+        android:id="@+id/deleteButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="Delete"
+        android:textColor="#1F2636"
+        app:backgroundTint="#EF4C7B"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/thirdview2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
