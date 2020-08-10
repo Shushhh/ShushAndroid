@@ -75,7 +75,7 @@ public class ShushQueryScheduler {
                         AlarmManager toAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                         PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context, id, intent2, 0);
                         toAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendars[1].getTimeInMillis() + (long) (hours * 60 * 60 * 1000), (7 * 24 * 60 * 60 * 1000), pendingIntent2); // set to ring
-
+                        // check the above method
                         id++;
 
                     }
