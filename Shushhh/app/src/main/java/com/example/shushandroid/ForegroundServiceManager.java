@@ -25,7 +25,7 @@ public class ForegroundServiceManager extends Service {
         Notification notification = new Notification.Builder(this, "service")
                 .setContentTitle("Service")
                 .setContentText("Test")
-                .setSmallIcon(R.drawable.ic_baseline_close_24)
+                .setSmallIcon(R.drawable.ic_shush_notif_icon)
                 .setContentIntent(pendingIntent)
                 .build();
         startForeground(1, notification);
