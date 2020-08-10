@@ -16,12 +16,14 @@ public class SilencerReciever extends BroadcastReceiver {
     private AudioManager audioManager;
     private SharedPreferenceManager sharedPreferenceManager;
     private double hours;
+    private Integer toggleState;
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
         sharedPreferenceManager = new SharedPreferenceManager(context);
         hours = sharedPreferenceManager.retrieveLocationInterval();
+        toggleState = sharedPreferenceManager.retrieveToggleState();
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
         /*
@@ -44,7 +46,7 @@ public class SilencerReciever extends BroadcastReceiver {
                 Log.i("Alarm", "Time Repeat");
                 if (toggleKey != null && toggleKey.equals(ShushQueryScheduler.Key.RING)) {
                     Log.i("Alarm Toggle", "Time Repeat - RING");
-                    audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                    audioManager.setRingerMode(toggleState);
                 } else if (toggleKey != null && toggleKey.equals(ShushQueryScheduler.Key.SILENT)) {
                     Log.i("Alarm Toggle", "Time Repeat - SILENT");
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
@@ -52,7 +54,7 @@ public class SilencerReciever extends BroadcastReceiver {
             } else if (scheduleType.equals(ShushQueryScheduler.Key.TIME_NO_REPEAT)) {
                 if (toggleKey != null && toggleKey.equals(ShushQueryScheduler.Key.RING)) {
                     Log.i("Alarm Toggle", "Time No Repeat - RING");
-                    audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                    audioManager.setRingerMode(toggleState);
                 } else if (toggleKey != null && toggleKey.equals(ShushQueryScheduler.Key.SILENT)) {
                     Log.i("Alarm Toggle", "Time No Repeat - SILENT");
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);

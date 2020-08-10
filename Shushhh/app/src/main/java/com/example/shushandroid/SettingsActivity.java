@@ -3,10 +3,10 @@ package com.example.shushandroid;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -16,7 +16,9 @@ public class SettingsActivity extends AppCompatActivity {
 
     private Button saveButton;
     private RadioButton radioButton30, radioButton60, radioButton120;
-    private String resultString;
+    private RadioButton radioRing, radioVibrate;
+    private String intervalString;
+    private Integer ringerToggleState;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor sharedPreferenceEditor;
     private SharedPreferenceManager sharedPreferenceManager;
@@ -31,6 +33,8 @@ public class SettingsActivity extends AppCompatActivity {
         radioButton30 = findViewById(R.id.radio_button_30);
         radioButton60 = findViewById(R.id.radio_button_60);
         radioButton120 = findViewById(R.id.radio_button_120);
+        radioRing = findViewById(R.id.radio_button_ring);
+        radioVibrate = findViewById(R.id.radio_button_vibrate);
 
         sharedPreferenceManager = new SharedPreferenceManager(this);
 
@@ -42,23 +46,33 @@ public class SettingsActivity extends AppCompatActivity {
             radioButton120.setChecked(true);
         }
 
+        if (sharedPreferenceManager.retrieveToggleState() == AudioManager.RINGER_MODE_NORMAL) {
+            radioRing.setChecked(true);
+        } else {
+            radioVibrate.setChecked(true);
+        }
+
         saveButton.setOnClickListener(view -> {
 
             if (radioButton30.isChecked()) {
-                resultString = getResources().getString(R.string.thirty_minutes);
+                intervalString = getResources().getString(R.string.thirty_minutes);
             } else if (radioButton60.isChecked()) {
-                resultString = getResources().getString(R.string.one_hour);
+                intervalString = getResources().getString(R.string.one_hour);
             } else if (radioButton120.isChecked()) {
-                resultString = getResources().getString(R.string.two_hours);
+                intervalString = getResources().getString(R.string.two_hours);
+            }
+
+            if (radioRing.isChecked()) {
+                ringerToggleState = AudioManager.RINGER_MODE_NORMAL;
+            } else if (radioVibrate.isChecked()) {
+                ringerToggleState = AudioManager.RINGER_MODE_VIBRATE;
             }
 
             sharedPreferences = this.getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
             sharedPreferenceEditor = sharedPreferences.edit();
-            sharedPreferenceEditor.putString(getResources().getString(R.string.settings_radio_string), resultString);
+            sharedPreferenceEditor.putString(getResources().getString(R.string.settings_radio_string), intervalString);
+            sharedPreferenceEditor.putInt(getResources().getString(R.string.settings_toggle_string), ringerToggleState);
             if (sharedPreferenceEditor.commit()) {
-                Log.i("Result" ,"To");
-                Intent intent = new Intent();
-                setResult(21, intent);
                 finish();
             }
         });

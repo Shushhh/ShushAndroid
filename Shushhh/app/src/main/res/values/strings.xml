@@ -27,4 +27,5 @@
     <string name="one_hour">1 hour</string>
     <string name="two_hours">2 hours</string>
     <string name="settings_radio_string">SettingsRadioString</string>
+    <string name="settings_toggle_string">SettingsToggleString</string>
 </resources>

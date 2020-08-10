@@ -257,21 +257,5 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.i("Result", "Activity");
-        if (requestCode == 10) {
-            if (resultCode == 21) {
-                Log.i("Result", "result");
-                String s = this.getSharedPreferences(getPackageName(), MODE_PRIVATE).getString(getResources().getString(R.string.settings_radio_string), null);
-                if (s != null) {
-                    Log.i("Result", s);
-                }
-            }
-        }
-
-    }
-
 }
 
