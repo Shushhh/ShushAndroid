@@ -106,18 +106,6 @@ public class MainActivity extends AppCompatActivity {
             init();
         }
 
-        Log.i("Package Name", this.getPackageName());
-        try {
-            ShushQueryScheduler.schedule(databaseManager.retrieveWithCursor(), this);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        try {
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         requestAudioPermissions();
 
     }
@@ -219,19 +207,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onPause() {
         Log.i("lifecycle", "destroy");
         Intent intent = new Intent(this, ForegroundServiceManager.class);
         startService(intent);
-        super.onDestroy();
+        super.onPause();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    protected void onStart() {
+    protected void onResume() {
         Log.i("lifecycle", "start");
         Intent intent = new Intent(this, ForegroundServiceManager.class);
+        try {
+            ShushQueryScheduler.schedule(databaseManager.retrieveWithCursor(), this);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         stopService(intent);
-        super.onStart();
+        super.onResume();
     }
 
     public static class VoicemailBottomSheetDialogFragment extends BottomSheetDialogFragment {

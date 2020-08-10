@@ -82,6 +82,7 @@ public class ShushQueryScheduler {
 
                 } else {
                     //everyday just check every x minutes
+                    /***************** DONE *******************/
                     AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                     Intent intent = new Intent(context, SilencerReciever.class);
                     intent.putExtra(SCHEDULE_TYPE, Key.LOCATION_NO_REPEAT);
@@ -92,6 +93,7 @@ public class ShushQueryScheduler {
                     // perform GeoFencing processing in SilencerReceiver
                 }
             } else if (shushObject.getLocation().equals(ShushObject.Key.NULL) || !shushObject.getLocation().equals(ShushObject.Key.NULL)) {
+                /***************** DONE *******************/
                 if (!shushObject.getRep().isEmpty()) {
                     for (String day: getDaysFromRep(shushObject.getRep())) {
                         Calendar[] calendars = getSelectedDayCalendars(shushObject.getDate(), shushObject.getTime(), day);
@@ -120,6 +122,7 @@ public class ShushQueryScheduler {
                         id++;
                     }
                 } else {
+                    /***************** DONE *******************/
                     Calendar[] calendars = getSelectedDayCalendars(shushObject.getDate(), shushObject.getTime(), shushObject.getRep());
                     AlarmManager fromAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                     Intent intent = new Intent(context, SilencerReciever.class);
