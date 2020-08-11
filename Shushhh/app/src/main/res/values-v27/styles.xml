@@ -23,6 +23,8 @@
     <style name="AppModalStyle"
         parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/bottom_sheet_voicemail</item>
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
+        <item name="android:navigationBarDividerColor">@color/colorAccent</item>
     </style>
 
     <style name="TextInputEditText.OutlinedBox.CustomFont" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">
@@ -40,15 +42,19 @@
     <style name="TextInputLayoutHelperText" parent="TextAppearance.Design.HelperText">
         <item name="android:fontFamily">@font/rubik</item>
     </style>
-    
+
     <style name="FullscreenDialogTheme" parent="Theme.AppCompat.Light.DialogWhenLarge">
         <item name="android:statusBarColor">@color/colorPrimary</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowAnimationStyle">@style/Animation.AppCompat.Dialog</item>
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
+        <item name="android:navigationBarDividerColor">@color/colorAccent</item>
     </style>
 
     <style name="LocationDialogTheme" parent="Theme.AppCompat.Light.DialogWhenLarge">
         <item name="android:statusBarColor">@color/colorPrimary</item>
+        <item name="android:navigationBarColor">@color/colorPrimary</item>
+        <item name="android:navigationBarDividerColor">@color/colorAccent</item>
     </style>
 
     <style name="ToggleButtonDesign" parent="Widget.MaterialComponents.Button.OutlinedButton">
