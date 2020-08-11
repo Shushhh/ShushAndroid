@@ -34,10 +34,11 @@
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/addNameEditText"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="20dp"
+        android:layout_marginRight="30dp"
         android:background="@android:color/transparent"
         android:fontFamily="@font/rubik"
         android:hint="Add Name"
@@ -46,7 +47,9 @@
         android:textColorHint="#5F6678"
         android:editable="true"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fullscreen_dialog_close"/>
+        app:layout_constraintTop_toBottomOf="@id/fullscreen_dialog_close"
+        android:inputType="text"
+        android:imeOptions="actionDone" />
 
     <View
         android:id="@+id/firstview"
