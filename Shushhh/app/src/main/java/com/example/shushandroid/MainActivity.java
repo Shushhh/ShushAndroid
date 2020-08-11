@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static class PermissionRequestCodes {
         public static final int PERMISSION_FINE_LOCATION = 44;
-        public static final int PERMISSION_READ_PHONE_STATE = 99;
+        public static final int PERMISSION_BACKGROUND_LOCATION = 99;
     }
 
     private final String CHECK = "MainActivity";
@@ -82,6 +82,9 @@ public class MainActivity extends AppCompatActivity {
     static private ArrayList<ShushObject> shushObjectArrayList = new ArrayList<>();
     static private DatabaseManager databaseManager;
     static private ShushRecyclerAdapter shushRecyclerAdapter;
+
+    private boolean isFineLocationGranted = false;
+    private boolean isBackgroundLocationGranted = false;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -162,6 +165,10 @@ public class MainActivity extends AppCompatActivity {
                     ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, PermissionRequestCodes.PERMISSION_FINE_LOCATION);
                 }
             } else {
+                isFineLocationGranted = true;
+            }
+
+            if (isFineLocationGranted && isBackgroundLocationGranted) {
                 ShushDialog timeDialog = new ShushDialog();
                 timeDialog.show(getSupportFragmentManager(), "", "fab");
             }
@@ -199,16 +206,35 @@ public class MainActivity extends AppCompatActivity {
      * @implNote runs after the user clicks on either of the several options when permission dialog is shown
      */
 
+    boolean tempReq1 = false;
+    boolean tempReq2 = false;
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == PermissionRequestCodes.PERMISSION_BACKGROUND_LOCATION) {
+            ShushDialog timeDialog = new ShushDialog();
+            timeDialog.show(getSupportFragmentManager(), "", "fab");
+            isBackgroundLocationGranted = true;
+        }
         if (requestCode == PermissionRequestCodes.PERMISSION_FINE_LOCATION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    ShushDialog timeDialog = new ShushDialog();
-                    timeDialog.show(getSupportFragmentManager(), "t");
+                    if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)) { // shows after denial
+                            new AlertDialog.Builder(MainActivity.this)
+                                    .setTitle("Location Permission")
+                                    .setMessage("To set location constraints to silence your phone, we will need to access your location in the background to monitor if you are within vicinity of constrained location. Note that all location data stays in your phone, thereby protecting your privacy.")
+                                    .setPositiveButton("Ok", (DialogInterface dialogInterface, int i) -> {
+                                        ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.ACCESS_BACKGROUND_LOCATION}, PermissionRequestCodes.PERMISSION_BACKGROUND_LOCATION);
+                                    }).create().show();
+                        } else {
+                            ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.ACCESS_BACKGROUND_LOCATION}, PermissionRequestCodes.PERMISSION_BACKGROUND_LOCATION);
+                        }
+                    }
                 }
             }
         }
+
     }
 
     public static class VoicemailBottomSheetDialogFragment extends BottomSheetDialogFragment {
