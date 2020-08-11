@@ -170,26 +170,33 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("Permissions", "Granted - fine");
             }
 
-            if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                isBackgroundLocationGranted = true;
-                Log.i("Permissions", "Granted - Background");
-            } else {
-                Log.i("Permissions", "Not granted - Background");
-                if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)) { // shows after denial
-                    new AlertDialog.Builder(MainActivity.this)
-                            .setTitle("Location Permission")
-                            .setMessage("To set location constraints to silence your phone, we will need to access your location in the background. Note that all location data stays in your phone, thereby protecting your privacy.")
-                            .setPositiveButton("Ok", (DialogInterface dialogInterface, int i) -> {
-                                ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.ACCESS_BACKGROUND_LOCATION}, PermissionRequestCodes.PERMISSION_BACKGROUND_LOCATION);
-                            }).create().show();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    isBackgroundLocationGranted = true;
+                    Log.i("Permissions", "Granted - Background");
                 } else {
-                    ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.ACCESS_BACKGROUND_LOCATION}, PermissionRequestCodes.PERMISSION_BACKGROUND_LOCATION);
+                    Log.i("Permissions", "Not granted - Background");
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)) { // shows after denial
+                        new AlertDialog.Builder(MainActivity.this)
+                                .setTitle("Location Permission")
+                                .setMessage("To set location constraints to silence your phone, we will need to access your location in the background. Note that all location data stays in your phone, thereby protecting your privacy.")
+                                .setPositiveButton("Ok", (DialogInterface dialogInterface, int i) -> {
+                                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, PermissionRequestCodes.PERMISSION_BACKGROUND_LOCATION);
+                                }).create().show();
+                    } else {
+                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, PermissionRequestCodes.PERMISSION_BACKGROUND_LOCATION);
+                    }
                 }
-            }
 
-            if (isFineLocationGranted && isBackgroundLocationGranted) {
-                ShushDialog timeDialog = new ShushDialog();
-                timeDialog.show(getSupportFragmentManager(), "", "fab");
+                if (isFineLocationGranted && isBackgroundLocationGranted) {
+                    ShushDialog timeDialog = new ShushDialog();
+                    timeDialog.show(getSupportFragmentManager(), "", "fab");
+                }
+            } else {
+                if (isFineLocationGranted) {
+                    ShushDialog timeDialog = new ShushDialog();
+                    timeDialog.show(getSupportFragmentManager(), "", "fab");
+                }
             }
 
         });
@@ -240,17 +247,23 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == PermissionRequestCodes.PERMISSION_FINE_LOCATION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)) { // shows after denial
-                            new AlertDialog.Builder(MainActivity.this)
-                                    .setTitle("Location Permission")
-                                    .setMessage("To set location constraints to silence your phone, we will need to access your location in the background to monitor if you are within vicinity of constrained location. Note that all location data stays in your phone, thereby protecting your privacy.")
-                                    .setPositiveButton("Ok", (DialogInterface dialogInterface, int i) -> {
-                                        ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.ACCESS_BACKGROUND_LOCATION}, PermissionRequestCodes.PERMISSION_BACKGROUND_LOCATION);
-                                    }).create().show();
-                        } else {
-                            ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.ACCESS_BACKGROUND_LOCATION}, PermissionRequestCodes.PERMISSION_BACKGROUND_LOCATION);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)) { // shows after denial
+                                new AlertDialog.Builder(MainActivity.this)
+                                        .setTitle("Location Permission")
+                                        .setMessage("To set location constraints to silence your phone, we will need to access your location in the background to monitor if you are within vicinity of constrained location. Note that all location data stays in your phone, thereby protecting your privacy.")
+                                        .setPositiveButton("Ok", (DialogInterface dialogInterface, int i) -> {
+                                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, PermissionRequestCodes.PERMISSION_BACKGROUND_LOCATION);
+                                        }).create().show();
+                            } else {
+                                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, PermissionRequestCodes.PERMISSION_BACKGROUND_LOCATION);
+                            }
                         }
+                    } else {
+                        ShushDialog timeDialog = new ShushDialog();
+                        timeDialog.show(getSupportFragmentManager(), "", "fab");
+                        isBackgroundLocationGranted = true;
                     }
                 }
             }
