@@ -2,6 +2,7 @@ package com.example.shushandroid;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,6 +12,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -23,6 +25,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -31,6 +36,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
@@ -45,6 +52,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -53,12 +61,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private FloatingActionButton checkFloatingActionButton;
     private FloatingActionButton gpsLocationFab;
+    private FloatingActionButton closeFab;
     private EditText searchEditText;
     private Spinner spinner;
 
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Location myLocation;
     private GoogleMap map;
+
+    private LatLng latLng;
+
+    private Geofence geofence;
+    private GeofencingClient geofencingClient;
+    private GeofenceHelper geofenceHelper;
+
+    private String GEOFENCE_ID = "SOME_GEOFENCE_ID";
 
     private static final String TAG = "MapActivity";
     private static final float DEFAULT_ZOOM = 15f;
@@ -69,11 +86,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        geofencingClient = LocationServices.getGeofencingClient(this);
+        geofenceHelper = new GeofenceHelper(this);
+
         radius = 10;
 
         searchEditText = findViewById(R.id.searchTextField);
         gpsLocationFab = findViewById(R.id.currentLocationButton);
         checkFloatingActionButton = findViewById(R.id.checkFloatingActionButton);
+        closeFab = findViewById(R.id.closeFloatingActionButton);
 
         String apiKey = getString(R.string.google_maps_API_key);
 
@@ -95,6 +116,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             if (!searchEditText.getText().toString().isEmpty()) {
                 String radiusString = radius + "m";
                 Intent intent = new Intent();
+                addGeofence(latLng, radius);
                 Log.i("Data", searchEditText.getText().toString());
                 intent.putExtra(ShushDialog.LocationDataTransferItem.LOCATION, searchEditText.getText().toString());
                 intent.putExtra(ShushDialog.LocationDataTransferItem.RADIUS, radiusString);
@@ -106,6 +128,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         .setPositiveButton("Ok", null)
                         .create().show();
             }
+        });
+
+        closeFab.setOnClickListener(view -> {
+            removeGeofence();
+            finish();
         });
 
         spinner = findViewById(R.id.radiusSpinner);
@@ -145,6 +172,43 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             Toast.makeText(getApplicationContext(), status.getStatusMessage(), Toast.LENGTH_SHORT).show();
         }
     }
+    private void addGeofence(LatLng latLng, float radius) {
+
+        geofence = geofenceHelper.getGeofence(GEOFENCE_ID, latLng, radius, Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_DWELL | Geofence.GEOFENCE_TRANSITION_EXIT);
+        GeofencingRequest geofencingRequest = geofenceHelper.getGeofencingRequest(geofence);
+        PendingIntent pendingIntent = geofenceHelper.getPendingIntent();
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        geofencingClient.addGeofences(geofencingRequest, pendingIntent)
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "onSuccess: Geofence Added..."))
+                .addOnFailureListener(e -> {
+                    String errorMessage = geofenceHelper.getErrorString(e);
+                    Log.d(TAG, "onFailure: " + errorMessage);
+                });
+    }
+
+    private void removeGeofence() {
+        PendingIntent pendingIntent = geofenceHelper.getPendingIntent();
+        geofencingClient.removeGeofences(pendingIntent)
+                .addOnSuccessListener(this, aVoid -> {
+                    // Geofences removed
+                    Log.d(TAG, "onSuccess: Geofence Removed...");
+                })
+                .addOnFailureListener(this, e -> {
+                    // Failed to remove geofences
+                    String errorMessage = geofenceHelper.getErrorString(e);
+                    Log.d(TAG, "onFailure: " + errorMessage);
+                });
+    }
 
     private void search() {
         Log.d(TAG, "starting search services");
@@ -174,9 +238,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             Address address = list.get(0);
             Log.d(TAG, "Found address: " + address.toString());
             //Toast.makeText(this, address.toString(), Toast.LENGTH_SHORT).show();
-            moveCamera(new LatLng(address.getLatitude(), address.getLongitude()), DEFAULT_ZOOM, address.getAddressLine(0));
+            latLng = new LatLng(address.getLatitude(), address.getLongitude());
+            moveCamera(latLng, DEFAULT_ZOOM, address.getAddressLine(0));
             map.clear();
-            map.addCircle(new CircleOptions().center(new LatLng(address.getLatitude(), address.getLongitude())).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
+            map.addCircle(new CircleOptions().center(latLng).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -184,17 +249,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         Log.d(TAG, "10m selected");
                         map.clear();
                         radius = 10;
-                        map.addCircle(new CircleOptions().center(new LatLng(address.getLatitude(), address.getLongitude())).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
+                        map.addCircle(new CircleOptions().center(latLng).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
                     } else if (adapterView.getSelectedItem().equals("100m")) {
                         Log.d(TAG, "100m selected");
                         map.clear();
                         radius = 100;
-                        map.addCircle(new CircleOptions().center(new LatLng(address.getLatitude(), address.getLongitude())).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
+                        map.addCircle(new CircleOptions().center(latLng).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
                     } else {
                         Log.d(TAG, "1000m selected");
                         map.clear();
                         radius = 1000;
-                        map.addCircle(new CircleOptions().center(new LatLng(address.getLatitude(), address.getLongitude())).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
+                        map.addCircle(new CircleOptions().center(latLng).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
                     }
                 }
 
@@ -202,7 +267,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 public void onNothingSelected(AdapterView<?> adapterView) {
                     map.clear();
                     radius = 10;
-                    map.addCircle(new CircleOptions().center(new LatLng(address.getLatitude(), address.getLongitude())).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
+                    map.addCircle(new CircleOptions().center(latLng).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
                 }
             });
 
@@ -235,11 +300,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                             e.printStackTrace();
                         }
                         searchEditText.setText(cityName);
-                        moveCamera(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), DEFAULT_ZOOM, "My Location");
+                        latLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+                        moveCamera(latLng, DEFAULT_ZOOM, "My Location");
                         map.clear();
                         radius = 10;
                         spinner.setSelection(0);
-                        map.addCircle(new CircleOptions().center(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
+                        map.addCircle(new CircleOptions().center(latLng).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
                         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -247,17 +313,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                                     Log.d(TAG, "10m selected");
                                     map.clear();
                                     radius = 10;
-                                    map.addCircle(new CircleOptions().center(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
+                                    map.addCircle(new CircleOptions().center(latLng).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
                                 } else if (adapterView.getSelectedItem().equals("100m")) {
                                     Log.d(TAG, "100m selected");
                                     map.clear();
                                     radius = 100;
-                                    map.addCircle(new CircleOptions().center(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
+                                    map.addCircle(new CircleOptions().center(latLng).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
                                 } else {
                                     Log.d(TAG, "1000m selected");
                                     map.clear();
                                     radius = 1000;
-                                    map.addCircle(new CircleOptions().center(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
+                                    map.addCircle(new CircleOptions().center(latLng).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
                                 }
                             }
 
@@ -265,7 +331,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                             public void onNothingSelected(AdapterView<?> adapterView) {
                                 map.clear();
                                 radius = 10;
-                                map.addCircle(new CircleOptions().center(new LatLng(myLocation.getLatitude(), myLocation.getLongitude())).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
+                                map.addCircle(new CircleOptions().center(latLng).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
                             }
                         });
                     } else {
