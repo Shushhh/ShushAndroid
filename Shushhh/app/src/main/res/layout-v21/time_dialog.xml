@@ -325,7 +325,6 @@
                     android:textColor="@color/cardview_light_background"
                     app:backgroundTint="@color/togglebutton_background_color" />
 
-
             </com.google.android.material.button.MaterialButtonToggleGroup>
 
             <Button
