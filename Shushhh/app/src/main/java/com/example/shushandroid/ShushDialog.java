@@ -83,7 +83,6 @@ public class ShushDialog extends DialogFragment {
      */
 
     private ToggleGroupManager toggleGroupManager;
-    private ShushObject shushObject;
     private TimePickerFragment timePicker;
     private DatabaseManager databaseManager;
 
@@ -102,6 +101,8 @@ public class ShushDialog extends DialogFragment {
     private String presetRadiusString = ""; //radius string
 
     private String from = ""; // from where: fab or click
+
+    public ShushObject shushObject;
 
     static ShushDialog newInstance() {
         return new ShushDialog();
@@ -139,6 +140,7 @@ public class ShushDialog extends DialogFragment {
                             mapTextView.setText("N/A");
                         } else {
                             mapTextView.setText(location);
+                            toggleGroupManager.manageState(false);
                         }
                     }
                     if (radiusTextView != null) {
@@ -146,11 +148,13 @@ public class ShushDialog extends DialogFragment {
                             radiusTextView.setText("N/A");
                         } else {
                             radiusTextView.setText(radius);
+                            toggleGroupManager.manageState(false);
                         }
                     }
                 } else {
                     mapTextView.setText("N/A");
                     radiusTextView.setText("N/A");
+                    toggleGroupManager.manageState(true);
                 }
             }
         }
@@ -182,6 +186,7 @@ public class ShushDialog extends DialogFragment {
         locationClearButton.setOnClickListener(v -> {
             mapTextView.setText("N/A");
             radiusTextView.setText("N/A");
+            toggleGroupManager.manageState(true);
         });
 
         deleteButton.setOnClickListener(v -> {
@@ -230,15 +235,22 @@ public class ShushDialog extends DialogFragment {
 
             toggleGroupManager.setCheckedToggleButtons(presetRepString);
             dateTextView1.setText((!presetDateString.isEmpty() ? presetDateString : "N/A"));
-//            if (!presetDateTextString.isEmpty()) { // if the preset date string is not empty (this item has repeatable days)
-//                dateTextView1.setText(presetDateTextString); // set the repeatable days string
-//                toggleGroupManager.setCheckedToggleButtons(presetSupplementalDataString); // check toggle buttons
-//            } else if (!presetSupplementalDataString.isEmpty()) { // else if it is not repeatable days, it has to be a particular day, so update that
-//                dateTextView1.setText(presetSupplementalDataString);
-//            }
 
-            mapTextView.setText((!presetLocationString.isEmpty() ? presetLocationString : "N/A"));
-            radiusTextView.setText((!presetRadiusString.isEmpty() ? presetRadiusString : "N/A"));
+            if (!presetLocationString.isEmpty()) {
+                mapTextView.setText(presetLocationString);
+                toggleGroupManager.manageState(false);
+            } else {
+                mapTextView.setText(ShushObject.Key.NULL);
+                toggleGroupManager.manageState(true);
+            }
+
+            if (!presetRadiusString.isEmpty()) {
+                radiusTextView.setText(presetLocationString);
+                toggleGroupManager.manageState(false);
+            } else {
+                radiusTextView.setText(ShushObject.Key.NULL);
+                toggleGroupManager.manageState(true);
+            }
 
         } else if (this.from.equals("fab")) { // if user comes here from fab action, set the current date and time
             dateTextView1.setText("N/A");
@@ -246,6 +258,8 @@ public class ShushDialog extends DialogFragment {
             timeTextView2.setText("N/A");
             mapTextView.setText("N/A");
             radiusTextView.setText("N/A");
+            toggleGroupManager.manageState(true);
+
         }
 
         closeButton.setOnClickListener(v -> {

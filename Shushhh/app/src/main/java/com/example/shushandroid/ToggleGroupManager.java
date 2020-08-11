@@ -40,6 +40,23 @@ public class ToggleGroupManager {
         saturdayButton = view.findViewById(R.id.saturday);
     }
 
+    public void manageState (boolean enable) { // improve UI
+        sundayButton.setEnabled(enable);
+        sundayButton.setFocusable(enable);
+        mondayButton.setEnabled(enable);
+        mondayButton.setFocusable(enable);
+        tuesDayButton.setEnabled(enable);
+        tuesDayButton.setFocusable(enable);
+        wednesdayButton.setEnabled(enable);
+        wednesdayButton.setFocusable(enable);
+        thursdayButton.setEnabled(enable);
+        thursdayButton.setFocusable(enable);
+        fridayButton.setEnabled(enable);
+        fridayButton.setFocusable(enable);
+        saturdayButton.setEnabled(enable);
+        saturdayButton.setFocusable(enable);
+    }
+
     /**
 
      * @return string of characters for the days chosen

@@ -51,54 +51,7 @@ public class SilencerReciever extends BroadcastReceiver {
         if (intent.getStringExtra(ShushQueryScheduler.SCHEDULE_TYPE) != null) {
             String scheduleType = Objects.requireNonNull(intent.getStringExtra(ShushQueryScheduler.SCHEDULE_TYPE));
             String toggleKey = intent.getStringExtra(ShushQueryScheduler.TOGGLE_KEY);
-            if (scheduleType.equals(ShushQueryScheduler.Key.LOCATION_REPEAT)) {
-
-                Log.i("Alarm", "LOcation repeat");
-
-                int x = intent.getIntExtra("DayInt", 0);
-                String day = intent.getStringExtra("DayString");
-
-                Calendar calendarFrom = Calendar.getInstance();
-                Calendar calendarTo = Calendar.getInstance();
-                Date date = new Date();
-                LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                LocalTime localTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalTime();
-
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd");
-
-                if (Integer.parseInt(dateFormat.format(date)) == x) {
-                    SilencerReciever.interval = (long) (hours/10 * 60 * 60 * 1000);
-                    try {
-                        ShushQueryScheduler.schedule(new DatabaseManager(context).retrieveWithCursor(), context);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    LocalDate nextLocalDate = localDate.with(TemporalAdjusters.next(ShushQueryScheduler.getDayOfWeek(day)));
-
-                    calendarFrom.set(Calendar.YEAR, localDate.getYear());
-                    calendarFrom.set(Calendar.MONTH, localDate.getMonthValue() - 1);
-                    calendarFrom.set(Calendar.DAY_OF_MONTH, localDate.getDayOfMonth());
-                    calendarFrom.set(Calendar.HOUR_OF_DAY, localTime.getHour());
-                    calendarFrom.set(Calendar.MINUTE, localTime.getMinute());
-
-                    calendarTo.set(Calendar.YEAR, nextLocalDate.getYear());
-                    calendarTo.set(Calendar.MONTH, nextLocalDate.getMonthValue() - 1);
-                    calendarTo.set(Calendar.DAY_OF_MONTH, nextLocalDate.getDayOfMonth());
-
-                    SilencerReciever.interval = calendarTo.getTimeInMillis() - calendarFrom.getTimeInMillis();
-
-                    System.out.println(SilencerReciever.interval);
-
-                    try {
-                        ShushQueryScheduler.schedule(new DatabaseManager(context).retrieveWithCursor(), context);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                }
-                // check inside location receiver for geofences
-
-            } else if (scheduleType.equals(ShushQueryScheduler.Key.LOCATION_NO_REPEAT)) {
+            if (scheduleType.equals(ShushQueryScheduler.Key.LOCATION_NO_REPEAT)) {
                 // check toggle with geofences and then ring or silent based on location (if within vicinity -> silent and if not -> ring)
             } else if (scheduleType.equals(ShushQueryScheduler.Key.TIME_REPEAT)) {
                 if (toggleKey != null && toggleKey.equals(ShushQueryScheduler.Key.RING)) {
@@ -142,11 +95,6 @@ public class SilencerReciever extends BroadcastReceiver {
                     Log.i("Alarm Toggle", "Location Time No Repeat - SILENT");
                 }
                 // check toggle with geofences and then ring or silent based on location (if within vicinity -> silent and if not -> ring)
-            } else if (scheduleType.equals(ShushQueryScheduler.Key.LOCATION_TIME_REPEAT)) {
-                AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                Intent locationIntent = new Intent (context, LocationReceiver.class);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, locationIntent, 0);
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), (long) (hours * 60 * 60 * 1000), pendingIntent);
             }
         }
     }
