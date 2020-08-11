@@ -170,6 +170,17 @@ public class MainActivity extends AppCompatActivity {
 
             if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 isBackgroundLocationGranted = true;
+            } else {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)) { // shows after denial
+                    new AlertDialog.Builder(MainActivity.this)
+                            .setTitle("Location Permission")
+                            .setMessage("To set location constraints to silence your phone, we will need to access your location in the background. Note that all location data stays in your phone, thereby protecting your privacy.")
+                            .setPositiveButton("Ok", (DialogInterface dialogInterface, int i) -> {
+                                ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.ACCESS_BACKGROUND_LOCATION}, PermissionRequestCodes.PERMISSION_BACKGROUND_LOCATION);
+                            }).create().show();
+                } else {
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.ACCESS_BACKGROUND_LOCATION}, PermissionRequestCodes.PERMISSION_BACKGROUND_LOCATION);
+                }
             }
 
             if (isFineLocationGranted && isBackgroundLocationGranted) {
@@ -216,9 +227,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == PermissionRequestCodes.PERMISSION_BACKGROUND_LOCATION) {
-            ShushDialog timeDialog = new ShushDialog();
-            timeDialog.show(getSupportFragmentManager(), "", "fab");
-            isBackgroundLocationGranted = true;
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                ShushDialog timeDialog = new ShushDialog();
+                timeDialog.show(getSupportFragmentManager(), "", "fab");
+                isBackgroundLocationGranted = true;
+            }
         }
         if (requestCode == PermissionRequestCodes.PERMISSION_FINE_LOCATION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {

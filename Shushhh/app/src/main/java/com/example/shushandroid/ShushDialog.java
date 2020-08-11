@@ -140,6 +140,7 @@ public class ShushDialog extends DialogFragment {
                             mapTextView.setText("N/A");
                         } else {
                             mapTextView.setText(location);
+                            toggleGroupManager.clearToggles();
                             toggleGroupManager.manageState(false);
                         }
                     }
@@ -148,6 +149,7 @@ public class ShushDialog extends DialogFragment {
                             radiusTextView.setText("N/A");
                         } else {
                             radiusTextView.setText(radius);
+                            toggleGroupManager.clearToggles();
                             toggleGroupManager.manageState(false);
                         }
                     }

@@ -53,6 +53,8 @@ public class ShushQueryScheduler {
         sharedPreferenceManager = new SharedPreferenceManager(context);
         hours = sharedPreferenceManager.retrieveLocationInterval();
 
+        Log.i("HOurs", hours + "");
+
         for (ShushObject shushObject: shushObjectArrayList) {
 
             if (shushObject.getDate().equals(ShushObject.Key.NULL)) { // only location setting with possible repeats
@@ -63,7 +65,7 @@ public class ShushQueryScheduler {
                 intent.putExtra(SCHEDULE_TYPE, Key.LOCATION_NO_REPEAT);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
                 alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), (long) ((hours/10 * 60 * 60 * 1000)), pendingIntent);
-                Log.i("Alarm Schedule", "Location no repeat executing...");
+                Log.i("Alarm Schedule", "Location no repeat executing..." + (long) ((hours/10 * 60 * 60 * 1000)));
                 id++;
                 // perform GeoFencing processing in SilencerReceiver
             } else if (shushObject.getLocation().equals(ShushObject.Key.NULL) || !shushObject.getLocation().equals(ShushObject.Key.NULL)) {
