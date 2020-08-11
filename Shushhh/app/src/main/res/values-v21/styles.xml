@@ -40,7 +40,7 @@
     </style>
     
     <style name="FullscreenDialogTheme" parent="Theme.AppCompat.Light.DialogWhenLarge">
-        <item name="android:statusBarColor">#280680</item>
+        <item name="android:statusBarColor">@color/colorPrimary</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowAnimationStyle">@style/Animation.AppCompat.Dialog</item>
     </style>
