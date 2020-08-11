@@ -1,5 +1,6 @@
 package com.example.shushandroid;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.View;
 
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 
  */
 
-public class ToggleGroupManager {
+public class ToggleGroupManager extends View{
 
     private MaterialButton sundayButton;
     private MaterialButton mondayButton;
@@ -29,11 +30,12 @@ public class ToggleGroupManager {
     private MaterialButton fridayButton;
     private MaterialButton saturdayButton;
 
-    /**
-     *
-     * @param view
-     */
+    public ToggleGroupManager(Context context) {
+        super(context);
+    }
+
     public ToggleGroupManager (View view) {
+        super(view.getContext());
         sundayButton = view.findViewById(R.id.sunday);
         mondayButton = view.findViewById(R.id.monday);
         tuesDayButton = view.findViewById(R.id.tuesday);
@@ -42,6 +44,12 @@ public class ToggleGroupManager {
         fridayButton = view.findViewById(R.id.friday);
         saturdayButton = view.findViewById(R.id.saturday);
     }
+
+    /**
+     *
+     * @param view
+     */
+
 
     public void manageState (boolean enable) { // improve UI
         sundayButton.setEnabled(enable);
@@ -109,7 +117,6 @@ public class ToggleGroupManager {
      * @implNote set the buttons that are present in the string to checked (not selected -> different. Select makes the background colorAccent)
      */
 
-
     public void setCheckedToggleButtons(String selectedDaysString) {
         if (selectedDaysString.length() > 0) {
             if (selectedDaysString.contains("Sn")) {
@@ -150,41 +157,48 @@ public class ToggleGroupManager {
             } else {
                 saturdayButton.setChecked(false);
             }
+        } else {
+            clearToggles();
         }
     }
 
     public void uncheckToggleGroup (String currentToggleStateString, String savedToggleStateString) {
-        ArrayList<String> currentDays = ShushQueryScheduler.getDaysFromRep(currentToggleStateString); //SnT
-        ArrayList<String> savedDays = ShushQueryScheduler.getDaysFromRep(savedToggleStateString); // T
+        ArrayList<String> currentDays = ShushQueryScheduler.getDaysFromRep(currentToggleStateString); //SnT or T
+        ArrayList<String> savedDays = ShushQueryScheduler.getDaysFromRep(savedToggleStateString); // T or SnT
         for (String day: currentDays) {
             if (!savedDays.contains(day)) {
-                this.uncheckButton(day);
+                this.checkButton(day, false);
+            }
+        }
+        for (String day: savedDays) {
+            if (!currentDays.contains(day)) {
+                this.checkButton(day, true);
             }
         }
     }
 
-    public void uncheckButton (String day) {
+    public void checkButton (String day, boolean value) {
         switch (day) {
             case "Sn":
-                sundayButton.setChecked(false);
+                sundayButton.setChecked(value);
                 break;
             case "M":
-                mondayButton.setChecked(false);
+                mondayButton.setChecked(value);
                 break;
             case "T":
-                tuesDayButton.setChecked(false);
+                tuesDayButton.setChecked(value);
                 break;
             case "W":
-                wednesdayButton.setChecked(false);
+                wednesdayButton.setChecked(value);
                 break;
             case "R":
-                thursdayButton.setChecked(false);
+                thursdayButton.setChecked(value);
                 break;
             case "F":
-                fridayButton.setChecked(false);
+                fridayButton.setChecked(value);
                 break;
             case "St":
-                saturdayButton.setChecked(false);
+                saturdayButton.setChecked(value);
                 break;
         }
     }

@@ -172,10 +172,12 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public ShushObject getShushObject (String uuidString) {
         ArrayList<ShushObject> shushObjects = this.retrieveWithCursor();
+        System.out.println("Info: " + shushObjects);
         for (ShushObject shushObject: shushObjects) {
+            Log.i("Information", shushObject.getUUID() + " | " + uuidString);
             if (shushObject.getUUID().equals(uuidString)) {
                 return shushObject;
-            } else return null;
+            }
         }
         return null;
     }

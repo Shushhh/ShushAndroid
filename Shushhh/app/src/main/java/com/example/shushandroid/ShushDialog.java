@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.sql.SQLOutput;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -160,28 +161,37 @@ public class ShushDialog extends DialogFragment {
         timePicker = new TimePickerFragment(getActivity());
         databaseManager = new DatabaseManager(getActivity());
 
+        Log.i("View", "View");
+
         if (getArguments() != null) {
             presetUUIDString = getArguments().getString(DatabaseManager.DatabaseEntry.UUID);
-
-            if (databaseManager.getShushObject(presetUUIDString) != null) {
+            Log.i("UUID", presetUUIDString);
                 ShushObject shushObject = databaseManager.getShushObject(presetUUIDString);
+
+            if (shushObject != null) {
+                Log.i("Click", "Click");
+
                 addNameEditText.post(() -> {
                     addNameEditText.setText(shushObject.getName());
+                    toggleGroupManager.setCheckedToggleButtons(shushObject.getRep());
+
                 });
+
                 dateTextView1.setText(shushObject.getDate());
                 mapTextView.setText(shushObject.getLocation());
                 radiusTextView.setText(shushObject.getRadius());
-                toggleGroupManager.setCheckedToggleButtons(shushObject.getRep());
 
-                timeTextView1.setText(shushObject.getTime().substring(0, shushObject.getTime().indexOf("-") - 1));
-                timeTextView2.setText(shushObject.getTime().substring(shushObject.getTime().indexOf("-") + 1));
+                System.out.println("REP: " + toggleGroupManager.getToggleStateString() + " " + shushObject.getRep());
+
+                timeTextView1.setText(shushObject.getTime().substring(0, shushObject.getTime().indexOf("-") - 1).trim());
+                timeTextView2.setText(shushObject.getTime().substring(shushObject.getTime().indexOf("-") + 1).trim());
+
+                System.out.println(timeTextView2.getText());
 
                 if (!shushObject.getLocation().equals(ShushObject.Key.NULL)) {
                     toggleGroupManager.manageState(false);
                 }
-
             }
-
             isFromFab = false;
         } else {
             isFromFab = true;
@@ -342,6 +352,7 @@ public class ShushDialog extends DialogFragment {
                 shushObject.setRadius(radius);
 
                 if (isFromFab) {
+                    Log.i("Info", "FAB");
                     shushObject.setUUID(UUID.randomUUID().toString());
                     if (databaseManager.insert(shushObject)) {
                         MainActivity.updateRecyclerView();
@@ -354,6 +365,7 @@ public class ShushDialog extends DialogFragment {
                         dismiss();
                     }
                 } else {
+                    Log.i("Info", "Click");
                     shushObject.setUUID(presetUUIDString);
                     if (databaseManager.update(shushObject)) {
                         MainActivity.updateRecyclerView();
