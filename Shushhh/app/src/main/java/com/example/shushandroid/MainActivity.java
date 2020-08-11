@@ -49,9 +49,11 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * @apiNote Main Activity class
@@ -106,19 +108,10 @@ public class MainActivity extends AppCompatActivity {
             init();
         }
 
-        Log.i("Package Name", this.getPackageName());
-        try {
-            ShushQueryScheduler.schedule(databaseManager.retrieveWithCursor(), this);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        try {
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         requestAudioPermissions();
+
+        Intent intent = new Intent(this, ForegroundServiceManager.class);
+        startService(intent);
 
     }
 
@@ -218,22 +211,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.i("lifecycle", "destroy");
-        Intent intent = new Intent(this, ForegroundServiceManager.class);
-        startService(intent);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.i("lifecycle", "start");
-        Intent intent = new Intent(this, ForegroundServiceManager.class);
-        stopService(intent);
-    }
-
     public static class VoicemailBottomSheetDialogFragment extends BottomSheetDialogFragment {
 
         private LinearLayout settingsView, feedbackView, aboutUsView;
@@ -259,22 +236,5 @@ public class MainActivity extends AppCompatActivity {
             return view;
         }
     }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.i("Result", "Activity");
-        if (requestCode == 10) {
-            if (resultCode == 21) {
-                Log.i("Result", "result");
-                String s = this.getSharedPreferences(getPackageName(), MODE_PRIVATE).getString(getResources().getString(R.string.settings_radio_string), null);
-                if (s != null) {
-                    Log.i("Result", s);
-                }
-            }
-        }
-
-    }
-
 }
 
