@@ -1,5 +1,6 @@
 package com.example.shushandroid;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -7,10 +8,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.RadioButton;
+
+import java.text.ParseException;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -23,6 +27,7 @@ public class SettingsActivity extends AppCompatActivity {
     private SharedPreferences.Editor sharedPreferenceEditor;
     private SharedPreferenceManager sharedPreferenceManager;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +78,11 @@ public class SettingsActivity extends AppCompatActivity {
             sharedPreferenceEditor.putString(getResources().getString(R.string.settings_radio_string), intervalString);
             sharedPreferenceEditor.putInt(getResources().getString(R.string.settings_toggle_string), ringerToggleState);
             if (sharedPreferenceEditor.commit()) {
+                try {
+                    ShushQueryScheduler.schedule(new DatabaseManager(this).retrieveWithCursor(), this);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 finish();
             }
         });
