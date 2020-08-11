@@ -184,7 +184,6 @@ public class ShushDialog extends DialogFragment {
             timeTextView2.setText("N/A");
             dateTextView1.setText("N/A");
         });
-
         locationClearButton.setOnClickListener(v -> {
             mapTextView.setText("N/A");
             radiusTextView.setText("N/A");
@@ -224,7 +223,7 @@ public class ShushDialog extends DialogFragment {
         if (this.from.equals("click")) { // if user comes here with recycler item click
             if (!presetNameString.isEmpty()) { // if nameString is not empty (check bundle code in the show method)
                 addNameEditText.post(() -> {
-                    addNameEditText.setText(presetNameString); // update EditText in a separate UIThread (still not sure why the main thread won't update it properly)
+                    addNameEditText.setText(presetNameString);// update EditText in a separate UIThread (still not sure why the main thread won't update it properly)
                 });
             }
             if (!presetTimeString1.isEmpty() && !presetTimeString2.isEmpty()) { // if time strings aren't empty, update time text views
@@ -255,6 +254,10 @@ public class ShushDialog extends DialogFragment {
                 radiusTextView.setText(ShushObject.Key.NULL);
                 toggleGroupManager.manageState(true);
             }
+
+
+            Log.i("Fragment create view", radiusTextView.getText() + "|" + mapTextView.getText());
+
 
         } else if (this.from.equals("fab")) { // if user comes here from fab action, set the current date and time
             dateTextView1.setText("N/A");

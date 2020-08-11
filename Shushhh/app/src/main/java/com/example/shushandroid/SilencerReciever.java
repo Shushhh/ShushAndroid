@@ -53,11 +53,11 @@ public class SilencerReciever extends BroadcastReceiver {
             String toggleKey = intent.getStringExtra(ShushQueryScheduler.TOGGLE_KEY);
             if (scheduleType.equals(ShushQueryScheduler.Key.LOCATION_NO_REPEAT)) {
                 Log.i("Alarm Loc", "Test");
-//                if (GeofenceBroadcastReceiver.isEntered()) {
-//                    Log.i("Geofence Test", "In");
-//                } else {
-//                    Log.i("Geofence Test", "Out");
-//                }
+                if (GeofenceBroadcastReceiver.isEntered()) {
+                    Log.i("Geofence Test", "In");
+                } else {
+                    Log.i("Geofence Test", "Out");
+                }
                 // check toggle with geofences and then ring or silent based on location (if within vicinity -> silent and if not -> ring)
             } else if (scheduleType.equals(ShushQueryScheduler.Key.TIME_REPEAT)) {
                 if (toggleKey != null && toggleKey.equals(ShushQueryScheduler.Key.RING)) {
