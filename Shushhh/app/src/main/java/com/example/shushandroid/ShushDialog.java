@@ -235,7 +235,6 @@ public class ShushDialog extends DialogFragment {
                 timeTextView2.setText("N/A");
             }
 
-
             toggleGroupManager.setCheckedToggleButtons(presetRepString);
             Log.i("Toggle", presetRepString + "|" + toggleGroupManager.getToggleStateString());
 
