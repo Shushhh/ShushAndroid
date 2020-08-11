@@ -224,7 +224,7 @@ public class ShushDialog extends DialogFragment {
 
         radiusTextView.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), MapActivity.class);
-//            intent.putExtra("Location", mapTextView.getText().toString()); set radius later
+            intent.putExtra("Location", mapTextView.getText().toString());
             startActivityForResult(intent, 10);
         });
 
