@@ -168,6 +168,10 @@ public class MainActivity extends AppCompatActivity {
                 isFineLocationGranted = true;
             }
 
+            if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                isBackgroundLocationGranted = true;
+            }
+
             if (isFineLocationGranted && isBackgroundLocationGranted) {
                 ShushDialog timeDialog = new ShushDialog();
                 timeDialog.show(getSupportFragmentManager(), "", "fab");
