@@ -22,8 +22,8 @@ public class SharedPreferenceManager {
                 return 2.0;
             } else if (s.charAt(0) == '3') {
                 return 0.5;
-            } else return 0.0;
-        } else return 0.0;
+            } else return 0.5;
+        } else return 0.5;
     }
 
     public Integer retrieveToggleState () {
