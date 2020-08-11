@@ -62,7 +62,7 @@ public class ShushQueryScheduler {
                 Intent intent = new Intent(context, SilencerReciever.class);
                 intent.putExtra(SCHEDULE_TYPE, Key.LOCATION_NO_REPEAT);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), (long) ((hours * 60 * 60 * 1000)), pendingIntent);
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), (long) ((hours/10 * 60 * 60 * 1000)), pendingIntent);
                 Log.i("Alarm Schedule", "Location no repeat executing...");
                 id++;
                 // perform GeoFencing processing in SilencerReceiver

@@ -17,7 +17,7 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
 
     private static final String TAG = "geofences";
 
-    GeofencingEvent geofencingEvent;
+    static GeofencingEvent geofencingEvent;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -51,10 +51,14 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
         }
 
     }
-    public boolean isEntered() {
-        if (geofencingEvent.getGeofenceTransition() == Geofence.GEOFENCE_TRANSITION_ENTER) {
+
+    public static boolean isEntered() {
+        if (geofencingEvent.getGeofenceTransition() == Geofence.GEOFENCE_TRANSITION_ENTER || geofencingEvent.getGeofenceTransition() == Geofence.GEOFENCE_TRANSITION_DWELL) {
             return true;
         } else {
+            if (geofencingEvent.getGeofenceTransition() == Geofence.GEOFENCE_TRANSITION_EXIT) {
+                return false;
+            }
             return false;
         }
     }
