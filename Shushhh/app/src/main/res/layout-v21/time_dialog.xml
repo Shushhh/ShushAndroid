@@ -295,7 +295,7 @@
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/rubik"
-            android:text="T"
+            android:text="R"
             android:textColor="@color/cardview_light_background"
             app:backgroundTint="@color/togglebutton_background_color" />
 

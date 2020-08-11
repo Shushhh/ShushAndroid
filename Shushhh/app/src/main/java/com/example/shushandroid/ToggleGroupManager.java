@@ -1,8 +1,11 @@
 package com.example.shushandroid;
 
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.material.button.MaterialButton;
+
+import java.util.ArrayList;
 
 /**
 
@@ -110,16 +113,19 @@ public class ToggleGroupManager {
     public void setCheckedToggleButtons(String selectedDaysString) {
         if (selectedDaysString.length() > 0) {
             if (selectedDaysString.contains("Sn")) {
+                Log.i("Toggle Button", "Sunday");
                 sundayButton.setChecked(true);
             } else {
                 sundayButton.setChecked(false);
             }
             if (selectedDaysString.contains("M")) {
+                Log.i("Toggle Button", "Monday");
                 mondayButton.setChecked(true);
             } else {
                 mondayButton.setChecked(false);
             }
             if (selectedDaysString.contains("T")) {
+                Log.i("Toggle Button", "Tuesday");
                 tuesDayButton.setChecked(true);
             } else {
                 tuesDayButton.setChecked(false);
@@ -144,6 +150,42 @@ public class ToggleGroupManager {
             } else {
                 saturdayButton.setChecked(false);
             }
+        }
+    }
+
+    public void uncheckToggleGroup (String currentToggleStateString, String savedToggleStateString) {
+        ArrayList<String> currentDays = ShushQueryScheduler.getDaysFromRep(currentToggleStateString); //SnT
+        ArrayList<String> savedDays = ShushQueryScheduler.getDaysFromRep(savedToggleStateString); // T
+        for (String day: currentDays) {
+            if (!savedDays.contains(day)) {
+                this.uncheckButton(day);
+            }
+        }
+    }
+
+    public void uncheckButton (String day) {
+        switch (day) {
+            case "Sn":
+                sundayButton.setChecked(false);
+                break;
+            case "M":
+                mondayButton.setChecked(false);
+                break;
+            case "T":
+                tuesDayButton.setChecked(false);
+                break;
+            case "W":
+                wednesdayButton.setChecked(false);
+                break;
+            case "R":
+                thursdayButton.setChecked(false);
+                break;
+            case "F":
+                fridayButton.setChecked(false);
+                break;
+            case "St":
+                saturdayButton.setChecked(false);
+                break;
         }
     }
 

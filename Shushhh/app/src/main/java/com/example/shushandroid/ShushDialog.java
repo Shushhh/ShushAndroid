@@ -233,9 +233,11 @@ public class ShushDialog extends DialogFragment {
                 timeTextView2.setText("N/A");
             }
 
-            toggleGroupManager.clearToggles();
+
             toggleGroupManager.setCheckedToggleButtons(presetRepString);
             Log.i("Toggle", presetRepString + "|" + toggleGroupManager.getToggleStateString());
+
+
             dateTextView1.setText((!presetDateString.isEmpty() ? presetDateString : "N/A"));
 
             if (!presetLocationString.isEmpty()) {
@@ -260,10 +262,10 @@ public class ShushDialog extends DialogFragment {
             mapTextView.setText("N/A");
             radiusTextView.setText("N/A");
             toggleGroupManager.manageState(true);
-
         }
 
         closeButton.setOnClickListener(v -> {
+            toggleGroupManager.uncheckToggleGroup(toggleGroupManager.getToggleStateString(), presetRepString);
             dismiss();
         });
 

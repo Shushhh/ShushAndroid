@@ -120,7 +120,7 @@ public class ShushQueryScheduler {
         }
     }
 
-    private static ArrayList<String> getDaysFromRep (String repString) {
+    public static ArrayList<String> getDaysFromRep (String repString) {
         char[] repArray = repString.toCharArray();
         ArrayList<String> days = new ArrayList();
         for (int index = 0; index < repArray.length; index++) {
