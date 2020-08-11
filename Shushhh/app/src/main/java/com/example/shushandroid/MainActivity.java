@@ -49,9 +49,11 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * @apiNote Main Activity class
@@ -231,6 +233,5 @@ public class MainActivity extends AppCompatActivity {
             return view;
         }
     }
-
 }
 

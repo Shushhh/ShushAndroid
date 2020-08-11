@@ -46,6 +46,8 @@ public class ShushQueryScheduler {
     private static double hours;
     private static SharedPreferenceManager sharedPreferenceManager;
 
+    private long millis = System.currentTimeMillis();
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static void schedule (ArrayList<ShushObject> shushObjectArrayList, Context context) throws ParseException {
 
@@ -55,30 +57,39 @@ public class ShushQueryScheduler {
         hours = sharedPreferenceManager.retrieveLocationInterval();
 
         for (ShushObject shushObject: shushObjectArrayList) {
-            Log.i("Alarm", shushObject.toString());
+
             if (shushObject.getDate().equals(ShushObject.Key.NULL)) { // only location setting with possible repeats
                 if (!shushObject.getRep().isEmpty()) { // no time -> location at a certain interval
-                    for (String day: getDaysFromRep(shushObject.getRep())) {
-                        Calendar[] calendars = getSelectedDayCalendars(shushObject.getDate(), shushObject.getTime(), day);
-                        AlarmManager fromAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                        Intent intent = new Intent(context, SilencerReciever.class);
-                        intent.putExtra(TOGGLE_KEY, Key.SILENT);
-                        intent.putExtra(SCHEDULE_TYPE, Key.LOCATION_REPEAT);
-                        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
-                        fromAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendars[0].getTimeInMillis(), (7 * 24 * 60 * 60 * 1000), pendingIntent); // set to silent
 
-                        id++;
+                    Date date = new Date();
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EE");
 
-                        Intent intent2 = new Intent(context, SilencerReciever.class);
-                        intent2.putExtra(TOGGLE_KEY, Key.RING);
-                        intent2.putExtra(SCHEDULE_TYPE, Key.LOCATION_REPEAT);
-                        AlarmManager toAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                        PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context, id, intent2, 0);
-                        toAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendars[1].getTimeInMillis() + (long) (hours * 60 * 60 * 1000), (7 * 24 * 60 * 60 * 1000), pendingIntent2); // set to ring
-                        id++;
+                    int i = 0;
+                    int index = i;
 
+                    for (String repDay: getDaysFromRep(shushObject.getRep())) {
+                        if (isTodayInRep(repDay, simpleDateFormat.format(date))) {
+                            index = i;
+                        } else {
+                            index = 0;
+                        }
+                        i ++;
                     }
 
+                    String day = getDaysFromRep(shushObject.getRep()).get(index);
+                    Calendar[] calendars = getSelectedDayCalendars(shushObject.getDate(), shushObject.getTime(), day);
+                    AlarmManager fromAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                    Intent intent = new Intent(context, SilencerReciever.class);
+                    intent.putExtra(TOGGLE_KEY, Key.SILENT);
+                    intent.putExtra(SCHEDULE_TYPE, Key.LOCATION_REPEAT);
+                    intent.putExtra("DayString", getDaysFromRep(shushObject.getRep()).get(index));
+                    intent.putExtra("DayInt", calendars[0].get(Calendar.DAY_OF_MONTH));
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
+                    if (SilencerReciever.interval == 0) {
+                        SilencerReciever.interval = (long) (hours/10 * 60 * 60 * 1000);
+                    }
+                    fromAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), SilencerReciever.interval, pendingIntent); // set to silent
+                    id++;
                 } else {
                     //everyday just check every x minutes
                     /***************** DONE *******************/
@@ -268,7 +279,7 @@ public class ShushQueryScheduler {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private static DayOfWeek getDayOfWeek (String dayString) {
+    public static DayOfWeek getDayOfWeek (String dayString) {
         if (dayString != null) {
             switch (dayString) {
                 case "Sn":
@@ -289,6 +300,16 @@ public class ShushQueryScheduler {
                     return null;
             }
         } else return null;
+    }
+
+    public static boolean isTodayInRep (String repDay, String currentDay) {
+        if (repDay.equals("Sn") && currentDay.equals("Sun"))
+            return true;
+        else if (repDay.equals("St") && currentDay.equals("Sat"))
+            return true;
+        else if (repDay.equals("R") && currentDay.equals("Thu"))
+            return true;
+        else return ("" + repDay.charAt(0)).equals("" + currentDay.charAt(0));
     }
 
 }
