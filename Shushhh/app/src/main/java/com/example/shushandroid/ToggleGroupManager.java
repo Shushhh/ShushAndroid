@@ -90,33 +90,59 @@ public class ToggleGroupManager {
         return checkedStateString;
     }
 
+
+    public void clearToggles () {
+        sundayButton.setChecked(false);
+        mondayButton.setChecked(false);
+        tuesDayButton.setChecked(false);
+        wednesdayButton.setChecked(false);
+        thursdayButton.setChecked(false);
+        fridayButton.setChecked(false);
+        saturdayButton.setChecked(false);
+    }
+
     /**
      * @param selectedDaysString provide the string of selected days obtained from the previous method defined
      * @implNote set the buttons that are present in the string to checked (not selected -> different. Select makes the background colorAccent)
      */
 
+
     public void setCheckedToggleButtons(String selectedDaysString) {
         if (selectedDaysString.length() > 0) {
             if (selectedDaysString.contains("Sn")) {
                 sundayButton.setChecked(true);
+            } else {
+                sundayButton.setChecked(false);
             }
             if (selectedDaysString.contains("M")) {
                 mondayButton.setChecked(true);
+            } else {
+                mondayButton.setChecked(false);
             }
             if (selectedDaysString.contains("T")) {
                 tuesDayButton.setChecked(true);
+            } else {
+                tuesDayButton.setChecked(false);
             }
             if (selectedDaysString.contains("W")) {
                 wednesdayButton.setChecked(true);
+            } else {
+                wednesdayButton.setChecked(false);
             }
             if (selectedDaysString.contains("R")) {
                 thursdayButton.setChecked(true);
+            } else {
+                thursdayButton.setChecked(false);
             }
             if (selectedDaysString.contains("F")) {
                 fridayButton.setChecked(true);
+            } else {
+                fridayButton.setChecked(false);
             }
             if (selectedDaysString.contains("St")) {
                 saturdayButton.setChecked(true);
+            } else {
+                saturdayButton.setChecked(false);
             }
         }
     }
