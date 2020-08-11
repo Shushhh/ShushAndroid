@@ -154,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
              * request permission again.
              */
             if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                Log.i("Permissions", "Not granted - fine");
                 if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) { // shows after denial
                     new AlertDialog.Builder(MainActivity.this)
                             .setTitle("Location Permission")
@@ -166,11 +167,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             } else {
                 isFineLocationGranted = true;
+                Log.i("Permissions", "Granted - fine");
             }
 
             if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 isBackgroundLocationGranted = true;
+                Log.i("Permissions", "Granted - Background");
             } else {
+                Log.i("Permissions", "Not granted - Background");
                 if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)) { // shows after denial
                     new AlertDialog.Builder(MainActivity.this)
                             .setTitle("Location Permission")
