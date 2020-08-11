@@ -108,6 +108,9 @@ public class MainActivity extends AppCompatActivity {
 
         requestAudioPermissions();
 
+        Intent intent = new Intent(this, ForegroundServiceManager.class);
+        startService(intent);
+
     }
 
     public void requestAudioPermissions () {
@@ -204,28 +207,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-    }
-
-    @Override
-    protected void onPause() {
-        Log.i("lifecycle", "destroy");
-        Intent intent = new Intent(this, ForegroundServiceManager.class);
-        startService(intent);
-        super.onPause();
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    @Override
-    protected void onResume() {
-        Log.i("lifecycle", "start");
-        Intent intent = new Intent(this, ForegroundServiceManager.class);
-        try {
-            ShushQueryScheduler.schedule(databaseManager.retrieveWithCursor(), this);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        stopService(intent);
-        super.onResume();
     }
 
     public static class VoicemailBottomSheetDialogFragment extends BottomSheetDialogFragment {

@@ -38,6 +38,8 @@ public class ForegroundServiceManager extends Service {
         return START_STICKY;
     }
 
+
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {

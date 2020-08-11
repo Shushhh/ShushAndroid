@@ -42,12 +42,20 @@ public class SilencerReciever extends BroadcastReceiver {
             } else if (scheduleType.equals(ShushQueryScheduler.Key.LOCATION_NO_REPEAT)) {
                 // check toggle with geofences and then ring or silent based on location (if within vicinity -> silent and if not -> ring)
             } else if (scheduleType.equals(ShushQueryScheduler.Key.TIME_REPEAT)) {
-                Log.i("Alarm", "Time Repeat");
                 if (toggleKey != null && toggleKey.equals(ShushQueryScheduler.Key.RING)) {
                     Log.i("Alarm Toggle", "Time Repeat - RING");
                     audioManager.setRingerMode(toggleState);
                 } else if (toggleKey != null && toggleKey.equals(ShushQueryScheduler.Key.SILENT)) {
                     Log.i("Alarm Toggle", "Time Repeat - SILENT");
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                    if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
+                        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                    }
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                 }
             } else if (scheduleType.equals(ShushQueryScheduler.Key.TIME_NO_REPEAT)) {
@@ -56,6 +64,15 @@ public class SilencerReciever extends BroadcastReceiver {
                     audioManager.setRingerMode(toggleState);
                 } else if (toggleKey != null && toggleKey.equals(ShushQueryScheduler.Key.SILENT)) {
                     Log.i("Alarm Toggle", "Time No Repeat - SILENT");
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                    if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
+                        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                    }
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                 }
             } else if (scheduleType.equals(ShushQueryScheduler.Key.LOCATION_TIME_NO_REPEAT)) {
@@ -73,10 +90,6 @@ public class SilencerReciever extends BroadcastReceiver {
                 alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), (long) (hours * 60 * 60 * 1000), pendingIntent);
             }
         }
-    }
-
-    public void setRinger() { // will do after implementing permissions
-
     }
 
 }
