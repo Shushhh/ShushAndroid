@@ -1,341 +1,349 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/colorPrimary">
 
-    <View
-        android:id="@+id/thirdview2"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@color/cardview_light_background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/repeatWeeklyToggleGroup" />
+        android:layout_height="match_parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <ImageButton
-        android:id="@+id/fullscreen_dialog_close"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@id/fullscreen_dialog_action"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:paddingTop="10dp"
-        android:layout_marginLeft="20dp"
-        android:src="@drawable/ic_baseline_close_24"
-        android:contentDescription="@string/todo" />
+            <View
+                android:id="@+id/thirdview2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:background="@color/cardview_light_background"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/repeatWeeklyToggleGroup" />
 
-
-    <Button
-        android:id="@+id/fullscreen_dialog_action"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:backgroundTint="@color/colorAccent"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
-        android:text="Save"
-        android:textColor="@color/colorPrimary" />
-
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/addNameEditText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="20dp"
-        android:background="@android:color/transparent"
-        android:fontFamily="@font/rubik"
-        android:hint="Add Name"
-        android:textColor="#FFF"
-        android:textSize="30sp"
-        android:textColorHint="#5F6678"
-        android:editable="true"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fullscreen_dialog_close"/>
-
-    <View
-        android:id="@+id/firstview"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@color/cardview_light_background"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/addNameEditText">
-    </View>
-
-    <TextView
-        android:id="@+id/timedialogtimetext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="20dp"
-        android:fontFamily="@font/rubik"
-        android:text="DATE | TIME"
-        android:textColor="#969EB0"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/firstview">
-    </TextView>
-
-    <Button
-        android:id="@+id/timeClearButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Clear"
-        android:textColor="@color/colorAccent"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        app:layout_constraintTop_toBottomOf="@id/firstview"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="30dp"/>
-
-    <TextView
-        android:id="@+id/firstdate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginLeft="40dp"
-        android:clickable="true"
-        android:focusable="false"
-        android:fontFamily="@font/rubik"
-        android:text="Mon, Jul 20, 2020"
-        android:textColor="@color/cardview_light_background"
-        android:textSize="19sp"
-        app:layout_constraintBottom_toTopOf="@+id/secondview"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timedialogtimetext" />
-
-    <TextView
-        android:id="@+id/firsttime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
-        android:layout_marginRight="40dp"
-        android:fontFamily="@font/rubik"
-        android:text="9:30 PM"
-        android:textColor="@color/cardview_light_background"
-        android:textSize="19sp"
-        app:layout_constraintBottom_toTopOf="@+id/firstdate"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <TextView
-        android:id="@+id/secondtime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
-        android:layout_marginRight="40dp"
-        android:fontFamily="@font/rubik"
-        android:text="10:30 PM"
-        android:textColor="@color/cardview_light_background"
-        android:textSize="19sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/firstdate" />
-
-    <TextView
-        android:id="@+id/locationdialogtimetext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/rubik"
-        android:text="LOCATION | RADIUS"
-        android:textColor="#969EB0"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="40dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/secondview"/>
-
-    <Button
-        android:id="@+id/locationClearButton"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="30dp"
-        android:text="Clear"
-        android:textColor="@color/colorAccent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/secondview" />
+            <ImageButton
+                android:id="@+id/fullscreen_dialog_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="@id/fullscreen_dialog_action"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:paddingTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:src="@drawable/ic_baseline_close_24"
+                android:contentDescription="@string/todo" />
 
 
-    <TextView
-        android:layout_width="225dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/locationTextView"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/locationdialogtimetext"
-        android:text="239 Mabery Park Blvd"
-        android:textColor="@color/cardview_light_background"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="20dp"
-        android:textSize="19sp"
-        android:fontFamily="@font/rubik"
-        android:ellipsize="end"
-        android:maxLines="1"/>
+            <Button
+                android:id="@+id/fullscreen_dialog_action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:backgroundTint="@color/colorAccent"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
+                android:text="Save"
+                android:textColor="@color/colorPrimary" />
 
-    <TextView
-        android:id="@+id/radiusTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="50dp"
-        android:fontFamily="@font/rubik"
-        android:text="2 mi"
-        android:textColor="@color/cardview_light_background"
-        android:textSize="19sp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="20dp"
-        app:layout_constraintTop_toBottomOf="@+id/locationdialogtimetext" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/addNameEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="20dp"
+                android:background="@android:color/transparent"
+                android:fontFamily="@font/rubik"
+                android:hint="Add Name"
+                android:textColor="#FFF"
+                android:textSize="30sp"
+                android:textColorHint="#5F6678"
+                android:editable="true"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fullscreen_dialog_close"/>
 
-    <View
-        android:id="@+id/secondview"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@color/cardview_light_background"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/secondtime" />
+            <View
+                android:id="@+id/firstview"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/cardview_light_background"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/addNameEditText">
+            </View>
 
-    <TextView
-        android:id="@+id/timedialogrepeattext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/rubik"
-        android:text="REPEAT"
-        android:textColor="#969EB0"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/thirdview"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="40dp"></TextView>
+            <TextView
+                android:id="@+id/timedialogtimetext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/rubik"
+                android:text="DATE | TIME"
+                android:textColor="#969EB0"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/firstview">
+            </TextView>
 
-    <View
-        android:id="@+id/thirdview"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/cardview_light_background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/locationTextView"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"/>
+            <Button
+                android:id="@+id/timeClearButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Clear"
+                android:textColor="@color/colorAccent"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                app:layout_constraintTop_toBottomOf="@id/firstview"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="30dp"/>
 
-    <com.google.android.material.button.MaterialButtonToggleGroup
-        android:id="@+id/repeatWeeklyToggleGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timedialogrepeattext"
-        app:selectionRequired="false"
-        app:singleSelection="false"
-        android:layout_marginTop="20dp">
+            <TextView
+                android:id="@+id/firstdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp"
+                android:layout_marginLeft="40dp"
+                android:clickable="true"
+                android:focusable="false"
+                android:fontFamily="@font/rubik"
+                android:text="Mon, Jul 20, 2020"
+                android:textColor="@color/cardview_light_background"
+                android:textSize="19sp"
+                app:layout_constraintBottom_toTopOf="@+id/secondview"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/timedialogtimetext" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/sunday"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/rubik"
-            android:text="S"
-            android:textColor="@color/cardview_light_background"
-            app:backgroundTint="@color/togglebutton_background_color"
-            app:rippleColor="@color/colorAccent" />
+            <TextView
+                android:id="@+id/firsttime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="40dp"
+                android:layout_marginRight="40dp"
+                android:fontFamily="@font/rubik"
+                android:text="9:30 PM"
+                android:textColor="@color/cardview_light_background"
+                android:textSize="19sp"
+                app:layout_constraintBottom_toTopOf="@+id/firstdate"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/monday"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/rubik"
-            android:text="M"
-            android:textColor="@color/cardview_light_background"
-            app:backgroundTint="@color/togglebutton_background_color" />
+            <TextView
+                android:id="@+id/secondtime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="40dp"
+                android:layout_marginRight="40dp"
+                android:fontFamily="@font/rubik"
+                android:text="10:30 PM"
+                android:textColor="@color/cardview_light_background"
+                android:textSize="19sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/firstdate" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/tuesday"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/rubik"
-            android:text="T"
-            android:textColor="@color/cardview_light_background"
-            app:backgroundTint="@color/togglebutton_background_color" />
+            <TextView
+                android:id="@+id/locationdialogtimetext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/rubik"
+                android:text="LOCATION | RADIUS"
+                android:textColor="#969EB0"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="40dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/secondview"/>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/wednesday"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/rubik"
-            android:text="W"
-            android:textColor="@color/cardview_light_background"
-            app:backgroundTint="@color/togglebutton_background_color" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/thursday"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/rubik"
-            android:text="R"
-            android:textColor="@color/cardview_light_background"
-            app:backgroundTint="@color/togglebutton_background_color" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/friday"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/rubik"
-            android:text="F"
-            android:textColor="@color/cardview_light_background"
-            app:backgroundTint="@color/togglebutton_background_color" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/saturday"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/rubik"
-            android:text="S"
-            android:textColor="@color/cardview_light_background"
-            app:backgroundTint="@color/togglebutton_background_color" />
+            <Button
+                android:id="@+id/locationClearButton"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="30dp"
+                android:text="Clear"
+                android:textColor="@color/colorAccent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/secondview" />
 
 
-    </com.google.android.material.button.MaterialButtonToggleGroup>
+            <TextView
+                android:layout_width="225dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/locationTextView"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/locationdialogtimetext"
+                android:text="239 Mabery Park Blvd"
+                android:textColor="@color/cardview_light_background"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="20dp"
+                android:textSize="19sp"
+                android:fontFamily="@font/rubik"
+                android:ellipsize="end"
+                android:maxLines="1"/>
 
-    <Button
-        android:id="@+id/deleteButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:text="Delete"
-        android:textColor="#1F2636"
-        app:backgroundTint="#EF4C7B"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/thirdview2" />
+            <TextView
+                android:id="@+id/radiusTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="50dp"
+                android:fontFamily="@font/rubik"
+                android:text="2 mi"
+                android:textColor="@color/cardview_light_background"
+                android:textSize="19sp"
+                app:layout_constraintRight_toRightOf="parent"
+                android:layout_marginTop="20dp"
+                app:layout_constraintTop_toBottomOf="@+id/locationdialogtimetext" />
+
+            <View
+                android:id="@+id/secondview"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/cardview_light_background"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/secondtime" />
+
+            <TextView
+                android:id="@+id/timedialogrepeattext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/rubik"
+                android:text="REPEAT"
+                android:textColor="#969EB0"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/thirdview"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="40dp"></TextView>
+
+            <View
+                android:id="@+id/thirdview"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/cardview_light_background"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/locationTextView"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"/>
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/repeatWeeklyToggleGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/timedialogrepeattext"
+                app:selectionRequired="false"
+                app:singleSelection="false"
+                android:layout_marginTop="20dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/sunday"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rubik"
+                    android:text="S"
+                    android:textColor="@color/cardview_light_background"
+                    app:backgroundTint="@color/togglebutton_background_color"
+                    app:rippleColor="@color/colorAccent" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/monday"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rubik"
+                    android:text="M"
+                    android:textColor="@color/cardview_light_background"
+                    app:backgroundTint="@color/togglebutton_background_color" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/tuesday"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rubik"
+                    android:text="T"
+                    android:textColor="@color/cardview_light_background"
+                    app:backgroundTint="@color/togglebutton_background_color" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/wednesday"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rubik"
+                    android:text="W"
+                    android:textColor="@color/cardview_light_background"
+                    app:backgroundTint="@color/togglebutton_background_color" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/thursday"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rubik"
+                    android:text="R"
+                    android:textColor="@color/cardview_light_background"
+                    app:backgroundTint="@color/togglebutton_background_color" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/friday"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rubik"
+                    android:text="F"
+                    android:textColor="@color/cardview_light_background"
+                    app:backgroundTint="@color/togglebutton_background_color" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/saturday"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/rubik"
+                    android:text="S"
+                    android:textColor="@color/cardview_light_background"
+                    app:backgroundTint="@color/togglebutton_background_color" />
+
+
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            <Button
+                android:id="@+id/deleteButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:text="Delete"
+                android:textColor="#1F2636"
+                app:backgroundTint="#EF4C7B"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/thirdview2" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
