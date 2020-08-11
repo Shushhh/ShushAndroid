@@ -190,12 +190,12 @@ public class MainActivity extends AppCompatActivity {
 
                 if (isFineLocationGranted && isBackgroundLocationGranted) {
                     ShushDialog timeDialog = new ShushDialog();
-                    timeDialog.show(getSupportFragmentManager(), "", "fab");
+                    timeDialog.show(getSupportFragmentManager(), "");
                 }
             } else {
                 if (isFineLocationGranted) {
                     ShushDialog timeDialog = new ShushDialog();
-                    timeDialog.show(getSupportFragmentManager(), "", "fab");
+                    timeDialog.show(getSupportFragmentManager(), "");
                 }
             }
 
@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == PermissionRequestCodes.PERMISSION_BACKGROUND_LOCATION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 ShushDialog timeDialog = new ShushDialog();
-                timeDialog.show(getSupportFragmentManager(), "", "fab");
+                timeDialog.show(getSupportFragmentManager(), "");
                 isBackgroundLocationGranted = true;
             }
         }
@@ -259,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     } else {
                         ShushDialog timeDialog = new ShushDialog();
-                        timeDialog.show(getSupportFragmentManager(), "", "fab");
+                        timeDialog.show(getSupportFragmentManager(), "");
                         isBackgroundLocationGranted = true;
                     }
                 }

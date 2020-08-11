@@ -170,6 +170,16 @@ public class DatabaseManager extends SQLiteOpenHelper {
         return (ArrayList) shushObjectArrayList;
     }
 
+    public ShushObject getShushObject (String uuidString) {
+        ArrayList<ShushObject> shushObjects = this.retrieveWithCursor();
+        for (ShushObject shushObject: shushObjects) {
+            if (shushObject.getUUID().equals(uuidString)) {
+                return shushObject;
+            } else return null;
+        }
+        return null;
+    }
+
     /**
      * @implNote implement only to clear existing database with test values
      */
