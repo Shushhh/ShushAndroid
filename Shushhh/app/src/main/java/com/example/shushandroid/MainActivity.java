@@ -232,9 +232,6 @@ public class MainActivity extends AppCompatActivity {
      * @implNote runs after the user clicks on either of the several options when permission dialog is shown
      */
 
-    boolean tempReq1 = false;
-    boolean tempReq2 = false;
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == PermissionRequestCodes.PERMISSION_BACKGROUND_LOCATION) {
