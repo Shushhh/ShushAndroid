@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.AudioManager;
 import android.os.Build;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -61,6 +62,9 @@ public class ShushQueryScheduler {
 
         Log.i("HOurs", hours + "");
 
+        final boolean[] silentChecker = {false};
+        int[] count = {0};
+        int[] count2 = {0};
         for (ShushObject shushObject: shushObjectArrayList) {
 
             if (shushObject.getDate().equals(ShushObject.Key.NULL)) {
@@ -71,6 +75,9 @@ public class ShushQueryScheduler {
 //                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), (long) ((hours/10 * 60 * 60 * 1000)), pendingIntent);
 //                Log.i("Alarm Schedule", "Location no repeat executing..." + (long) ((hours/10 * 60 * 60 * 1000)));
 //                id++;
+
+                //ONLY LOCATION (NO REPEATS PER DAY EVER) --> JUST BASED ON LOCATION
+                count2[0]++;
                 Log.i("Run", "run");
                 LocationManager locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
                 LocationListener locationListener = new LocationListener() {
@@ -81,8 +88,27 @@ public class ShushQueryScheduler {
                         setLocation.setLongitude(shushObject.getLatLng().longitude);
 
                         if (setLocation.distanceTo(location) < Double.parseDouble(shushObject.getRadius().substring(0, shushObject.getRadius().length() - 1))) {
+                            silentChecker[0] = true;
+                            Log.d("test", "silent");
+                            //Set ringer to silent
+
                             System.out.println("SILENT");
                         } else {
+                            count[0]++;
+                            if (silentChecker[0] == true) {
+                                Log.d("test", "silent");
+                                //Set ringer to silent
+                                /*if (count[0] == count2[0]) {
+                                    silentChecker[0] = false;
+                                    Log.d("size", "size: " + count2[0]);
+                                    Log.d("test", "ring");
+                                    //Set ringer to ring
+                                }*/
+                            } else {
+                                silentChecker[0] = false;
+                                Log.d("test", "ring");
+                                //Set ringer to ring
+                            }
                             System.out.println(setLocation.distanceTo(location));
                         }
 
@@ -90,10 +116,13 @@ public class ShushQueryScheduler {
                 };
                 locationManager.removeUpdates(locationListener);
                 if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                    count[0] = 0;
+                    silentChecker[0] = false;
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) ((hours/10 * 60 * 60 * 1000)), 5, locationListener);
                 }
             } else if (shushObject.getLocation().equals(ShushObject.Key.NULL) || !shushObject.getLocation().equals(ShushObject.Key.NULL)) {
                 /***************** DONE *******************/
+                //LOCATION AND TIME REPEAT OR TIME REPEAT
                 if (!shushObject.getRep().isEmpty()) {
                     for (String day: getDaysFromRep(shushObject.getRep())) {
                         Calendar[] calendars = getSelectedDayCalendars(shushObject.getDate(), shushObject.getTime(), day);
@@ -117,11 +146,13 @@ public class ShushQueryScheduler {
                     }
                 } else {
                     /***************** DONE *******************/
+                    //TIME NO REPEAT
                     Calendar[] calendars = getSelectedDayCalendars(shushObject.getDate(), shushObject.getTime(), shushObject.getRep());
                     AlarmManager fromAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                     Intent intent = new Intent(context, SilencerReciever.class);
                     if (shushObject.getLocation().equals(ShushObject.Key.NULL))
                         intent.putExtra(SCHEDULE_TYPE, Key.TIME_NO_REPEAT);
+                    //LOCATION TIME NO REPEAT
                     else
                         intent.putExtra(SCHEDULE_TYPE, Key.LOCATION_TIME_NO_REPEAT);
                     intent.putExtra(TOGGLE_KEY, Key.SILENT);

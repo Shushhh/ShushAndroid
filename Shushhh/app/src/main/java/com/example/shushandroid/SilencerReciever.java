@@ -59,8 +59,6 @@ public class SilencerReciever extends BroadcastReceiver {
             String toggleKey = intent.getStringExtra(ShushQueryScheduler.TOGGLE_KEY);
             if (scheduleType.equals(ShushQueryScheduler.Key.LOCATION_NO_REPEAT)) {
 
-                getLocation(context);
-
             } else if (scheduleType.equals(ShushQueryScheduler.Key.TIME_REPEAT)) {
                 if (toggleKey != null && toggleKey.equals(ShushQueryScheduler.Key.RING)) {
                     Log.i("Alarm Toggle", "Time Repeat - RING");
@@ -87,11 +85,6 @@ public class SilencerReciever extends BroadcastReceiver {
                 }
             }
         }
-    }
-
-    @SuppressLint("MissingPermission")
-    public void getLocation (Context context) {
-
     }
 
 }
