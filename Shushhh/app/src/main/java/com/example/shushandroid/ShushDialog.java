@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.sql.SQLOutput;
@@ -88,6 +89,7 @@ public class ShushDialog extends DialogFragment {
     private boolean isFromFab = true;
 
     public ShushObject shushObject;
+    LatLng latlng;
 
     static ShushDialog newInstance() {
         return new ShushDialog();
@@ -109,6 +111,8 @@ public class ShushDialog extends DialogFragment {
                 if (data != null) {
                     String location = data.getStringExtra(LocationDataTransferItem.LOCATION);
                     String radius = data.getStringExtra(LocationDataTransferItem.RADIUS);
+                    Bundle bundle = data.getParcelableExtra("bundle");
+                    latlng = bundle.getParcelable("latlng");
                     Log.i("Activity Result", location + " " + radius);
                     if (mapTextView != null) {
                         if (location == null) {
@@ -350,6 +354,9 @@ public class ShushDialog extends DialogFragment {
                 shushObject.setRep(toggleGroupManager.getToggleStateString());
                 shushObject.setLocation(location);
                 shushObject.setRadius(radius);
+                shushObject.setLatLng(latlng);
+
+                Log.i("Latlng", latlng.toString());
 
                 if (isFromFab) {
                     Log.i("Info", "FAB");
@@ -359,6 +366,7 @@ public class ShushDialog extends DialogFragment {
                         ArrayList<ShushObject> shushObjects = databaseManager.retrieveWithCursor();
                         try {
                             ShushQueryScheduler.schedule(shushObjects, getContext());
+                            GeofenceManager.addGeofences(shushObjects, getContext());
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
@@ -372,6 +380,7 @@ public class ShushDialog extends DialogFragment {
                         ArrayList<ShushObject> shushObjects = databaseManager.retrieveWithCursor();
                         try {
                             ShushQueryScheduler.schedule(shushObjects, getContext());
+                            GeofenceManager.addGeofences(shushObjects, getContext());
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }

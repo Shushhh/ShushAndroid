@@ -1,5 +1,7 @@
 package com.example.shushandroid;
 
+import com.google.android.gms.maps.model.LatLng;
+
 /**
  * @apiNote Shush Object helper class
  * @author  Akash Veerappan
@@ -21,6 +23,8 @@ public class ShushObject {
     private String UUID;
     private String rep;
 
+    private LatLng latLng;
+
     public ShushObject() {
 
     }
@@ -33,6 +37,14 @@ public class ShushObject {
         this.location = location;
         this.radius = radius;
         this.UUID = UUID;
+    }
+
+    public LatLng getLatLng() {
+        return latLng;
+    }
+
+    public void setLatLng(LatLng latLng) {
+        this.latLng = latLng;
     }
 
     public String getDate() {
@@ -101,6 +113,7 @@ public class ShushObject {
                 ", location='" + location + '\'' +
                 ", radius='" + radius + '\'' +
                 ", UUID='" + UUID + '\'' +
+                ", LatLng='" + latLng + '\'' +
                 '}';
     }
 }
