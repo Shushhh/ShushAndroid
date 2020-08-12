@@ -48,6 +48,7 @@ public class SilencerReciever extends BroadcastReceiver {
         /*
          * If the user mentions a location, perform GeoFencing processing here *
          */
+
         if (intent.getStringExtra(ShushQueryScheduler.SCHEDULE_TYPE) != null) {
             String scheduleType = Objects.requireNonNull(intent.getStringExtra(ShushQueryScheduler.SCHEDULE_TYPE));
             String toggleKey = intent.getStringExtra(ShushQueryScheduler.TOGGLE_KEY);
