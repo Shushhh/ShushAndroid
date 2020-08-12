@@ -80,6 +80,8 @@ public class ShushDialog extends DialogFragment {
     private Button locationClearButton;
     private Button deleteButton;
 
+    private LatLng storedLatLng;
+
     private ToggleGroupManager toggleGroupManager;
     private TimePickerFragment timePicker;
     private DatabaseManager databaseManager;
@@ -184,6 +186,8 @@ public class ShushDialog extends DialogFragment {
                 dateTextView1.setText(shushObject.getDate());
                 mapTextView.setText(shushObject.getLocation());
                 radiusTextView.setText(shushObject.getRadius());
+
+                storedLatLng = shushObject.getLatLng();
 
                 System.out.println("REP: " + toggleGroupManager.getToggleStateString() + " " + shushObject.getRep());
 
@@ -357,9 +361,9 @@ public class ShushDialog extends DialogFragment {
                 shushObject.setRep(toggleGroupManager.getToggleStateString());
                 shushObject.setLocation(location);
                 shushObject.setRadius(radius);
-                shushObject.setLatLng(latlng);
-
-                Log.i("Latlng", latlng.toString());
+                if (latlng == null) {
+                    shushObject.setLatLng(storedLatLng);
+                }
 
                 if (isFromFab) {
                     Log.i("Info", "FAB");
