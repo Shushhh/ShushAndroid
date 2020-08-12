@@ -53,12 +53,11 @@ public class SilencerReciever extends BroadcastReceiver {
             String toggleKey = intent.getStringExtra(ShushQueryScheduler.TOGGLE_KEY);
             if (scheduleType.equals(ShushQueryScheduler.Key.LOCATION_NO_REPEAT)) {
                 Log.i("Alarm Loc", "Test");
-//                if (GeofenceBroadcastReceiver.isEntered()) {
-//                    Log.i("Geofence Test", "In");
-//                } else {
-//                    Log.i("Geofence Test", "Out");
-//                }
-                // check toggle with geofences and then ring or silent based on location (if within vicinity -> silent and if not -> ring)
+                if (GeofenceBroadcastReceiver.isEntered()) {
+                    Log.i("Geofence Test", "In");
+                } else {
+                    Log.i("Geofence Test", "Out");
+                }
             } else if (scheduleType.equals(ShushQueryScheduler.Key.TIME_REPEAT)) {
                 if (toggleKey != null && toggleKey.equals(ShushQueryScheduler.Key.RING)) {
                     Log.i("Alarm Toggle", "Time Repeat - RING");
@@ -74,7 +73,6 @@ public class SilencerReciever extends BroadcastReceiver {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    Log.i("Alarm Toggle", "Time Repeat - SILENT2");
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                 }
             } else if (scheduleType.equals(ShushQueryScheduler.Key.TIME_NO_REPEAT)) {
@@ -96,13 +94,11 @@ public class SilencerReciever extends BroadcastReceiver {
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                 }
             } else if (scheduleType.equals(ShushQueryScheduler.Key.LOCATION_TIME_NO_REPEAT)) {
-                Log.i("Alarm Message", "Location Time No Repeat");
-                if (toggleKey != null && toggleKey.equals(ShushQueryScheduler.Key.RING)) {
-                    Log.i("Alarm Toggle", "Location Time No Repeat - RING");
-                } else if (toggleKey != null && toggleKey.equals(ShushQueryScheduler.Key.SILENT)) {
+                if (toggleKey != null && toggleKey.equals(ShushQueryScheduler.Key.SILENT)) {
                     Log.i("Alarm Toggle", "Location Time No Repeat - SILENT");
+                } else if (toggleKey != null && toggleKey.equals(ShushQueryScheduler.Key.RING)) {
+                    Log.i("Alarm Toggle", "Location Time No Repeat - RING");
                 }
-                // check toggle with geofences and then ring or silent based on location (if within vicinity -> silent and if not -> ring)
             }
         }
     }

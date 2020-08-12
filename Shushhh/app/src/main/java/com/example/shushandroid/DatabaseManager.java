@@ -200,12 +200,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         this.getWritableDatabase().delete(DatabaseEntry.TABLE_NAME, null, null);
     }
 
-    //(34.0428816,-84.22302)
-    //lat/lng: (34.042896,-84.2229916)
-
     public LatLng parseStringToLatLng (String coordinates) {
-        Log.i("Coordinates", coordinates.substring(10, coordinates.indexOf(',')));
-        Log.i("Coordinates", coordinates.substring(coordinates.indexOf(',') + 1, coordinates.length() - 1));
 
         String s1 = coordinates.substring(10, coordinates.indexOf(',')).trim();
         String s2 = coordinates.substring(coordinates.indexOf(',') + 1, coordinates.length() - 1).trim();

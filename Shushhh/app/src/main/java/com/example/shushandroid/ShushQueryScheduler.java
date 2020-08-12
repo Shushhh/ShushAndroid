@@ -57,9 +57,7 @@ public class ShushQueryScheduler {
 
         for (ShushObject shushObject: shushObjectArrayList) {
 
-            if (shushObject.getDate().equals(ShushObject.Key.NULL)) { // only location setting with possible repeats
-                //everyday just check every x minutes
-                /***************** DONE *******************/
+            if (shushObject.getDate().equals(ShushObject.Key.NULL)) {
                 AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                 Intent intent = new Intent(context, SilencerReciever.class);
                 intent.putExtra(SCHEDULE_TYPE, Key.LOCATION_NO_REPEAT);
@@ -67,7 +65,6 @@ public class ShushQueryScheduler {
                 alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), (long) ((hours/10 * 60 * 60 * 1000)), pendingIntent);
                 Log.i("Alarm Schedule", "Location no repeat executing..." + (long) ((hours/10 * 60 * 60 * 1000)));
                 id++;
-                // perform GeoFencing processing in SilencerReceiver
             } else if (shushObject.getLocation().equals(ShushObject.Key.NULL) || !shushObject.getLocation().equals(ShushObject.Key.NULL)) {
                 /***************** DONE *******************/
                 if (!shushObject.getRep().isEmpty()) {
