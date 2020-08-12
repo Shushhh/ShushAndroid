@@ -1,14 +1,19 @@
 package com.example.shushandroid;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Build;
 import android.text.format.DateFormat;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
@@ -45,6 +50,7 @@ public class ShushQueryScheduler {
     private static double hours;
     private static SharedPreferenceManager sharedPreferenceManager;
 
+    @SuppressLint("MissingPermission")
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static void schedule (ArrayList<ShushObject> shushObjectArrayList, Context context) throws ParseException {
 
@@ -58,13 +64,34 @@ public class ShushQueryScheduler {
         for (ShushObject shushObject: shushObjectArrayList) {
 
             if (shushObject.getDate().equals(ShushObject.Key.NULL)) {
-                AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                Intent intent = new Intent(context, SilencerReciever.class);
-                intent.putExtra(SCHEDULE_TYPE, Key.LOCATION_NO_REPEAT);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), (long) ((hours/10 * 60 * 60 * 1000)), pendingIntent);
-                Log.i("Alarm Schedule", "Location no repeat executing..." + (long) ((hours/10 * 60 * 60 * 1000)));
-                id++;
+//                AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+//                Intent intent = new Intent(context, SilencerReciever.class);
+//                intent.putExtra(SCHEDULE_TYPE, Key.LOCATION_NO_REPEAT);
+//                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
+//                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), (long) ((hours/10 * 60 * 60 * 1000)), pendingIntent);
+//                Log.i("Alarm Schedule", "Location no repeat executing..." + (long) ((hours/10 * 60 * 60 * 1000)));
+//                id++;
+                Log.i("Run", "run");
+                LocationManager locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
+                LocationListener locationListener = new LocationListener() {
+                    @Override
+                    public void onLocationChanged(@NonNull Location location) {
+                        Location setLocation = new Location("Current Location");
+                        setLocation.setLatitude(shushObject.getLatLng().latitude);
+                        setLocation.setLongitude(shushObject.getLatLng().longitude);
+
+                        if (setLocation.distanceTo(location) < Double.parseDouble(shushObject.getRadius().substring(0, shushObject.getRadius().length() - 1))) {
+                            System.out.println("SILENT");
+                        } else {
+                            System.out.println(setLocation.distanceTo(location));
+                        }
+
+                    }
+                };
+                locationManager.removeUpdates(locationListener);
+                if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) ((hours/10 * 60 * 60 * 1000)), 5, locationListener);
+                }
             } else if (shushObject.getLocation().equals(ShushObject.Key.NULL) || !shushObject.getLocation().equals(ShushObject.Key.NULL)) {
                 /***************** DONE *******************/
                 if (!shushObject.getRep().isEmpty()) {
@@ -267,6 +294,28 @@ public class ShushQueryScheduler {
         else if (repDay.equals("R") && currentDay.equals("Thu"))
             return true;
         else return ("" + repDay.charAt(0)).equals("" + currentDay.charAt(0));
+    }
+
+    private static double getDistance(Location l1, Location l2) {
+
+        double lat_a = l1.getLatitude();
+        double lat_b = l2.getLatitude();
+        double lng_a = l1.getLongitude();
+        double lng_b = l2.getLongitude();
+
+        float pk = (float) (180.f/Math.PI);
+
+        double a1 = lat_a / pk;
+        double a2 = lng_a / pk;
+        double b1 = lat_b / pk;
+        double b2 = lng_b / pk;
+
+        double t1 = Math.cos(a1) * Math.cos(a2) * Math.cos(b1) * Math.cos(b2);
+        double t2 = Math.cos(a1) * Math.sin(a2) * Math.cos(b1) * Math.sin(b2);
+        double t3 = Math.sin(a1) * Math.sin(b1);
+        double tt = Math.acos(t1 + t2 + t3);
+
+        return 6366000 * tt;
     }
 
 }

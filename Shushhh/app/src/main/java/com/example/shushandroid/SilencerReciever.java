@@ -1,15 +1,20 @@
 package com.example.shushandroid;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.media.AudioManager;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import java.text.DateFormat;
@@ -53,13 +58,9 @@ public class SilencerReciever extends BroadcastReceiver {
             String scheduleType = Objects.requireNonNull(intent.getStringExtra(ShushQueryScheduler.SCHEDULE_TYPE));
             String toggleKey = intent.getStringExtra(ShushQueryScheduler.TOGGLE_KEY);
             if (scheduleType.equals(ShushQueryScheduler.Key.LOCATION_NO_REPEAT)) {
-                if (GeofenceBroadcastReceiver.isEntered()) {
-                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                    Log.i("Alarm Toggle", "Location Repeat - SILENT");
-                } else {
-                    audioManager.setRingerMode(toggleState);
-                    Log.i("Alarm Toggle", "Location Repeat - RING");
-                }
+
+                getLocation(context);
+
             } else if (scheduleType.equals(ShushQueryScheduler.Key.TIME_REPEAT)) {
                 if (toggleKey != null && toggleKey.equals(ShushQueryScheduler.Key.RING)) {
                     Log.i("Alarm Toggle", "Time Repeat - RING");
@@ -86,6 +87,11 @@ public class SilencerReciever extends BroadcastReceiver {
                 }
             }
         }
+    }
+
+    @SuppressLint("MissingPermission")
+    public void getLocation (Context context) {
+
     }
 
 }
