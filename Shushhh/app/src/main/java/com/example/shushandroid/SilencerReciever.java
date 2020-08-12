@@ -54,8 +54,10 @@ public class SilencerReciever extends BroadcastReceiver {
             if (scheduleType.equals(ShushQueryScheduler.Key.LOCATION_NO_REPEAT)) {
                 if (GeofenceBroadcastReceiver.isEntered()) {
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                    Log.i("Alarm Toggle", "Location Repeat - SILENT");
                 } else {
                     audioManager.setRingerMode(toggleState);
+                    Log.i("Alarm Toggle", "Location Repeat - RING");
                 }
             } else if (scheduleType.equals(ShushQueryScheduler.Key.TIME_REPEAT)) {
                 if (toggleKey != null && toggleKey.equals(ShushQueryScheduler.Key.RING)) {
