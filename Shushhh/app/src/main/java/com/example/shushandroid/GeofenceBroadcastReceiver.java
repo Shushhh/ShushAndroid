@@ -24,6 +24,8 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
 
         geofencingEvent = GeofencingEvent.fromIntent(intent);
 
+        Log.i("Test", "test");
+
         if (geofencingEvent.hasError()) {
             String errorMessage = GeofenceStatusCodes.getStatusCodeString(geofencingEvent.getErrorCode());
             Log.d(TAG, "onReceive: Error receiving geofence event with error code " + errorMessage);
@@ -49,7 +51,6 @@ public class GeofenceBroadcastReceiver extends BroadcastReceiver {
                 Toast.makeText(context, "GEOFENCE_TRANSITION_EXIT", Toast.LENGTH_SHORT).show();
                 break;
         }
-
     }
 
     public static boolean isEntered() {

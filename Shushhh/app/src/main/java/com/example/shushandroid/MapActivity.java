@@ -1,5 +1,6 @@
 package com.example.shushandroid;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
@@ -71,11 +72,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private LatLng latLng;
 
-    private Geofence geofence;
-    private GeofencingClient geofencingClient;
-    private GeofenceHelper geofenceHelper;
+    private static Geofence geofence;
+    private static GeofencingClient geofencingClient;
+    private static GeofenceHelper geofenceHelper;
 
-    private String GEOFENCE_ID = "SOME_GEOFENCE_ID";
+    private static String GEOFENCE_ID = "SOME_GEOFENCE_ID";
 
     private static final String TAG = "MapActivity";
     private static final float DEFAULT_ZOOM = 15f;
@@ -116,10 +117,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             if (!searchEditText.getText().toString().isEmpty()) {
                 String radiusString = radius + "m";
                 Intent intent = new Intent();
-                addGeofence(latLng, radius);
                 Log.i("Data", searchEditText.getText().toString());
                 intent.putExtra(ShushDialog.LocationDataTransferItem.LOCATION, searchEditText.getText().toString());
                 intent.putExtra(ShushDialog.LocationDataTransferItem.RADIUS, radiusString);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("latlng", latLng);
+                intent.putExtra("bundle", bundle);
                 setResult(Activity.RESULT_OK, intent);
                 finish();
             } else {
@@ -172,29 +175,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             Toast.makeText(getApplicationContext(), status.getStatusMessage(), Toast.LENGTH_SHORT).show();
         }
     }
-    private void addGeofence(LatLng latLng, float radius) {
 
-        geofence = geofenceHelper.getGeofence(GEOFENCE_ID, latLng, radius, Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_DWELL | Geofence.GEOFENCE_TRANSITION_EXIT);
-        GeofencingRequest geofencingRequest = geofenceHelper.getGeofencingRequest(geofence);
-        PendingIntent pendingIntent = geofenceHelper.getPendingIntent();
-
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        geofencingClient.addGeofences(geofencingRequest, pendingIntent)
-                .addOnSuccessListener(aVoid -> Log.d(TAG, "onSuccess: Geofence Added..."))
-                .addOnFailureListener(e -> {
-                    String errorMessage = geofenceHelper.getErrorString(e);
-                    Log.d(TAG, "onFailure: " + errorMessage);
-                });
-    }
+//    @SuppressLint("MissingPermission")
+//    public static void addGeofence(LatLng latLng, float radius) {
+//
+//        geofence = geofenceHelper.getGeofence(GEOFENCE_ID, latLng, radius, Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_DWELL | Geofence.GEOFENCE_TRANSITION_EXIT);
+//        GeofencingRequest geofencingRequest = geofenceHelper.getGeofencingRequest(geofence);
+//        PendingIntent pendingIntent = geofenceHelper.getPendingIntent();
+//
+//        geofencingClient.addGeofences(geofencingRequest, pendingIntent)
+//                .addOnSuccessListener(aVoid -> Log.d(TAG, "onSuccess: Geofence Added..."))
+//                .addOnFailureListener(e -> {
+//                    String errorMessage = geofenceHelper.getErrorString(e);
+//                    Log.d(TAG, "onFailure: " + errorMessage);
+//                });
+//    }
 
     private void removeGeofence() {
         PendingIntent pendingIntent = geofenceHelper.getPendingIntent();

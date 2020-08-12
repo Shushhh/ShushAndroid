@@ -27,8 +27,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.sql.SQLOutput;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -78,40 +80,20 @@ public class ShushDialog extends DialogFragment {
     private Button locationClearButton;
     private Button deleteButton;
 
-    /*
-     * Utility objects
-     */
-
     private ToggleGroupManager toggleGroupManager;
     private TimePickerFragment timePicker;
     private DatabaseManager databaseManager;
 
-    /*
-     * Strings to set the text in the dialog after recycler item click
-     */
+    private String presetUUIDString;
 
-    private String presetNameString = ""; // string for name
-    private String presetTimeString = ""; // string for time
-    private String presetDateString = ""; // string for either the date or the repeatedDates
-    private String presetRepString = ""; // current date string for when the data string is repeatable days instead of a date
-    private String presetTimeString1 = ""; // modified string from presetDataString
-    private String presetTimeString2 = ""; // modified string from presetDataString
-    private String presetUUIDString = ""; // uuid string
-    private String presetLocationString = ""; //location string
-    private String presetRadiusString = ""; //radius string
-
-    private String from = ""; // from where: fab or click
+    private boolean isFromFab = true;
 
     public ShushObject shushObject;
+    LatLng latlng;
 
     static ShushDialog newInstance() {
         return new ShushDialog();
     }
-
-    /**
-     *
-     * @param savedInstanceState
-     */
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -120,11 +102,6 @@ public class ShushDialog extends DialogFragment {
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullscreenDialogTheme);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -134,10 +111,12 @@ public class ShushDialog extends DialogFragment {
                 if (data != null) {
                     String location = data.getStringExtra(LocationDataTransferItem.LOCATION);
                     String radius = data.getStringExtra(LocationDataTransferItem.RADIUS);
+                    Bundle bundle = data.getParcelableExtra("bundle");
+                    latlng = bundle.getParcelable("latlng");
                     Log.i("Activity Result", location + " " + radius);
                     if (mapTextView != null) {
                         if (location == null) {
-                            mapTextView.setText("N/A");
+                            mapTextView.setText(ShushObject.Key.NULL);
                         } else {
                             mapTextView.setText(location);
                             toggleGroupManager.clearToggles();
@@ -146,7 +125,7 @@ public class ShushDialog extends DialogFragment {
                     }
                     if (radiusTextView != null) {
                         if (radius == null) {
-                            radiusTextView.setText("N/A");
+                            radiusTextView.setText(ShushObject.Key.NULL);
                         } else {
                             radiusTextView.setText(radius);
                             toggleGroupManager.clearToggles();
@@ -154,8 +133,8 @@ public class ShushDialog extends DialogFragment {
                         }
                     }
                 } else {
-                    mapTextView.setText("N/A");
-                    radiusTextView.setText("N/A");
+                    mapTextView.setText(ShushObject.Key.NULL);
+                    radiusTextView.setText(ShushObject.Key.NULL);
                     toggleGroupManager.manageState(true);
                 }
             }
@@ -178,15 +157,59 @@ public class ShushDialog extends DialogFragment {
         timeClearButton = view.findViewById(R.id.timeClearButton);
         locationClearButton = view.findViewById(R.id.locationClearButton);
         deleteButton = view.findViewById(R.id.deleteButton);
+        mapTextView = view.findViewById(R.id.locationTextView);
+        radiusTextView = view.findViewById(R.id.radiusTextView);
+
+        toggleGroupManager = new ToggleGroupManager(view);
+        shushObject = new ShushObject();
+        timePicker = new TimePickerFragment(getActivity());
+        databaseManager = new DatabaseManager(getActivity());
+
+        Log.i("View", "View");
+
+        if (getArguments() != null) {
+            presetUUIDString = getArguments().getString(DatabaseManager.DatabaseEntry.UUID);
+            Log.i("UUID", presetUUIDString);
+                ShushObject shushObject = databaseManager.getShushObject(presetUUIDString);
+
+            if (shushObject != null) {
+                Log.i("Click", "Click");
+
+                addNameEditText.post(() -> {
+                    addNameEditText.setText(shushObject.getName());
+                    toggleGroupManager.setCheckedToggleButtons(shushObject.getRep());
+
+                });
+
+                dateTextView1.setText(shushObject.getDate());
+                mapTextView.setText(shushObject.getLocation());
+                radiusTextView.setText(shushObject.getRadius());
+
+                System.out.println("REP: " + toggleGroupManager.getToggleStateString() + " " + shushObject.getRep());
+
+                timeTextView1.setText(shushObject.getTime().substring(0, shushObject.getTime().indexOf("-") - 1).trim());
+                timeTextView2.setText(shushObject.getTime().substring(shushObject.getTime().indexOf("-") + 1).trim());
+
+                System.out.println(timeTextView2.getText());
+
+                if (!shushObject.getLocation().equals(ShushObject.Key.NULL)) {
+                    toggleGroupManager.manageState(false);
+                }
+            }
+            isFromFab = false;
+        } else {
+            isFromFab = true;
+        }
 
         timeClearButton.setOnClickListener(v -> {
-            timeTextView1.setText("N/A");
-            timeTextView2.setText("N/A");
-            dateTextView1.setText("N/A");
+            timeTextView1.setText(ShushObject.Key.NULL);
+            timeTextView2.setText(ShushObject.Key.NULL);
+            dateTextView1.setText(ShushObject.Key.NULL);
         });
+
         locationClearButton.setOnClickListener(v -> {
-            mapTextView.setText("N/A");
-            radiusTextView.setText("N/A");
+            mapTextView.setText(ShushObject.Key.NULL);
+            radiusTextView.setText(ShushObject.Key.NULL);
             toggleGroupManager.manageState(true);
         });
 
@@ -207,69 +230,23 @@ public class ShushDialog extends DialogFragment {
             }
         });
 
-        mapTextView = view.findViewById(R.id.locationTextView);
-        radiusTextView = view.findViewById(R.id.radiusTextView);
         mapTextView.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), MapActivity.class);
             intent.putExtra("Location", mapTextView.getText().toString());
             startActivityForResult(intent, 10);
         });
 
-        toggleGroupManager = new ToggleGroupManager(view);
-        shushObject = new ShushObject();
-        timePicker = new TimePickerFragment(getActivity());
-        databaseManager = new DatabaseManager(getActivity());
-
-        if (this.from.equals("click")) { // if user comes here with recycler item click
-            if (!presetNameString.isEmpty()) { // if nameString is not empty (check bundle code in the show method)
-                addNameEditText.post(() -> {
-                    addNameEditText.setText(presetNameString);// update EditText in a separate UIThread (still not sure why the main thread won't update it properly)
-                });
-            }
-            if (!presetTimeString1.isEmpty() && !presetTimeString2.isEmpty()) { // if time strings aren't empty, update time text views
-                timeTextView1.setText(presetTimeString1);
-                timeTextView2.setText(presetTimeString2);
-            } else {
-                timeTextView1.setText("N/A");
-                timeTextView2.setText("N/A");
-            }
-
-            toggleGroupManager.setCheckedToggleButtons(presetRepString);
-            Log.i("Toggle", presetRepString + "|" + toggleGroupManager.getToggleStateString());
-
-
-            dateTextView1.setText((!presetDateString.isEmpty() ? presetDateString : "N/A"));
-
-            if (!presetLocationString.isEmpty()) {
-                mapTextView.setText(presetLocationString);
-                toggleGroupManager.manageState(false);
-            } else {
-                mapTextView.setText(ShushObject.Key.NULL);
-                toggleGroupManager.manageState(true);
-            }
-            if (!presetRadiusString.isEmpty()) {
-                radiusTextView.setText(presetLocationString);
-                toggleGroupManager.manageState(false);
-            } else {
-                radiusTextView.setText(ShushObject.Key.NULL);
-                toggleGroupManager.manageState(true);
-            }
-
-
-            Log.i("Fragment create view", radiusTextView.getText() + "|" + mapTextView.getText());
-
-
-        } else if (this.from.equals("fab")) { // if user comes here from fab action, set the current date and time
-            dateTextView1.setText("N/A");
-            timeTextView1.setText("N/A");
-            timeTextView2.setText("N/A");
-            mapTextView.setText("N/A");
-            radiusTextView.setText("N/A");
-            toggleGroupManager.manageState(true);
-        }
+        radiusTextView.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), MapActivity.class);
+            intent.putExtra("Location", mapTextView.getText().toString());
+            startActivityForResult(intent, 10);
+        });
 
         closeButton.setOnClickListener(v -> {
-            toggleGroupManager.uncheckToggleGroup(toggleGroupManager.getToggleStateString(), presetRepString);
+            if (presetUUIDString != null) {
+                toggleGroupManager.uncheckToggleGroup(toggleGroupManager.getToggleStateString(), databaseManager.getShushObject(presetUUIDString).getRep());
+                dismiss();
+            }
             dismiss();
         });
 
@@ -294,7 +271,7 @@ public class ShushDialog extends DialogFragment {
 
             try {
                 if (!name.isEmpty()) {
-                    if (date.equals("N/A") && time1.equals("N/A") && time2.equals("N/A") && location.equals("N/A") && radius.equals("N/A")) {
+                    if (date.equals(ShushObject.Key.NULL) && time1.equals(ShushObject.Key.NULL) && time2.equals(ShushObject.Key.NULL) && location.equals(ShushObject.Key.NULL) && radius.equals(ShushObject.Key.NULL)) {
                         new AlertDialog.Builder(getActivity()).setTitle("Location and time fields left blank")
                                 .setMessage("Please fill either or both location and time fields to provide a constraint for silencing your phone.")
                                 .setPositiveButton("Ok", null)
@@ -302,7 +279,7 @@ public class ShushDialog extends DialogFragment {
                         goLocation = false;
                         goTime = false;
                     } else {
-                        if (!date.equals("N/A") && !time1.equals("N/A") && !time2.equals("N/A")) {
+                        if (!date.equals(ShushObject.Key.NULL) && !time1.equals(ShushObject.Key.NULL) && !time2.equals(ShushObject.Key.NULL)) {
                             date1 = simpleDateFormat.parse(time1);
                             date2 = simpleDateFormat.parse(time2);
                             if (date2 != null && !date2.after(date1)) {
@@ -319,14 +296,14 @@ public class ShushDialog extends DialogFragment {
                             }
                         } else {
                             goTime = false;
-                            if (!(date.equals("N/A") && time1.equals("N/A") && time2.equals("N/A"))) {
-                                if (date.equals("N/A")) {
+                            if (!(date.equals(ShushObject.Key.NULL) && time1.equals(ShushObject.Key.NULL) && time2.equals(ShushObject.Key.NULL))) {
+                                if (date.equals(ShushObject.Key.NULL)) {
                                     new AlertDialog.Builder(getActivity()).setTitle("Date field left blank")
                                             .setMessage("Please enter a date for your constraint. Click on the date field to access a date picker.")
                                             .setPositiveButton("Ok", null)
                                             .create().show();
                                     goTime = false;
-                                } else if (time1.equals("N/A") || time2.equals("N/A")) {
+                                } else if (time1.equals(ShushObject.Key.NULL) || time2.equals(ShushObject.Key.NULL)) {
                                     new AlertDialog.Builder(getActivity()).setTitle("Time field left blank")
                                             .setMessage("Please enter a time for your constraint. Click on the time field to access the time picker.")
                                             .setPositiveButton("Ok", null)
@@ -337,19 +314,19 @@ public class ShushDialog extends DialogFragment {
                                 goTime = true;
                             }
                         }
-                        if (!location.equals("N/A") && !radius.equals("N/A")) {
+                        if (!location.equals(ShushObject.Key.NULL) && !radius.equals(ShushObject.Key.NULL)) {
                             shushObject.setLocation(location);
                             shushObject.setRadius(radius);
                             goLocation = true;
-                        } else if (!(location.equals("N/A") && radius.equals("N/A"))) {
-                            if (location.equals("N/A")) {
+                        } else if (!(location.equals(ShushObject.Key.NULL) && radius.equals(ShushObject.Key.NULL))) {
+                            if (location.equals(ShushObject.Key.NULL)) {
                                 new AlertDialog.Builder(getActivity()).setTitle("Location field left blank")
                                         .setMessage("Please enter a location for your constraint. Click on the location field to access the map.")
                                         .setPositiveButton("Ok", null)
                                         .create().show();
                                 goLocation = false;
                             } else {
-                                if (radius.equals("N/A")) {
+                                if (radius.equals(ShushObject.Key.NULL)) {
                                     new AlertDialog.Builder(getActivity()).setTitle("Radius field left blank")
                                             .setMessage("Please enter a radius for your constraint. Click on the location field to access the radius options.")
                                             .setPositiveButton("Ok", null)
@@ -380,26 +357,33 @@ public class ShushDialog extends DialogFragment {
                 shushObject.setRep(toggleGroupManager.getToggleStateString());
                 shushObject.setLocation(location);
                 shushObject.setRadius(radius);
+                shushObject.setLatLng(latlng);
 
-                if (this.from.equals("fab")) {
+                Log.i("Latlng", latlng.toString());
+
+                if (isFromFab) {
+                    Log.i("Info", "FAB");
                     shushObject.setUUID(UUID.randomUUID().toString());
                     if (databaseManager.insert(shushObject)) {
                         MainActivity.updateRecyclerView();
                         ArrayList<ShushObject> shushObjects = databaseManager.retrieveWithCursor();
                         try {
                             ShushQueryScheduler.schedule(shushObjects, getContext());
+                            GeofenceManager.addGeofences(shushObjects, getContext());
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
                         dismiss();
                     }
-                } else if (this.from.equals("click")) {
+                } else {
+                    Log.i("Info", "Click");
                     shushObject.setUUID(presetUUIDString);
                     if (databaseManager.update(shushObject)) {
                         MainActivity.updateRecyclerView();
                         ArrayList<ShushObject> shushObjects = databaseManager.retrieveWithCursor();
                         try {
                             ShushQueryScheduler.schedule(shushObjects, getContext());
+                            GeofenceManager.addGeofences(shushObjects, getContext());
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
@@ -436,37 +420,6 @@ public class ShushDialog extends DialogFragment {
         return view;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-
-    public void show(FragmentManager fragmentManager, @Nullable String tag, String from) {
-        this.from = from;
-        if (from.equals("click")) {
-            if (getArguments() != null) {
-
-                presetNameString = (getArguments().getString(DatabaseManager.DatabaseEntry.NAME) == null ? "" : getArguments().getString(DatabaseManager.DatabaseEntry.NAME));
-                presetTimeString = (getArguments().getString(DatabaseManager.DatabaseEntry.TIME) == null ? "" : getArguments().getString(DatabaseManager.DatabaseEntry.TIME));
-                presetDateString = (getArguments().getString(DatabaseManager.DatabaseEntry.DATE) == null ? "" : getArguments().getString(DatabaseManager.DatabaseEntry.DATE));
-                presetRepString = (getArguments().getString(DatabaseManager.DatabaseEntry.REP) == null ? "" : getArguments().getString(DatabaseManager.DatabaseEntry.REP));
-                presetUUIDString = (getArguments().getString(DatabaseManager.DatabaseEntry.UUID) == null ? "" : getArguments().getString(DatabaseManager.DatabaseEntry.UUID));
-                presetLocationString = (getArguments().getString(DatabaseManager.DatabaseEntry.LOC) == null ? "" : getArguments().getString(DatabaseManager.DatabaseEntry.LOC));
-                presetRadiusString = (getArguments().getString(DatabaseManager.DatabaseEntry.RAD) == null ? "" : getArguments().getString(DatabaseManager.DatabaseEntry.RAD));
-
-                int index = 0;
-                if (!presetTimeString.isEmpty()) {
-                    for (Character character : presetTimeString.toCharArray()) {
-                        if (character == '-') {
-                            presetTimeString1 = presetTimeString.substring(0, index - 1);
-                            presetTimeString2 = presetTimeString.substring(index + 2);
-                        }
-                        index = index + 1;
-                    }
-                }
-            }
-        }
-
-        super.show(fragmentManager, tag);
-    }
-
     /**
      *
      */
@@ -493,7 +446,7 @@ public class ShushDialog extends DialogFragment {
 
             if (textView != null) {
                 String text = textView.getText().toString();
-                if (!text.equals("N/A")) {
+                if (!text.equals(ShushObject.Key.NULL)) {
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, MMM dd, yyyy");
                     try {
                         Date date = simpleDateFormat.parse(text);
@@ -561,7 +514,7 @@ public class ShushDialog extends DialogFragment {
             int minute = c.get(Calendar.MINUTE);
             TimePickerDialog timePickerDialog = new TimePickerDialog(context, this, hour, minute, false);
             String text = textView.getText().toString();
-            if (!text.equals("N/A")) {
+            if (!text.equals(ShushObject.Key.NULL)) {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm a");
                 try {
                     Date date = simpleDateFormat.parse(text);
