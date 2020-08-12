@@ -116,8 +116,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ForegroundServiceManager.class);
         startService(intent);
 
-        GeofenceManager.addGeofences(databaseManager.retrieveWithCursor(), this);
-
     }
 
     public void requestAudioPermissions () {

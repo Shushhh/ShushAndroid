@@ -375,7 +375,7 @@ public class ShushDialog extends DialogFragment {
                         ArrayList<ShushObject> shushObjects = databaseManager.retrieveWithCursor();
                         try {
                             ShushQueryScheduler.schedule(shushObjects, getContext());
-                            GeofenceManager.addGeofences(shushObjects, getContext());
+                            //GeofenceManager.addGeofences(shushObjects, getContext());
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
@@ -389,7 +389,7 @@ public class ShushDialog extends DialogFragment {
                         ArrayList<ShushObject> shushObjects = databaseManager.retrieveWithCursor();
                         try {
                             ShushQueryScheduler.schedule(shushObjects, getContext());
-                            GeofenceManager.addGeofences(shushObjects, getContext());
+                            //GeofenceManager.addGeofences(shushObjects, getContext());
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }

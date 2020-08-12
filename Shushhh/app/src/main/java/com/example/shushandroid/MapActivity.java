@@ -72,12 +72,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private LatLng latLng;
 
-    private static Geofence geofence;
-    private static GeofencingClient geofencingClient;
-    private static GeofenceHelper geofenceHelper;
-
-    private static String GEOFENCE_ID = "SOME_GEOFENCE_ID";
-
     private static final String TAG = "MapActivity";
     private static final float DEFAULT_ZOOM = 15f;
     private int radius = 10;
@@ -86,9 +80,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-
-        geofencingClient = LocationServices.getGeofencingClient(this);
-        geofenceHelper = new GeofenceHelper(this);
 
         radius = 10;
 
@@ -134,7 +125,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
 
         closeFab.setOnClickListener(view -> {
-            removeGeofence();
             finish();
         });
 
@@ -150,13 +140,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         spinner.setAdapter(adapter);
 
         spinner.setSelection(0);
-
-        // If they click on the gps button: take them to their location, update the textfield with their current location (set text of searchbar)
-        // when they load this activity, the searchbar will already have their location
-        // if they delete it on purpose check for isEmpty
-        // implement in search method and onclick for gps button
-        // always update the searchbar so that we can confidently get the text from the searchbar and update our data in the location dialog
-        // advanced feature (to do later): check how legitimate the location is
 
         initMap();
         search();
@@ -176,34 +159,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
-//    @SuppressLint("MissingPermission")
-//    public static void addGeofence(LatLng latLng, float radius) {
-//
-//        geofence = geofenceHelper.getGeofence(GEOFENCE_ID, latLng, radius, Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_DWELL | Geofence.GEOFENCE_TRANSITION_EXIT);
-//        GeofencingRequest geofencingRequest = geofenceHelper.getGeofencingRequest(geofence);
-//        PendingIntent pendingIntent = geofenceHelper.getPendingIntent();
-//
-//        geofencingClient.addGeofences(geofencingRequest, pendingIntent)
-//                .addOnSuccessListener(aVoid -> Log.d(TAG, "onSuccess: Geofence Added..."))
-//                .addOnFailureListener(e -> {
-//                    String errorMessage = geofenceHelper.getErrorString(e);
-//                    Log.d(TAG, "onFailure: " + errorMessage);
-//                });
-//    }
-
-    private void removeGeofence() {
-        PendingIntent pendingIntent = geofenceHelper.getPendingIntent();
-        geofencingClient.removeGeofences(pendingIntent)
-                .addOnSuccessListener(this, aVoid -> {
-                    // Geofences removed
-                    Log.d(TAG, "onSuccess: Geofence Removed...");
-                })
-                .addOnFailureListener(this, e -> {
-                    // Failed to remove geofences
-                    String errorMessage = geofenceHelper.getErrorString(e);
-                    Log.d(TAG, "onFailure: " + errorMessage);
-                });
-    }
 
     private void search() {
         Log.d(TAG, "starting search services");
