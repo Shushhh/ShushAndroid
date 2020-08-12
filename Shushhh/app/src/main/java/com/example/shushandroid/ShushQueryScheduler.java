@@ -63,9 +63,11 @@ public class ShushQueryScheduler {
         Log.i("HOurs", hours + "");
 
         final boolean[] silentChecker = {false};
-        int[] count = {0};
-        int[] count2 = {0};
-        int[] count3 = {1};
+        int[] locationcount = {0};
+        int[] locationcount2 = {0};
+        int[] locationcount3 = {1};
+
+        int[] timecount = {0};
         for (ShushObject shushObject: shushObjectArrayList) {
 
             if (shushObject.getDate().equals(ShushObject.Key.NULL)) {
@@ -78,7 +80,7 @@ public class ShushQueryScheduler {
 //                id++;
 
                 //ONLY LOCATION (NO REPEATS PER DAY EVER) --> JUST BASED ON LOCATION
-                count2[0]++;
+                locationcount2[0]++;
                 Log.i("Run", "run");
                 LocationManager locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
                 LocationListener locationListener = new LocationListener() {
@@ -96,13 +98,13 @@ public class ShushQueryScheduler {
                             System.out.println("SILENT");
                         } else {
                             if (silentChecker[0] == true) {
-                                count[0]++;
+                                locationcount[0]++;
                                 Log.d("test", "silent");
                                 //Set ringer to silent
-                                if (count[0] == count2[0]) {
-                                    count[0] = 0;
+                                if (locationcount[0] == locationcount2[0]) {
+                                    locationcount[0] = 0;
                                     silentChecker[0] = false;
-                                    Log.d("size", "size: " + count2[0]);
+                                    Log.d("size", "size: " + locationcount2[0]);
                                     Log.d("test", "ring");
                                     //Set ringer to ring
                                 }
@@ -118,9 +120,9 @@ public class ShushQueryScheduler {
                 };
                 locationManager.removeUpdates(locationListener);
                 if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                    if (count3[0] == 1) {
-                        count[0] = 0;
-                        count3[0] = 0;
+                    if (locationcount3[0] == 1) {
+                        locationcount[0] = 0;
+                        locationcount3[0] = 0;
                     }
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) ((hours/10 * 60 * 60 * 1000)), 5, locationListener);
                 }
