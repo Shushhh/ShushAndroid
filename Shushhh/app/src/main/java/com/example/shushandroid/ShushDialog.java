@@ -243,7 +243,10 @@ public class ShushDialog extends DialogFragment {
         });
 
         closeButton.setOnClickListener(v -> {
-            toggleGroupManager.uncheckToggleGroup(toggleGroupManager.getToggleStateString(), databaseManager.getShushObject(presetUUIDString).getRep());
+            if (presetUUIDString != null) {
+                toggleGroupManager.uncheckToggleGroup(toggleGroupManager.getToggleStateString(), databaseManager.getShushObject(presetUUIDString).getRep());
+                dismiss();
+            }
             dismiss();
         });
 
