@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
@@ -34,17 +35,31 @@ public class GeofenceManager {
                 GeofencingRequest geofencingRequest = geofenceHelper.getGeofencingRequest(geofence);
                 PendingIntent pendingIntent = geofenceHelper.getPendingIntent();
 
-                if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                        ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    Log.i("Geofence", "Granted");
-                    geofencingClient.addGeofences(geofencingRequest, pendingIntent)
-                            .addOnSuccessListener(aVoid -> Log.d("Geofence", "onSuccess: Geofence Added..."))
-                            .addOnFailureListener(e -> {
-                                String errorMessage = geofenceHelper.getErrorString(e);
-                                Log.d("Geofence", "onFailure: " + errorMessage);
-                            });
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                            ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        Log.i("Geofence", "Granted");
+                        geofencingClient.addGeofences(geofencingRequest, pendingIntent)
+                                .addOnSuccessListener(aVoid -> Log.d("Geofence", "onSuccess: Geofence Added..."))
+                                .addOnFailureListener(e -> {
+                                    String errorMessage = geofenceHelper.getErrorString(e);
+                                    Log.d("Geofence", "onFailure: " + errorMessage);
+                                });
+                    } else {
+                        Log.i("Geofence", "Out");
+                    }
                 } else {
-                    Log.i("Geofence", "Out");
+                    if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        Log.i("Geofence", "Granted");
+                        geofencingClient.addGeofences(geofencingRequest, pendingIntent)
+                                .addOnSuccessListener(aVoid -> Log.d("Geofence", "onSuccess: Geofence Added..."))
+                                .addOnFailureListener(e -> {
+                                    String errorMessage = geofenceHelper.getErrorString(e);
+                                    Log.d("Geofence", "onFailure: " + errorMessage);
+                                });
+                    } else {
+                        Log.i("Geofence", "Out");
+                    }
                 }
 
             }
