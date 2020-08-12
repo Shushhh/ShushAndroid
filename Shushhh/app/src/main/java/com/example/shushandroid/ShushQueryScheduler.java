@@ -73,22 +73,24 @@ public class ShushQueryScheduler {
 //                id++;
                 Log.i("Run", "run");
                 LocationManager locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
-                if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) ((hours/10 * 60 * 60 * 1000)), 5, new LocationListener() {
-                        @Override
-                        public void onLocationChanged(@NonNull Location location) {
-                            Location setLocation = new Location("Current Location");
-                            setLocation.setLatitude(shushObject.getLatLng().latitude);
-                            setLocation.setLongitude(shushObject.getLatLng().longitude);
+                LocationListener locationListener = new LocationListener() {
+                    @Override
+                    public void onLocationChanged(@NonNull Location location) {
+                        Location setLocation = new Location("Current Location");
+                        setLocation.setLatitude(shushObject.getLatLng().latitude);
+                        setLocation.setLongitude(shushObject.getLatLng().longitude);
 
-                            if (setLocation.distanceTo(location) < Double.parseDouble(shushObject.getRadius().substring(0, shushObject.getRadius().length() - 1))) {
-                                System.out.println("SILENT");
-                            } else {
-                                System.out.println(setLocation.distanceTo(location));
-                            }
-
+                        if (setLocation.distanceTo(location) < Double.parseDouble(shushObject.getRadius().substring(0, shushObject.getRadius().length() - 1))) {
+                            System.out.println("SILENT");
+                        } else {
+                            System.out.println(setLocation.distanceTo(location));
                         }
-                    });
+
+                    }
+                };
+                locationManager.removeUpdates(locationListener);
+                if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) ((hours/10 * 60 * 60 * 1000)), 5, locationListener);
                 }
             } else if (shushObject.getLocation().equals(ShushObject.Key.NULL) || !shushObject.getLocation().equals(ShushObject.Key.NULL)) {
                 /***************** DONE *******************/
