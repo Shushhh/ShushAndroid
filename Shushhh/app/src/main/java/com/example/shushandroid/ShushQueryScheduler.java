@@ -65,6 +65,7 @@ public class ShushQueryScheduler {
         final boolean[] silentChecker = {false};
         int[] count = {0};
         int[] count2 = {0};
+        int[] count3 = {1};
         for (ShushObject shushObject: shushObjectArrayList) {
 
             if (shushObject.getDate().equals(ShushObject.Key.NULL)) {
@@ -94,16 +95,17 @@ public class ShushQueryScheduler {
 
                             System.out.println("SILENT");
                         } else {
-                            count[0]++;
                             if (silentChecker[0] == true) {
+                                count[0]++;
                                 Log.d("test", "silent");
                                 //Set ringer to silent
-                                /*if (count[0] == count2[0]) {
+                                if (count[0] == count2[0]) {
+                                    count[0] = 0;
                                     silentChecker[0] = false;
                                     Log.d("size", "size: " + count2[0]);
                                     Log.d("test", "ring");
                                     //Set ringer to ring
-                                }*/
+                                }
                             } else {
                                 silentChecker[0] = false;
                                 Log.d("test", "ring");
@@ -116,8 +118,10 @@ public class ShushQueryScheduler {
                 };
                 locationManager.removeUpdates(locationListener);
                 if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                    count[0] = 0;
-                    silentChecker[0] = false;
+                    if (count3[0] == 1) {
+                        count[0] = 0;
+                        count3[0] = 0;
+                    }
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) ((hours/10 * 60 * 60 * 1000)), 5, locationListener);
                 }
             } else if (shushObject.getLocation().equals(ShushObject.Key.NULL) || !shushObject.getLocation().equals(ShushObject.Key.NULL)) {
