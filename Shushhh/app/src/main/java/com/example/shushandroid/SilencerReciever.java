@@ -53,6 +53,7 @@ public class SilencerReciever extends BroadcastReceiver {
         /*
          * If the user mentions a location, perform GeoFencing processing here *
          */
+        int count = 0;
 
         if (intent.getStringExtra(ShushQueryScheduler.SCHEDULE_TYPE) != null) {
             String scheduleType = Objects.requireNonNull(intent.getStringExtra(ShushQueryScheduler.SCHEDULE_TYPE));
@@ -62,26 +63,44 @@ public class SilencerReciever extends BroadcastReceiver {
             } else if (scheduleType.equals(ShushQueryScheduler.Key.TIME_REPEAT)) {
                 if (toggleKey != null && toggleKey.equals(ShushQueryScheduler.Key.RING)) {
                     Log.i("Alarm Toggle", "Time Repeat - RING");
-                    audioManager.setRingerMode(toggleState);
+                    count--;
+                    if (count > 0) {
+                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                    } else {
+                        audioManager.setRingerMode(toggleState);
+                    }
                 } else if (toggleKey != null && toggleKey.equals(ShushQueryScheduler.Key.SILENT)) {
                     Log.i("Alarm Toggle", "Time Repeat - SILENT");
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                    count++;
                 }
             } else if (scheduleType.equals(ShushQueryScheduler.Key.TIME_NO_REPEAT)) {
                 if (toggleKey != null && toggleKey.equals(ShushQueryScheduler.Key.RING)) {
                     Log.i("Alarm Toggle", "Time No Repeat - RING");
-                    audioManager.setRingerMode(toggleState);
+                    count--;
+                    if (count > 0) {
+                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                    } else {
+                        audioManager.setRingerMode(toggleState);
+                    }
                 } else if (toggleKey != null && toggleKey.equals(ShushQueryScheduler.Key.SILENT)) {
                     Log.i("Alarm Toggle", "Time No Repeat - SILENT");
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                    count++;
                 }
             } else if (scheduleType.equals(ShushQueryScheduler.Key.LOCATION_TIME_NO_REPEAT)) {
                 if (toggleKey != null && toggleKey.equals(ShushQueryScheduler.Key.SILENT)) {
                     Log.i("Alarm Toggle", "Location Time No Repeat - SILENT");
                     audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                    count++;
                 } else if (toggleKey != null && toggleKey.equals(ShushQueryScheduler.Key.RING)) {
                     Log.i("Alarm Toggle", "Location Time No Repeat - RING");
-                    audioManager.setRingerMode(toggleState);
+                    count--;
+                    if (count > 0) {
+                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                    } else {
+                        audioManager.setRingerMode(toggleState);
+                    }
                 }
             }
         }

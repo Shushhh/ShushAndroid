@@ -141,6 +141,8 @@ public class ShushQueryScheduler {
 
                         id++;
 
+
+
                         Intent intent2 = new Intent(context, SilencerReciever.class);
                         intent2.putExtra(SCHEDULE_TYPE, Key.TIME_REPEAT);
                         intent2.putExtra(TOGGLE_KEY, Key.RING);
