@@ -103,8 +103,8 @@ public class ShushQueryScheduler {
                             System.out.println("SILENT");
                         } else {
                             if (silentChecker[0] == true) {
-                                locationcount[0]++;
-                                Log.d("test", "silent");
+                                /*locationcount[0]++;
+                                Log.d("test", "silent");*/
                                 //Set ringer to silent
                                 if (locationcount[0] == locationcount2[0]) {
                                     locationcount[0] = 0;
