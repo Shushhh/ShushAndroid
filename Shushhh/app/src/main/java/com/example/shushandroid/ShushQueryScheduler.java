@@ -103,8 +103,8 @@ public class ShushQueryScheduler {
                             System.out.println("SILENT");
                         } else {
                             if (silentChecker[0] == true) {
-                                /*locationcount[0]++;
-                                Log.d("test", "silent");*/
+                                locationcount[0]++;
+                                Log.d("test", "silent");
                                 //Set ringer to silent
                                 if (locationcount[0] == locationcount2[0]) {
                                     locationcount[0] = 0;
@@ -128,7 +128,7 @@ public class ShushQueryScheduler {
                 };
                 locationManager.removeUpdates(locationListener);
                 if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, (long) ((hours/10 * 60 * 60 * 1000)), 5, locationListener);
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) ((hours/10 * 60 * 60 * 1000) / 3), 5, locationListener);
                 }
             } else if (shushObject.getLocation().equals(ShushObject.Key.NULL) || !shushObject.getLocation().equals(ShushObject.Key.NULL)) {
                 /***************** DONE *******************/
