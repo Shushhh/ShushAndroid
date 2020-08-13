@@ -128,7 +128,7 @@ public class ShushQueryScheduler {
                 };
                 locationManager.removeUpdates(locationListener);
                 if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) ((hours/10 * 60 * 60 * 1000) / 3), 5, locationListener);
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, (long) ((hours/10 * 60 * 60 * 1000) / 3), 5, locationListener);
                 }
             } else if (shushObject.getLocation().equals(ShushObject.Key.NULL) || !shushObject.getLocation().equals(ShushObject.Key.NULL)) {
                 /***************** DONE *******************/
