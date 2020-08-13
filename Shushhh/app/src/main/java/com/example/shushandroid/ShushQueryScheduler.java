@@ -80,6 +80,7 @@ public class ShushQueryScheduler {
 //                id++;
 
                 //ONLY LOCATION (NO REPEATS PER DAY EVER) --> JUST BASED ON LOCATION
+                //Test commit
                 locationcount2[0]++;
                 Log.i("Run", "run");
                 LocationManager locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
