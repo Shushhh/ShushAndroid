@@ -65,11 +65,10 @@ public class ShushQueryScheduler {
         final boolean[] silentChecker = {false};
         int[] locationcount = {0};
         int[] locationcount2 = {0};
-        int[] locationcount3 = {1};
 
         int[] timecount = {0};
-        for (ShushObject shushObject: shushObjectArrayList) {
-
+        for (int i = 0; i < shushObjectArrayList.size(); i++) {
+            ShushObject shushObject = shushObjectArrayList.get(i);
             if (shushObject.getDate().equals(ShushObject.Key.NULL)) {
 //                AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 //                Intent intent = new Intent(context, SilencerReciever.class);
@@ -116,16 +115,14 @@ public class ShushQueryScheduler {
                             }
                             System.out.println(setLocation.distanceTo(location));
                         }
-
+                        if (shushObject == shushObjectArrayList.get(shushObjectArrayList.size() - 1)) {
+                            locationcount[0] = 0;
+                        }
                     }
                 };
                 locationManager.removeUpdates(locationListener);
                 if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                    if (locationcount3[0] == 1) {
-                        locationcount[0] = 0;
-                        locationcount3[0] = 0;
-                    }
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) ((hours/10 * 60 * 60 * 1000)), 5, locationListener);
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, (long) ((hours/10 * 60 * 60 * 1000)), 5, locationListener);
                 }
             } else if (shushObject.getLocation().equals(ShushObject.Key.NULL) || !shushObject.getLocation().equals(ShushObject.Key.NULL)) {
                 /***************** DONE *******************/
