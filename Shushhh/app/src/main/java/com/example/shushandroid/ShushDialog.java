@@ -226,10 +226,10 @@ public class ShushDialog extends DialogFragment {
                     ArrayList<ShushObject> shushObjects = databaseManager.retrieveWithCursor();
                     try {
                         ShushQueryScheduler.schedule(shushObjects, getContext());
+                        dismiss();
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                    dismiss();
                 }
             }
         });
