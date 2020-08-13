@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class ShushQueryScheduler {
@@ -66,9 +67,9 @@ public class ShushQueryScheduler {
         int[] locationcount = {0};
         int[] locationcount2 = {0};
 
-        int[] timecount = {0};
         for (int i = 0; i < shushObjectArrayList.size(); i++) {
             ShushObject shushObject = shushObjectArrayList.get(i);
+            List<ShushObject> locationList = new ArrayList<>();
             if (shushObject.getDate().equals(ShushObject.Key.NULL)) {
 //                AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 //                Intent intent = new Intent(context, SilencerReciever.class);
@@ -81,6 +82,7 @@ public class ShushQueryScheduler {
                 //ONLY LOCATION (NO REPEATS PER DAY EVER) --> JUST BASED ON LOCATION
                 //Test commit
                 locationcount2[0]++;
+                locationList.add(shushObject);
                 Log.i("Run", "run");
                 LocationManager locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
                 LocationListener locationListener = new LocationListener() {
@@ -115,7 +117,7 @@ public class ShushQueryScheduler {
                             }
                             System.out.println(setLocation.distanceTo(location));
                         }
-                        if (shushObject == shushObjectArrayList.get(shushObjectArrayList.size() - 1)) {
+                        if (shushObject == locationList.get(locationList.size() - 1)) {
                             locationcount[0] = 0;
                         }
                     }
