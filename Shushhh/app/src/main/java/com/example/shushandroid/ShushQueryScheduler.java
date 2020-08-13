@@ -76,6 +76,9 @@ public class ShushQueryScheduler {
                 LocationListener locationListener = new LocationListener() {
                     @Override
                     public void onLocationChanged(@NonNull Location location) {
+
+                        Log.i("Listener", "lisneter");
+
                         Location setLocation = new Location("Current Location");
                         setLocation.setLatitude(shushObject.getLatLng().latitude);
                         setLocation.setLongitude(shushObject.getLatLng().longitude);
@@ -85,7 +88,6 @@ public class ShushQueryScheduler {
                         } else {
                             System.out.println(setLocation.distanceTo(location));
                         }
-
                     }
                 };
                 locationManager.removeUpdates(locationListener);

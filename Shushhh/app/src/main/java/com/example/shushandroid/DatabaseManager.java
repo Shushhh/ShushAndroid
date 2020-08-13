@@ -170,7 +170,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 String uuid = cursor.getString(cursor.getColumnIndex(DatabaseEntry.UUID));
                 String latlng = cursor.getString(cursor.getColumnIndex(DatabaseEntry.LATLNG));
                 ShushObject shushObject = new ShushObject(name, time, date, rep, location, radius, uuid);
-                shushObject.setLatLng(parseStringToLatLng(latlng));
+                if (latlng != null)
+                    shushObject.setLatLng(parseStringToLatLng(latlng));
                 shushObjectArrayList.add(shushObject);
             } while (cursor.moveToNext());
         } else {
