@@ -69,11 +69,11 @@ public class ShushQueryScheduler {
 
 
         LocationManager locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
+        List<ShushObject> locationList = new ArrayList<>();
 
         for (int i = 0; i < shushObjectArrayList.size(); i++) {
             Log.i("ShushObject", shushObjectArrayList.get(i).toString());
             ShushObject shushObject = shushObjectArrayList.get(i);
-            List<ShushObject> locationList = new ArrayList<>();
             if (shushObject.getDate().equals(ShushObject.Key.NULL)) {
                 locationcount2[0]++;
                 locationList.add(shushObject);
@@ -118,6 +118,8 @@ public class ShushQueryScheduler {
                         if (shushObject.equals(locationList.get(locationList.size() - 1))) {
                             locationcount[0] = 0;
                         }
+                        Log.d("test", "size of list: " + locationList.size());
+                        Log.d("test", "size of arraylist" + shushObjectArrayList.size());
                     }
                 };
                 locationManager.removeUpdates(locationListener);
