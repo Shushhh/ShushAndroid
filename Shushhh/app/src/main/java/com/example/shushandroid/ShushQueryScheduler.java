@@ -61,35 +61,30 @@ public class ShushQueryScheduler {
         sharedPreferenceManager = new SharedPreferenceManager(context);
         hours = sharedPreferenceManager.retrieveLocationInterval();
 
-        Log.i("HOurs", hours + "");
-
         final boolean[] silentChecker = {false};
         int[] locationcount = {0};
         int[] locationcount2 = {0};
 
+        System.out.println(shushObjectArrayList.size());
+
+
+        LocationManager locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
+
         for (int i = 0; i < shushObjectArrayList.size(); i++) {
+            Log.i("ShushObject", shushObjectArrayList.get(i).toString());
             ShushObject shushObject = shushObjectArrayList.get(i);
             List<ShushObject> locationList = new ArrayList<>();
             if (shushObject.getDate().equals(ShushObject.Key.NULL)) {
-//                AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-//                Intent intent = new Intent(context, SilencerReciever.class);
-//                intent.putExtra(SCHEDULE_TYPE, Key.LOCATION_NO_REPEAT);
-//                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
-//                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), (long) ((hours/10 * 60 * 60 * 1000)), pendingIntent);
-//                Log.i("Alarm Schedule", "Location no repeat executing..." + (long) ((hours/10 * 60 * 60 * 1000)));
-//                id++;
-
-                //ONLY LOCATION (NO REPEATS PER DAY EVER) --> JUST BASED ON LOCATION
-                //Test commit
                 locationcount2[0]++;
                 locationList.add(shushObject);
+                Log.d("test", locationList.toString());
                 Log.i("Run", "run");
-                LocationManager locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
+
                 LocationListener locationListener = new LocationListener() {
                     @Override
                     public void onLocationChanged(@NonNull Location location) {
 
-                        Log.i("Listener", "lisneter");
+                        Log.i("Listener", "listener");
 
                         Location setLocation = new Location("Current Location");
                         setLocation.setLatitude(shushObject.getLatLng().latitude);
@@ -98,7 +93,6 @@ public class ShushQueryScheduler {
                         if (setLocation.distanceTo(location) < Double.parseDouble(shushObject.getRadius().substring(0, shushObject.getRadius().length() - 1))) {
                             silentChecker[0] = true;
                             Log.d("test", "silent");
-                            //Set ringer to silent
 
                             System.out.println("SILENT");
                         } else {
@@ -121,14 +115,14 @@ public class ShushQueryScheduler {
                             System.out.println(setLocation.distanceTo(location));
                         }
 
-                        if (shushObject == locationList.get(locationList.size() - 1)) {
+                        if (shushObject.equals(locationList.get(locationList.size() - 1))) {
                             locationcount[0] = 0;
                         }
                     }
                 };
                 locationManager.removeUpdates(locationListener);
                 if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, (long) ((hours/10 * 60 * 60 * 1000) / 3), 5, locationListener);
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) ((hours/10 * 60 * 60 * 1000) / 3), 5, locationListener);
                 }
             } else if (shushObject.getLocation().equals(ShushObject.Key.NULL) || !shushObject.getLocation().equals(ShushObject.Key.NULL)) {
                 /***************** DONE *******************/
@@ -144,8 +138,6 @@ public class ShushQueryScheduler {
                         fromAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendars[0].getTimeInMillis(), (7 * 24 * 60 * 60 * 1000), pendingIntent); // set to silent
 
                         id++;
-
-
 
                         Intent intent2 = new Intent(context, SilencerReciever.class);
                         intent2.putExtra(SCHEDULE_TYPE, Key.TIME_REPEAT);
