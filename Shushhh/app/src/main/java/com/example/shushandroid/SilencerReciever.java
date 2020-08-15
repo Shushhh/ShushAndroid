@@ -42,6 +42,7 @@ public class SilencerReciever extends BroadcastReceiver {
     private double hours;
     private Integer toggleState;
     public static int index = 0;
+    public static int firstTime = 1;
 
     public static long interval = 0;
 
@@ -66,6 +67,7 @@ public class SilencerReciever extends BroadcastReceiver {
          * If the user mentions a location, perform GeoFencing processing here *
          */
         int count = 0;
+        int locationcounter = 0;
 
         final boolean[] silentChecker = {false};
         int[] locationcount = {0};
@@ -132,7 +134,6 @@ public class SilencerReciever extends BroadcastReceiver {
             String scheduleType = Objects.requireNonNull(intent.getStringExtra(ShushQueryScheduler.SCHEDULE_TYPE));
             String toggleKey = intent.getStringExtra(ShushQueryScheduler.TOGGLE_KEY);
             if (scheduleType.equals(ShushQueryScheduler.Key.LOCATION_NO_REPEAT)) {
-
                 if (index == total) {
                     index = 0;
                     Log.i("index", "In");
@@ -142,7 +143,7 @@ public class SilencerReciever extends BroadcastReceiver {
 
                 LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
-                        LocationListener locationListener = new LocationListener() {
+                LocationListener locationListener = new LocationListener() {
                             @Override
                             public void onLocationChanged(@NonNull Location location) {
 
@@ -175,6 +176,10 @@ public class SilencerReciever extends BroadcastReceiver {
                                 locationManager.removeUpdates(this);
                                 Log.i("index", index + "");
                                 index++;
+
+                                if (index + 1 == total) {
+                                    locationStatuses.clear();
+                                }
                             }
                         };
                         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
