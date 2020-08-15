@@ -74,14 +74,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private static final String TAG = "MapActivity";
     private static final float DEFAULT_ZOOM = 15f;
-    private int radius = 10;
+    private int radius = 50;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        radius = 10;
+        radius = 50;
 
         searchEditText = findViewById(R.id.searchTextField);
         gpsLocationFab = findViewById(R.id.currentLocationButton);
@@ -131,9 +131,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         spinner = findViewById(R.id.radiusSpinner);
 
         List<String> radiusList = new ArrayList<>();
-        radiusList.add("10m");
-        radiusList.add("100m");
-        radiusList.add("1000m");
+        radiusList.add("50m");
+        radiusList.add("250m");
+        radiusList.add("500m");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(MapActivity.this, android.R.layout.simple_spinner_item, radiusList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -195,20 +195,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    if (adapterView.getSelectedItem().equals("10m")) {
-                        Log.d(TAG, "10m selected");
+                    if (adapterView.getSelectedItem().equals("50m")) {
+                        Log.d(TAG, "50m selected");
                         map.clear();
-                        radius = 10;
+                        radius = 50;
                         map.addCircle(new CircleOptions().center(latLng).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
-                    } else if (adapterView.getSelectedItem().equals("100m")) {
-                        Log.d(TAG, "100m selected");
+                    } else if (adapterView.getSelectedItem().equals("250m")) {
+                        Log.d(TAG, "250m selected");
                         map.clear();
-                        radius = 100;
+                        radius = 250;
                         map.addCircle(new CircleOptions().center(latLng).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
                     } else {
-                        Log.d(TAG, "1000m selected");
+                        Log.d(TAG, "500m selected");
                         map.clear();
-                        radius = 1000;
+                        radius = 500;
                         map.addCircle(new CircleOptions().center(latLng).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
                     }
                 }
@@ -216,7 +216,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 @Override
                 public void onNothingSelected(AdapterView<?> adapterView) {
                     map.clear();
-                    radius = 10;
+                    radius = 50;
                     map.addCircle(new CircleOptions().center(latLng).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
                 }
             });
@@ -253,26 +253,26 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                         latLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
                         moveCamera(latLng, DEFAULT_ZOOM, "My Location");
                         map.clear();
-                        radius = 10;
+                        radius = 50;
                         spinner.setSelection(0);
                         map.addCircle(new CircleOptions().center(latLng).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
                         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                             @Override
                             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                                if (adapterView.getSelectedItem().equals("10m")) {
-                                    Log.d(TAG, "10m selected");
+                                if (adapterView.getSelectedItem().equals("50m")) {
+                                    Log.d(TAG, "50m selected");
                                     map.clear();
-                                    radius = 10;
+                                    radius = 50;
                                     map.addCircle(new CircleOptions().center(latLng).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
-                                } else if (adapterView.getSelectedItem().equals("100m")) {
-                                    Log.d(TAG, "100m selected");
+                                } else if (adapterView.getSelectedItem().equals("250m")) {
+                                    Log.d(TAG, "250m selected");
                                     map.clear();
-                                    radius = 100;
+                                    radius = 250;
                                     map.addCircle(new CircleOptions().center(latLng).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
                                 } else {
-                                    Log.d(TAG, "1000m selected");
+                                    Log.d(TAG, "500m selected");
                                     map.clear();
-                                    radius = 1000;
+                                    radius = 500;
                                     map.addCircle(new CircleOptions().center(latLng).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
                                 }
                             }
@@ -280,7 +280,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                             @Override
                             public void onNothingSelected(AdapterView<?> adapterView) {
                                 map.clear();
-                                radius = 10;
+                                radius = 50;
                                 map.addCircle(new CircleOptions().center(latLng).radius(radius).strokeColor(Color.RED).fillColor(Color.argb(70, 150, 50, 50))).isClickable();
                             }
                         });
