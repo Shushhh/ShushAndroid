@@ -199,12 +199,7 @@ public class SilencerReciever extends BroadcastReceiver {
                                 return;
                             } else {
 
-                                Criteria criteria = new Criteria();
-                                criteria.setAccuracy(Criteria.ACCURACY_FINE);
-                                criteria.setCostAllowed(false);
-
-                                locationManager.requestLocationUpdates(locationManager.getBestProvider(criteria, true) == null ? LocationManager.NETWORK_PROVIDER : locationManager.getBestProvider(criteria, true), 100, 0, locationListener);
-                                Log.i("Provider", locationManager.getBestProvider(criteria, true));
+                                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 100, 0, locationListener);
                             }
                         }
             } else if (scheduleType.equals(ShushQueryScheduler.Key.TIME_REPEAT)) {
