@@ -42,6 +42,8 @@ public class SilencerReciever extends BroadcastReceiver {
 
     public static long interval = 0;
 
+    public static ArrayList<Boolean> locationStatuses = new ArrayList<>();
+
     @SuppressLint("MissingPermission")
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -61,6 +63,8 @@ public class SilencerReciever extends BroadcastReceiver {
         final boolean[] silentChecker = {false};
         int[] locationcount = {0};
         int[] locationcount2 = {0};
+
+
 
         /*
 
@@ -124,7 +128,6 @@ public class SilencerReciever extends BroadcastReceiver {
 
                 LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
-
                 Double latitude = intent.getDoubleExtra("lat", 0);
                 Double longitude = intent.getDoubleExtra("lng", 0);
                 Double radius = intent.getDoubleExtra("rad", 0);
@@ -132,7 +135,6 @@ public class SilencerReciever extends BroadcastReceiver {
                 Log.i("Location Lat ShushInfo", latitude.toString());
                 Log.i("Location Lng ShushInfo", longitude.toString());
                 Log.i("Location Rad ShushInfo", radius.toString());
-
 
                 LocationListener locationListener = new LocationListener() {
                     @Override
@@ -147,9 +149,18 @@ public class SilencerReciever extends BroadcastReceiver {
 
                         if (setLocation.distanceTo(location) < radius){
                             Log.d("Location status", "Silent");
+                            locationStatuses.add(true);
                         } else {
                             Log.d("Location status", "Ring");
+                            locationStatuses.add(false);
                         }
+
+                        if (locationStatuses.contains(true)) {
+                            Log.i("Final result", "Silent");
+                        } else {
+                            Log.i("Final result", "Ring");
+                        }
+
                         Log.i("Location Info Distance", radius + " | " + setLocation.distanceTo(location));
                         locationManager.removeUpdates(this);
                     }

@@ -70,6 +70,7 @@ public class ShushQueryScheduler {
             Log.i("ShushObject", shushObjectArrayList.get(i).toString());
             ShushObject shushObject = shushObjectArrayList.get(i);
             if (shushObject.getDate().equals(ShushObject.Key.NULL)) {
+
                 AlarmManager fromAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                 Intent intent = new Intent(context, SilencerReciever.class);
                 intent.putExtra(SCHEDULE_TYPE, Key.LOCATION_NO_REPEAT);
@@ -78,7 +79,7 @@ public class ShushQueryScheduler {
                 intent.putExtra("rad", Double.parseDouble(shushObject.getRadius().substring(0, shushObject.getRadius().length() - 1)));
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
                 fromAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), (long) (hours/10 * 60 * 60 * 1000), pendingIntent); // set to silent
-
+                SilencerReciever.locationStatuses.clear();
                 id ++;
 
             } else if (shushObject.getLocation().equals(ShushObject.Key.NULL) || !shushObject.getLocation().equals(ShushObject.Key.NULL)) {
