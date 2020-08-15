@@ -162,6 +162,8 @@ public class SilencerReciever extends BroadcastReceiver {
                                     locationStatuses.add(false);
                                 }
 
+                                Log.i("values", "items in list: " + locationStatuses.toString());
+
                                 if (locationStatuses.contains(true)) {
                                     Log.i("Final result", "Silent");
                                 } else {
@@ -177,7 +179,7 @@ public class SilencerReciever extends BroadcastReceiver {
                                 Log.i("index", index + "");
                                 index++;
 
-                                if (index + 1 == total) {
+                                if (index == total) {
                                     locationStatuses.clear();
                                 }
                             }
