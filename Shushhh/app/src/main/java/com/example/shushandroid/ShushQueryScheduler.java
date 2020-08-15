@@ -71,15 +71,19 @@ public class ShushQueryScheduler {
             ShushObject shushObject = shushObjectArrayList.get(i);
             if (shushObject.getDate().equals(ShushObject.Key.NULL)) {
 
+                SilencerReciever.locationStatuses.clear();
+                Log.i("call","call");
                 AlarmManager fromAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                 Intent intent = new Intent(context, SilencerReciever.class);
                 intent.putExtra(SCHEDULE_TYPE, Key.LOCATION_NO_REPEAT);
                 intent.putExtra("lat", shushObject.getLatLng().latitude);
                 intent.putExtra("lng", shushObject.getLatLng().longitude);
                 intent.putExtra("rad", Double.parseDouble(shushObject.getRadius().substring(0, shushObject.getRadius().length() - 1)));
+                Log.i("Intent info", shushObject.getLatLng().latitude + " | " + shushObject.getLatLng().longitude + " | " + shushObject.getRadius());
+                Log.i("call","call1");
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
-                fromAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), (long) (hours/10 * 60 * 60 * 1000), pendingIntent); // set to silent
-                SilencerReciever.locationStatuses.clear();
+                fromAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), (long) (hours/5 * 60 * 60 * 1000), pendingIntent);
+                Log.i("call","call2");// set to silent
                 id ++;
 
             } else if (shushObject.getLocation().equals(ShushObject.Key.NULL) || !shushObject.getLocation().equals(ShushObject.Key.NULL)) {

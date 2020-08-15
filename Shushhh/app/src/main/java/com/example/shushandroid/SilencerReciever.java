@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -16,6 +17,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -44,7 +46,6 @@ public class SilencerReciever extends BroadcastReceiver {
 
     public static ArrayList<Boolean> locationStatuses = new ArrayList<>();
 
-    @SuppressLint("MissingPermission")
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -147,7 +148,7 @@ public class SilencerReciever extends BroadcastReceiver {
                         Log.i("Location LatCurrentInfo", latitude.toString());
                         Log.i("Location LngCurrentInfo", longitude.toString());
 
-                        if (setLocation.distanceTo(location) < radius){
+                        if (setLocation.distanceTo(location) < radius) {
                             Log.d("Location status", "Silent");
                             locationStatuses.add(true);
                         } else {
@@ -167,7 +168,18 @@ public class SilencerReciever extends BroadcastReceiver {
                 };
 
                 if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) ((hours/10 * 60 * 60 * 1000) / 3), 0, locationListener);
+                    if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        return;
+                    } else {
+                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) ((hours / 10 * 60 * 60 * 1000) / 3), 0, locationListener);
+                    }
                 }
 
             } else if (scheduleType.equals(ShushQueryScheduler.Key.TIME_REPEAT)) {
