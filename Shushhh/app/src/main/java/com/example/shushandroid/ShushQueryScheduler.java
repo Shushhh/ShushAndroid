@@ -64,7 +64,7 @@ public class ShushQueryScheduler {
 
         Log.i("Test", "test");
 
-        SilencerReciever.total = shushObjectArrayList.size();
+        SilencerReciever.total = numberLocationShushObjects(shushObjectArrayList);
         SilencerReciever.index = 0;
         SilencerReciever.latitudes.clear();
         SilencerReciever.longitudes.clear();
@@ -94,7 +94,7 @@ public class ShushQueryScheduler {
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
                 fromAlarmManager.cancel(pendingIntent);
-                fromAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), (long) (hours/5 * 60 * 60 * 1000), pendingIntent);
+                fromAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), (long) (hours/30 * 60 * 60 * 1000), pendingIntent);
                 Log.i("call","call2");// set to silent
                 id ++;
 
@@ -119,6 +119,7 @@ public class ShushQueryScheduler {
                         AlarmManager toAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                         PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context, id, intent2, 0);
                         toAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendars[1].getTimeInMillis(), (7 * 24 * 60 * 60 * 1000), pendingIntent2); // set to ring
+
 
                         id++;
                     }
@@ -148,6 +149,8 @@ public class ShushQueryScheduler {
                     intent2.putExtra(TOGGLE_KEY, Key.RING);
                     PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context, id, intent2, 0);
                     toAlarmManager.set(AlarmManager.RTC_WAKEUP, calendars[1].getTimeInMillis(), pendingIntent2); // set to ring
+
+                    System.out.println(calendars[0] + "|" + calendars[1]);
 
                     id++;
                 }
@@ -325,6 +328,16 @@ public class ShushQueryScheduler {
         double tt = Math.acos(t1 + t2 + t3);
 
         return 6366000 * tt;
+    }
+
+    public static int numberLocationShushObjects (ArrayList<ShushObject> shushObjects) {
+        int i = 0;
+        for (ShushObject shushObject: shushObjects) {
+            if (!shushObject.getLocation().equals(ShushObject.Key.NULL)) {
+                i++;
+            }
+        }
+        return i;
     }
 
 }

@@ -135,7 +135,10 @@ public class SilencerReciever extends BroadcastReceiver {
 
                 if (index == total) {
                     index = 0;
+                    Log.i("index", "In");
                 }
+
+                Log.i("index comparison", index + "|" + total);
 
                 LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
@@ -164,14 +167,13 @@ public class SilencerReciever extends BroadcastReceiver {
                                     Log.i("Final result", "Ring");
                                 }
 
-
                                 Log.i("Location Lat ShushInfo", latitudes.get(index).toString());
                                 Log.i("Location Lng ShushInfo", longitudes.get(index).toString());
                                 Log.i("Location Rad ShushInfo", radii.get(index).toString());
 
-
                                 Log.i("Location Info Distance", radii.get(index) + " | " + setLocation.distanceTo(location));
                                 locationManager.removeUpdates(this);
+                                Log.i("index", index + "");
                                 index++;
                             }
                         };
@@ -186,7 +188,7 @@ public class SilencerReciever extends BroadcastReceiver {
                                 // for ActivityCompat#requestPermissions for more details.
                                 return;
                             } else {
-                                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) ((hours / 10 * 60 * 60 * 1000) / 3), 0, locationListener);
+                                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 0, locationListener);
                             }
                         }
             } else if (scheduleType.equals(ShushQueryScheduler.Key.TIME_REPEAT)) {
