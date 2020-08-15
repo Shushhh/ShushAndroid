@@ -113,7 +113,7 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
 
             if (currentItem.getLocation().equals("N/A")) {
                 singleViewHolder.nameTextView.setText(currentItem.getName());
-                singleViewHolder.dataTextView.setText(currentItem.getTime());
+                singleViewHolder.dataTextView.setText(truncateText(currentItem.getTime()));
                 singleViewHolder.supplementalDataTextView.setText(currentItem.getDate());
                 singleViewHolder.repTextView.setText(currentItem.getRep());
                 singleViewHolder.containerView.setOnClickListener(view -> {
@@ -126,7 +126,7 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
                 });
             } else {
                 singleViewHolder.nameTextView.setText(currentItem.getName());
-                singleViewHolder.dataTextView.setText(currentItem.getLocation());
+                singleViewHolder.dataTextView.setText(truncateText(currentItem.getLocation()));
                 singleViewHolder.repTextView.setText(currentItem.getRep());
                 singleViewHolder.supplementalDataTextView.setText(currentItem.getRadius());
                 singleViewHolder.containerView.setOnClickListener(view -> {
@@ -139,8 +139,6 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
                 });
             }
 
-
-
         } else if (getItemViewType(position) == DOUBLE_TYPE) {
             ShushObject currentItem = shushObjectArrayList.get(position);
             DoubleViewHolder doubleViewHolder = (DoubleViewHolder) holder;
@@ -149,7 +147,7 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
             doubleViewHolder.timeTextView.setText(currentItem.getTime());
             doubleViewHolder.dateTextView.setText(currentItem.getDate());
             doubleViewHolder.repTextView.setText(currentItem.getRep());
-            doubleViewHolder.locationTextView.setText(currentItem.getLocation());
+            doubleViewHolder.locationTextView.setText(truncateText(currentItem.getLocation()));
             doubleViewHolder.radiusTextView.setText(currentItem.getRadius());
 
             doubleViewHolder.containerView.setOnClickListener(view -> {
@@ -182,4 +180,11 @@ public class ShushRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
     public void setShushObjectArrayList(ArrayList<ShushObject> shushObjectArrayList) {
         this.shushObjectArrayList = shushObjectArrayList;
     }
+
+    public String truncateText (String longText) {
+        if (longText.length() > 30) {
+            return longText.substring(0, 25) + "...";
+        } else return longText;
+    }
+
 }
