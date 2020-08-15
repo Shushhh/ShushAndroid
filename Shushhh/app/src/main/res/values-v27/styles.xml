@@ -8,6 +8,7 @@
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
         <item name="textInputStyle">@style/CustomFontTextInputLayout</item>
         <item name="android:navigationBarColor">@color/colorAccentDarker</item>
+        <item name="android:navigationBarDividerColor">@color/colorAccentDarker</item>
     </style>
 
     <style name="TabLayoutTextFont" parent="@android:style/TextAppearance.Widget.TabWidget">

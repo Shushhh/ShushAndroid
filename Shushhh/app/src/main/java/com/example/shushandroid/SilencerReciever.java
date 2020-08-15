@@ -2,6 +2,7 @@ package com.example.shushandroid;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -170,7 +171,7 @@ public class SilencerReciever extends BroadcastReceiver {
                                 audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                             } else {
                                 Log.i("Final result", "Ring");
-                                audioManager.setRingerMode(toggleState);
+                                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
                             }
 
                             Log.i("Location Lat ShushInfo", latitudes.get(index).toString());
@@ -209,7 +210,7 @@ public class SilencerReciever extends BroadcastReceiver {
                     if (count > 0) {
                         audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                     } else {
-                        audioManager.setRingerMode(toggleState);
+                        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
                     }
                 } else if (toggleKey != null && toggleKey.equals(ShushQueryScheduler.Key.SILENT)) {
                     Log.i("Alarm Toggle", "Time Repeat - SILENT");
@@ -223,7 +224,7 @@ public class SilencerReciever extends BroadcastReceiver {
                     if (count > 0) {
                         audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                     } else {
-                        audioManager.setRingerMode(toggleState);
+                        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
                     }
                 } else if (toggleKey != null && toggleKey.equals(ShushQueryScheduler.Key.SILENT)) {
                     Log.i("Alarm Toggle", "Time No Repeat - SILENT");
@@ -241,7 +242,7 @@ public class SilencerReciever extends BroadcastReceiver {
                     if (count > 0) {
                         audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                     } else {
-                        audioManager.setRingerMode(toggleState);
+                        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
                     }
                 }
             }
