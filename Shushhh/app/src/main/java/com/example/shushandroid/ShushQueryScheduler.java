@@ -62,26 +62,38 @@ public class ShushQueryScheduler {
         sharedPreferenceManager = new SharedPreferenceManager(context);
         hours = sharedPreferenceManager.retrieveLocationInterval();
 
-        System.out.println(shushObjectArrayList.size());
+        Log.i("Test", "test");
+
+        SilencerReciever.total = shushObjectArrayList.size();
+        SilencerReciever.index = 0;
+        SilencerReciever.latitudes.clear();
+        SilencerReciever.longitudes.clear();
+        SilencerReciever.radii.clear();
+
+        Log.i("Test", "test1");
 
         LocationManager locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
 
         for (int i = 0; i < shushObjectArrayList.size(); i++) {
             Log.i("ShushObject", shushObjectArrayList.get(i).toString());
             ShushObject shushObject = shushObjectArrayList.get(i);
+            Log.i("shush", shushObject.toString());
+
             if (shushObject.getDate().equals(ShushObject.Key.NULL)) {
 
                 SilencerReciever.locationStatuses.clear();
                 Log.i("call","call");
                 AlarmManager fromAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                Intent intent = new Intent(context, SilencerReciever.class);
+                Intent intent = new Intent(context.getApplicationContext(), SilencerReciever.class);
                 intent.putExtra(SCHEDULE_TYPE, Key.LOCATION_NO_REPEAT);
-                intent.putExtra("lat", shushObject.getLatLng().latitude);
-                intent.putExtra("lng", shushObject.getLatLng().longitude);
-                intent.putExtra("rad", Double.parseDouble(shushObject.getRadius().substring(0, shushObject.getRadius().length() - 1)));
-                Log.i("Intent info", shushObject.getLatLng().latitude + " | " + shushObject.getLatLng().longitude + " | " + shushObject.getRadius());
+                SilencerReciever.latitudes.add(shushObject.getLatLng().latitude);
+                SilencerReciever.longitudes.add(shushObject.getLatLng().longitude);
+                SilencerReciever.radii.add(Double.parseDouble(shushObject.getRadius().substring(0, shushObject.getRadius().length() - 1)));
+                Log.i("Intent info", shushObject.getLatLng().latitude + " | " + shushObject.getLatLng().longitude + " | " + Double.parseDouble(shushObject.getRadius().substring(0, shushObject.getRadius().length() - 1)));
                 Log.i("call","call1");
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
+                fromAlarmManager.cancel(pendingIntent);
                 fromAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), (long) (hours/5 * 60 * 60 * 1000), pendingIntent);
                 Log.i("call","call2");// set to silent
                 id ++;

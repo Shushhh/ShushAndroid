@@ -12,6 +12,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.AudioManager;
 import android.os.Build;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
 
@@ -43,6 +44,11 @@ public class SilencerReciever extends BroadcastReceiver {
     public static int index = 0;
 
     public static long interval = 0;
+
+    public static ArrayList<Double> latitudes = new ArrayList<>();
+    public static ArrayList<Double> longitudes = new ArrayList<>();
+    public static ArrayList<Double> radii = new ArrayList<>();
+    public static Integer total = 0;
 
     public static ArrayList<Boolean> locationStatuses = new ArrayList<>();
 
@@ -127,61 +133,62 @@ public class SilencerReciever extends BroadcastReceiver {
             String toggleKey = intent.getStringExtra(ShushQueryScheduler.TOGGLE_KEY);
             if (scheduleType.equals(ShushQueryScheduler.Key.LOCATION_NO_REPEAT)) {
 
-                LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-
-                Double latitude = intent.getDoubleExtra("lat", 0);
-                Double longitude = intent.getDoubleExtra("lng", 0);
-                Double radius = intent.getDoubleExtra("rad", 0);
-
-                Log.i("Location Lat ShushInfo", latitude.toString());
-                Log.i("Location Lng ShushInfo", longitude.toString());
-                Log.i("Location Rad ShushInfo", radius.toString());
-
-                LocationListener locationListener = new LocationListener() {
-                    @Override
-                    public void onLocationChanged(@NonNull Location location) {
-
-                        Location setLocation = new Location("Current Location");
-                        setLocation.setLatitude(latitude);
-                        setLocation.setLongitude(longitude);
-
-                        Log.i("Location LatCurrentInfo", latitude.toString());
-                        Log.i("Location LngCurrentInfo", longitude.toString());
-
-                        if (setLocation.distanceTo(location) < radius) {
-                            Log.d("Location status", "Silent");
-                            locationStatuses.add(true);
-                        } else {
-                            Log.d("Location status", "Ring");
-                            locationStatuses.add(false);
-                        }
-
-                        if (locationStatuses.contains(true)) {
-                            Log.i("Final result", "Silent");
-                        } else {
-                            Log.i("Final result", "Ring");
-                        }
-
-                        Log.i("Location Info Distance", radius + " | " + setLocation.distanceTo(location));
-                        locationManager.removeUpdates(this);
-                    }
-                };
-
-                if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                    if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                        return;
-                    } else {
-                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) ((hours / 10 * 60 * 60 * 1000) / 3), 0, locationListener);
-                    }
+                if (index == total) {
+                    index = 0;
                 }
 
+                LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+
+                        LocationListener locationListener = new LocationListener() {
+                            @Override
+                            public void onLocationChanged(@NonNull Location location) {
+
+                                Location setLocation = new Location("Current Location");
+                                setLocation.setLatitude(latitudes.get(index));
+                                setLocation.setLongitude(longitudes.get(index));
+
+                                Log.i("Location LatCurrentInfo", latitudes.get(index).toString());
+                                Log.i("Location LngCurrentInfo", longitudes.get(index).toString());
+
+                                if (setLocation.distanceTo(location) < radii.get(index)) {
+                                    Log.d("Location status", "Silent");
+                                    locationStatuses.add(true);
+                                } else {
+                                    Log.d("Location status", "Ring");
+                                    locationStatuses.add(false);
+                                }
+
+                                if (locationStatuses.contains(true)) {
+                                    Log.i("Final result", "Silent");
+                                } else {
+                                    Log.i("Final result", "Ring");
+                                }
+
+
+                                Log.i("Location Lat ShushInfo", latitudes.get(index).toString());
+                                Log.i("Location Lng ShushInfo", longitudes.get(index).toString());
+                                Log.i("Location Rad ShushInfo", radii.get(index).toString());
+
+
+                                Log.i("Location Info Distance", radii.get(index) + " | " + setLocation.distanceTo(location));
+                                locationManager.removeUpdates(this);
+                                index++;
+                            }
+                        };
+                        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                            if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                // TODO: Consider calling
+                                //    ActivityCompat#requestPermissions
+                                // here to request the missing permissions, and then overriding
+                                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                //                                          int[] grantResults)
+                                // to handle the case where the user grants the permission. See the documentation
+                                // for ActivityCompat#requestPermissions for more details.
+                                return;
+                            } else {
+                                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) ((hours / 10 * 60 * 60 * 1000) / 3), 0, locationListener);
+                            }
+                        }
             } else if (scheduleType.equals(ShushQueryScheduler.Key.TIME_REPEAT)) {
                 if (toggleKey != null && toggleKey.equals(ShushQueryScheduler.Key.RING)) {
                     Log.i("Alarm Toggle", "Time Repeat - RING");
