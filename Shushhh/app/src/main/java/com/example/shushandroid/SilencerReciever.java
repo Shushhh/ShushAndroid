@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -144,47 +145,47 @@ public class SilencerReciever extends BroadcastReceiver {
                 LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
                 LocationListener locationListener = new LocationListener() {
-                            @Override
-                            public void onLocationChanged(@NonNull Location location) {
+                        @Override
+                        public void onLocationChanged(@NonNull Location location) {
 
-                                Location setLocation = new Location("Current Location");
-                                setLocation.setLatitude(latitudes.get(index));
-                                setLocation.setLongitude(longitudes.get(index));
+                            Location setLocation = new Location("Current Location");
+                            setLocation.setLatitude(latitudes.get(index));
+                            setLocation.setLongitude(longitudes.get(index));
 
-                                Log.i("Location LatCurrentInfo", latitudes.get(index).toString());
-                                Log.i("Location LngCurrentInfo", longitudes.get(index).toString());
+                            Log.i("Location LatCurrentInfo", latitudes.get(index).toString());
+                            Log.i("Location LngCurrentInfo", longitudes.get(index).toString());
 
-                                if (setLocation.distanceTo(location) < radii.get(index)) {
-                                    Log.d("Location status", "Silent");
-                                    locationStatuses.add(true);
-                                } else {
-                                    Log.d("Location status", "Ring");
-                                    locationStatuses.add(false);
-                                }
-
-                                Log.i("values", "items in list: " + locationStatuses.toString());
-
-                                if (locationStatuses.contains(true)) {
-                                    Log.i("Final result", "Silent");
-                                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                                } else {
-                                    Log.i("Final result", "Ring");
-                                    audioManager.setRingerMode(toggleState);
-                                }
-
-                                Log.i("Location Lat ShushInfo", latitudes.get(index).toString());
-                                Log.i("Location Lng ShushInfo", longitudes.get(index).toString());
-                                Log.i("Location Rad ShushInfo", radii.get(index).toString());
-
-                                Log.i("Location Info Distance", radii.get(index) + " | " + setLocation.distanceTo(location));
-                                locationManager.removeUpdates(this);
-                                Log.i("index", index + "");
-                                index++;
-
-                                if (index == total) {
-                                    locationStatuses.clear();
-                                }
+                            if (setLocation.distanceTo(location) < radii.get(index)) {
+                                Log.d("Location status", "Silent");
+                                locationStatuses.add(true);
+                            } else {
+                                Log.d("Location status", "Ring");
+                                locationStatuses.add(false);
                             }
+
+                            Log.i("values", "items in list: " + locationStatuses.toString());
+
+                            if (locationStatuses.contains(true)) {
+                                Log.i("Final result", "Silent");
+                                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                            } else {
+                                Log.i("Final result", "Ring");
+                                audioManager.setRingerMode(toggleState);
+                            }
+
+                            Log.i("Location Lat ShushInfo", latitudes.get(index).toString());
+                            Log.i("Location Lng ShushInfo", longitudes.get(index).toString());
+                            Log.i("Location Rad ShushInfo", radii.get(index).toString());
+
+                            Log.i("Location Info Distance", radii.get(index) + " | " + setLocation.distanceTo(location));
+                            locationManager.removeUpdates(this);
+                            Log.i("index", index + "");
+                            index++;
+
+                            if (index == total) {
+                                locationStatuses.clear();
+                            }
+                        }
                         };
                         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                             if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -197,7 +198,13 @@ public class SilencerReciever extends BroadcastReceiver {
                                 // for ActivityCompat#requestPermissions for more details.
                                 return;
                             } else {
-                                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 0, locationListener);
+
+                                Criteria criteria = new Criteria();
+                                criteria.setAccuracy(Criteria.ACCURACY_FINE);
+                                criteria.setCostAllowed(false);
+
+                                locationManager.requestLocationUpdates(locationManager.getBestProvider(criteria, true) == null ? LocationManager.NETWORK_PROVIDER : locationManager.getBestProvider(criteria, true), 100, 0, locationListener);
+                                Log.i("Provider", locationManager.getBestProvider(criteria, true));
                             }
                         }
             } else if (scheduleType.equals(ShushQueryScheduler.Key.TIME_REPEAT)) {
