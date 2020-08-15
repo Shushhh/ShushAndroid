@@ -11,6 +11,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.AudioManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.util.Log;
 
@@ -61,71 +62,25 @@ public class ShushQueryScheduler {
         sharedPreferenceManager = new SharedPreferenceManager(context);
         hours = sharedPreferenceManager.retrieveLocationInterval();
 
-        final boolean[] silentChecker = {false};
-        int[] locationcount = {0};
-        int[] locationcount2 = {0};
-
         System.out.println(shushObjectArrayList.size());
 
-
         LocationManager locationManager = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
-        List<ShushObject> locationList = new ArrayList<>();
 
         for (int i = 0; i < shushObjectArrayList.size(); i++) {
             Log.i("ShushObject", shushObjectArrayList.get(i).toString());
             ShushObject shushObject = shushObjectArrayList.get(i);
             if (shushObject.getDate().equals(ShushObject.Key.NULL)) {
-                locationcount2[0]++;
-                locationList.add(shushObject);
-                Log.d("test", locationList.toString());
-                Log.i("Run", "run");
+                AlarmManager fromAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                Intent intent = new Intent(context, SilencerReciever.class);
+                intent.putExtra(SCHEDULE_TYPE, Key.LOCATION_NO_REPEAT);
+                intent.putExtra("lat", shushObject.getLatLng().latitude);
+                intent.putExtra("lng", shushObject.getLatLng().longitude);
+                intent.putExtra("rad", Double.parseDouble(shushObject.getRadius().substring(0, shushObject.getRadius().length() - 1)));
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
+                fromAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), (long) (hours/10 * 60 * 60 * 1000), pendingIntent); // set to silent
 
-                LocationListener locationListener = new LocationListener() {
-                    @Override
-                    public void onLocationChanged(@NonNull Location location) {
+                id ++;
 
-                        Log.i("Listener", "listener");
-
-                        Location setLocation = new Location("Current Location");
-                        setLocation.setLatitude(shushObject.getLatLng().latitude);
-                        setLocation.setLongitude(shushObject.getLatLng().longitude);
-
-                        if (setLocation.distanceTo(location) < Double.parseDouble(shushObject.getRadius().substring(0, shushObject.getRadius().length() - 1))) {
-                            silentChecker[0] = true;
-                            Log.d("test", "silent");
-
-                            System.out.println("SILENT");
-                        } else {
-                            if (silentChecker[0] == true) {
-                                locationcount[0]++;
-                                Log.d("test", "silent");
-                                //Set ringer to silent
-                                if (locationcount[0] == locationcount2[0]) {
-                                    locationcount[0] = 0;
-                                    silentChecker[0] = false;
-                                    Log.d("size", "size: " + locationcount2[0]);
-                                    Log.d("test", "ring");
-                                    //Set ringer to ring
-                                }
-                            } else {
-                                silentChecker[0] = false;
-                                Log.d("test", "ring");
-                                //Set ringer to ring
-                            }
-                            System.out.println(setLocation.distanceTo(location));
-                        }
-
-                        if (shushObject.equals(locationList.get(locationList.size() - 1))) {
-                            locationcount[0] = 0;
-                        }
-                        Log.d("test", "size of list: " + locationList.size());
-                        Log.d("test", "size of arraylist" + shushObjectArrayList.size());
-                    }
-                };
-                locationManager.removeUpdates(locationListener);
-                if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long) ((hours/10 * 60 * 60 * 1000) / 3), 5, locationListener);
-                }
             } else if (shushObject.getLocation().equals(ShushObject.Key.NULL) || !shushObject.getLocation().equals(ShushObject.Key.NULL)) {
                 /***************** DONE *******************/
                 //LOCATION AND TIME REPEAT OR TIME REPEAT
