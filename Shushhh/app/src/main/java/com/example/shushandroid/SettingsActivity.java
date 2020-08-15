@@ -51,6 +51,8 @@ public class SettingsActivity extends AppCompatActivity {
             radioButton120.setChecked(true);
         }
 
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimary));
+
         if (sharedPreferenceManager.retrieveToggleState() == AudioManager.RINGER_MODE_NORMAL) {
             radioRing.setChecked(true);
         } else {

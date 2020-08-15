@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
@@ -39,8 +39,14 @@
         <item name="android:fontFamily">@font/rubik</item>
     </style>
 
-    <style name="LocationDialogTheme" parent="Theme.AppCompat.Light.DialogWhenLarge">
-        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/colorPrimary</item>
+    <style name="FullscreenDialogTheme" parent="Theme.AppCompat.Light.DialogWhenLarge">
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowAnimationStyle">@style/Animation.AppCompat.Dialog</item>
     </style>
+
+    <style name="ToggleButtonDesign" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="materialButtonOutlinedStyle">@color/colorAccent</item>
+    </style>
+
 
 </resources>

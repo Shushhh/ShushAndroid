@@ -51,7 +51,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name=".SettingsActivity"/>
-        <activity android:name=".EmailActivity"/>
+        <activity android:name=".FeedbackActivity"/>
         <activity android:name=".AboutPage"/>
 
         <activity android:name=".MainActivity">

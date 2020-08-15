@@ -143,6 +143,13 @@ public class ShushDialog extends DialogFragment {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void onCancel(@NonNull DialogInterface dialog) {
+        super.onCancel(dialog);
+        getActivity().getWindow().setNavigationBarColor(getResources().getColor(R.color.colorAccentDarker));
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
     @Override
@@ -166,6 +173,8 @@ public class ShushDialog extends DialogFragment {
         shushObject = new ShushObject();
         timePicker = new TimePickerFragment(getActivity());
         databaseManager = new DatabaseManager(getActivity());
+
+        getActivity().getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimary));
 
         Log.i("View", "View");
 

@@ -136,16 +136,14 @@ public class SilencerReciever extends BroadcastReceiver {
             String scheduleType = Objects.requireNonNull(intent.getStringExtra(ShushQueryScheduler.SCHEDULE_TYPE));
             String toggleKey = intent.getStringExtra(ShushQueryScheduler.TOGGLE_KEY);
             if (scheduleType.equals(ShushQueryScheduler.Key.LOCATION_NO_REPEAT)) {
-                if (index == total) {
-                    index = 0;
-                    Log.i("index", "In");
-                }
 
-                Log.i("index comparison", index + "|" + total);
+                if (total > 0) {
 
-                LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+                    Log.i("index comparison", index + "|" + total);
 
-                LocationListener locationListener = new LocationListener() {
+                    LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+
+                    LocationListener locationListener = new LocationListener() {
                         @Override
                         public void onLocationChanged(@NonNull Location location) {
 
@@ -185,24 +183,26 @@ public class SilencerReciever extends BroadcastReceiver {
 
                             if (index == total) {
                                 locationStatuses.clear();
+                                index = 0;
                             }
                         }
-                        };
-                        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
-                            if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                // TODO: Consider calling
-                                //    ActivityCompat#requestPermissions
-                                // here to request the missing permissions, and then overriding
-                                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                //                                          int[] grantResults)
-                                // to handle the case where the user grants the permission. See the documentation
-                                // for ActivityCompat#requestPermissions for more details.
-                                return;
-                            } else {
+                    };
+                    if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                        if (ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            // TODO: Consider calling
+                            //    ActivityCompat#requestPermissions
+                            // here to request the missing permissions, and then overriding
+                            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                            //                                          int[] grantResults)
+                            // to handle the case where the user grants the permission. See the documentation
+                            // for ActivityCompat#requestPermissions for more details.
+                            return;
+                        } else {
 
-                                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 100, 0, locationListener);
-                            }
+                            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 100, 0, locationListener);
                         }
+                    }
+                }
             } else if (scheduleType.equals(ShushQueryScheduler.Key.TIME_REPEAT)) {
                 if (toggleKey != null && toggleKey.equals(ShushQueryScheduler.Key.RING)) {
                     Log.i("Alarm Toggle", "Time Repeat - RING");

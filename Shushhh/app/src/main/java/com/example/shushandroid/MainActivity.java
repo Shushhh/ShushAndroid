@@ -6,21 +6,11 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.Lifecycle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
-import androidx.viewpager2.widget.ViewPager2;
 
-import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 
 import android.os.Build;
 import android.Manifest;
@@ -28,7 +18,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,20 +29,12 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * @apiNote Main Activity class
@@ -86,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean isFineLocationGranted = false;
     private boolean isBackgroundLocationGranted = false;
 
+    private boolean isBackFromBottomMenu = false;
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
         bottomAppBar = findViewById(R.id.bottomappbar);
 
         voicemailBottomSheetDialogFragment = new VoicemailBottomSheetDialogFragment();
+
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.colorAccentDarker));
 
         bottomAppBar.setNavigationOnClickListener((View v) -> {
             voicemailBottomSheetDialogFragment.show(getSupportFragmentManager(), getResources().getString(R.string.bottom_sheet));
@@ -115,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, ForegroundServiceManager.class);
         startService(intent);
-
     }
 
     public void requestAudioPermissions () {
@@ -133,6 +117,13 @@ public class MainActivity extends AppCompatActivity {
                     })
                     .create().show();
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    protected void onResume() {
+        super.onResume();
+
     }
 
     public static void updateRecyclerView () {
@@ -272,6 +263,7 @@ public class MainActivity extends AppCompatActivity {
 
         private LinearLayout settingsView, feedbackView, aboutUsView;
 
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         @Nullable
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -282,13 +274,15 @@ public class MainActivity extends AppCompatActivity {
             feedbackView = view.findViewById(R.id.feedback_view);
             aboutUsView = view.findViewById(R.id.about_us_view);
 
+            getActivity().getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimary));
+
             settingsView.setOnClickListener(v -> {
                 if (getActivity() != null)
                     getActivity().startActivityForResult(new Intent(getActivity(), SettingsActivity.class), 10);
             });
 
             feedbackView.setOnClickListener(v -> {
-                getActivity().startActivity(new Intent (getActivity(), EmailActivity.class));
+                getActivity().startActivity(new Intent (getActivity(), FeedbackActivity.class));
             });
 
             aboutUsView.setOnClickListener(v -> {
@@ -297,6 +291,14 @@ public class MainActivity extends AppCompatActivity {
 
             return view;
         }
+
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+        @Override
+        public void onCancel(@NonNull DialogInterface dialog) {
+            super.onCancel(dialog);
+            getActivity().getWindow().setNavigationBarColor(getResources().getColor(R.color.colorAccentDarker));
+        }
+
     }
 }
 

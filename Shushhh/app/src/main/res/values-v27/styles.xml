@@ -7,8 +7,6 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
         <item name="textInputStyle">@style/CustomFontTextInputLayout</item>
-        <item name="android:navigationBarColor">@color/colorAccentDarker</item>
-        <item name="android:navigationBarDividerColor">@color/colorAccentDarker</item>
     </style>
 
     <style name="TabLayoutTextFont" parent="@android:style/TextAppearance.Widget.TabWidget">
@@ -23,8 +21,6 @@
     <style name="AppModalStyle"
         parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/bottom_sheet_voicemail</item>
-        <item name="android:navigationBarColor">@color/colorPrimary</item>
-        <item name="android:navigationBarDividerColor">@color/colorAccent</item>
     </style>
 
     <style name="TextInputEditText.OutlinedBox.CustomFont" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">
@@ -48,13 +44,10 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowAnimationStyle">@style/Animation.AppCompat.Dialog</item>
         <item name="android:navigationBarColor">@color/colorPrimary</item>
-        <item name="android:navigationBarDividerColor">@color/colorAccent</item>
     </style>
 
     <style name="LocationDialogTheme" parent="Theme.AppCompat.Light.DialogWhenLarge">
         <item name="android:statusBarColor">@color/colorPrimary</item>
-        <item name="android:navigationBarColor">@color/colorPrimary</item>
-        <item name="android:navigationBarDividerColor">@color/colorAccent</item>
     </style>
 
     <style name="ToggleButtonDesign" parent="Widget.MaterialComponents.Button.OutlinedButton">
