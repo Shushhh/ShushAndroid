@@ -166,8 +166,10 @@ public class SilencerReciever extends BroadcastReceiver {
 
                                 if (locationStatuses.contains(true)) {
                                     Log.i("Final result", "Silent");
+                                    audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                                 } else {
                                     Log.i("Final result", "Ring");
+                                    audioManager.setRingerMode(toggleState);
                                 }
 
                                 Log.i("Location Lat ShushInfo", latitudes.get(index).toString());
