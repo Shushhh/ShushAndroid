@@ -179,7 +179,7 @@ public class SilencerReciever extends BroadcastReceiver {
 
                             Log.i("Location Info Distance", radii.get(index) + " | " + setLocation.distanceTo(location));
                             locationManager.removeUpdates(this);
-                            Log.i("index", index + "");
+                            Log.i("index", index + "|" + total);
                             index++;
 
                             if (index == total) {
