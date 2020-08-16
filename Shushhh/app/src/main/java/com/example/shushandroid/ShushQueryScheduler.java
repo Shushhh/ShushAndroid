@@ -39,9 +39,10 @@ public class ShushQueryScheduler {
     public static final String SCHEDULE_TYPE = "SCHEDULE_TYPE";
     public static final String TOGGLE_KEY = "TOGGLE_KEY";
 
+    public static boolean isCurrentTime = false;
+
     public static class Key {
         public static final String LOCATION_NO_REPEAT = "LOCATION_NO_REPEAT";
-        public static final String LOCATION_TIME_REPEAT = "LOCATION_TIME_REPEAT";
         public static final String LOCATION_TIME_NO_REPEAT = "LOCATION_TIME_NO_REPEAT";
         public static final String TIME_REPEAT = "TIME_REPEAT";
         public static final String TIME_NO_REPEAT = "TIME_NO_REPEAT";
@@ -94,7 +95,7 @@ public class ShushQueryScheduler {
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
                 fromAlarmManager.cancel(pendingIntent);
-                fromAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), (long) (hours * 60 * 60 * 1000), pendingIntent);
+                fromAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), (long) (hours * 60 * 60 * 1000) / 5, pendingIntent);
                 Log.i("call","call2");// set to silent
                 id ++;
 
@@ -125,7 +126,6 @@ public class ShushQueryScheduler {
                         AlarmManager toAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                         PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context, id, intent2, 0);
                         toAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendars[1].getTimeInMillis(), (7 * 24 * 60 * 60 * 1000), pendingIntent2); // set to ring
-
 
                         id++;
                     }

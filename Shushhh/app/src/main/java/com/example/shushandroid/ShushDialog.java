@@ -233,6 +233,8 @@ public class ShushDialog extends DialogFragment {
                 } else {
                     MainActivity.updateRecyclerView();
                     ArrayList<ShushObject> shushObjects = databaseManager.retrieveWithCursor();
+                    if (ShushQueryScheduler.isCurrentTime)
+                        SilencerReciever.count--;
                     try {
                         ShushQueryScheduler.schedule(shushObjects, getContext());
                         dismiss();
