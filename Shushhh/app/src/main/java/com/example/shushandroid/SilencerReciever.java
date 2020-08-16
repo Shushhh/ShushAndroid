@@ -64,7 +64,7 @@ public class SilencerReciever extends BroadcastReceiver {
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         interval = (long) (hours * 60 * 60 * 1000);
 
-        Log.i("Count", intent.getStringExtra(ShushQueryScheduler.SCHEDULE_TYPE));
+        Log.i("Count", count + "");
 
         if (intent.getStringExtra(ShushQueryScheduler.SCHEDULE_TYPE).equals(ShushQueryScheduler.Key.TIME_NO_REPEAT))
             Log.i("Count", "IN");
