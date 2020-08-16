@@ -79,8 +79,6 @@ public class MainActivity extends AppCompatActivity {
 
         voicemailBottomSheetDialogFragment = new VoicemailBottomSheetDialogFragment();
 
-        getWindow().setNavigationBarColor(getResources().getColor(R.color.colorAccentDarker));
-
         bottomAppBar.setNavigationOnClickListener((View v) -> {
             voicemailBottomSheetDialogFragment.show(getSupportFragmentManager(), getResources().getString(R.string.bottom_sheet));
         });
@@ -117,13 +115,6 @@ public class MainActivity extends AppCompatActivity {
                     })
                     .create().show();
         }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getWindow().setNavigationBarColor(getResources().getColor(R.color.colorAccentDarker));
     }
 
     public static void updateRecyclerView () {
@@ -274,8 +265,6 @@ public class MainActivity extends AppCompatActivity {
             feedbackView = view.findViewById(R.id.feedback_view);
             aboutUsView = view.findViewById(R.id.about_us_view);
 
-            getActivity().getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimary));
-
             settingsView.setOnClickListener(v -> {
                 if (getActivity() != null)
                     getActivity().startActivityForResult(new Intent(getActivity(), SettingsActivity.class), 10);
@@ -298,7 +287,6 @@ public class MainActivity extends AppCompatActivity {
             super.onCancel(dialog);
             getActivity().getWindow().setNavigationBarColor(getResources().getColor(R.color.colorAccentDarker));
         }
-
     }
 }
 

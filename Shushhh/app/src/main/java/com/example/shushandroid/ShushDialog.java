@@ -231,6 +231,7 @@ public class ShushDialog extends DialogFragment {
                 if (!databaseManager.delete(presetUUIDString)) {
                     Log.e("DB Error", "Error deleting " + presetUUIDString + " ShushObject");
                 } else {
+                    getActivity().getWindow().setNavigationBarColor(getResources().getColor(R.color.colorAccentDarker));
                     MainActivity.updateRecyclerView();
                     ArrayList<ShushObject> shushObjects = databaseManager.retrieveWithCursor();
                     if (ShushQueryScheduler.isCurrentTime)
@@ -260,12 +261,15 @@ public class ShushDialog extends DialogFragment {
         closeButton.setOnClickListener(v -> {
             if (presetUUIDString != null) {
                 toggleGroupManager.uncheckToggleGroup(toggleGroupManager.getToggleStateString(), databaseManager.getShushObject(presetUUIDString).getRep());
+                getActivity().getWindow().setNavigationBarColor(getResources().getColor(R.color.colorAccentDarker));
                 dismiss();
             }
             dismiss();
         });
 
         saveButton.setOnClickListener(v -> {
+
+            getActivity().getWindow().setNavigationBarColor(getResources().getColor(R.color.colorAccentDarker));
 
             String time1 = timeTextView1.getText().toString();
             String time2 = timeTextView2.getText().toString();
@@ -432,6 +436,13 @@ public class ShushDialog extends DialogFragment {
         });
 
         return view;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void onStop() {
+        super.onStop();
+        getActivity().getWindow().setNavigationBarColor(getResources().getColor(R.color.colorAccentDarker));
     }
 
     /**

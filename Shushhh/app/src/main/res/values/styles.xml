@@ -26,6 +26,7 @@
     <style name="TextInputEditText.OutlinedBox.CustomFont" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">
         <item name="android:fontFamily">@font/rubik</item>
     </style>
+
     <style name="CustomFontTextInputLayout" parent="Widget.Design.TextInputLayout">
         <item name="hintTextAppearance">@style/TextInputLayoutHintText</item>
         <item name="helperTextTextAppearance">@style/TextInputLayoutHelperText</item>
@@ -41,12 +42,11 @@
 
     <style name="FullscreenDialogTheme" parent="Theme.AppCompat.Light.DialogWhenLarge">
         <item name="windowNoTitle">true</item>
-        <item name="android:windowAnimationStyle">@style/Animation.AppCompat.Dialog</item>
+
     </style>
 
     <style name="ToggleButtonDesign" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="materialButtonOutlinedStyle">@color/colorAccent</item>
     </style>
-
 
 </resources>
