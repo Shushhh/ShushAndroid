@@ -28,4 +28,5 @@
     <string name="thirty_minutes">30 minutes</string>
     <string name="settings_radio_string">SettingsRadioString</string>
     <string name="settings_toggle_string">SettingsToggleString</string>
+    <string name="feedback_email_address">shushhhapp@gmail.com</string>
 </resources>

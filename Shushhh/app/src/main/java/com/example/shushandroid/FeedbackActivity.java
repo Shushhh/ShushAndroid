@@ -5,13 +5,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class FeedbackActivity extends AppCompatActivity {
-    EditText toEditText, subjectEditText, messageText;
+    EditText subjectEditText, messageText;
+    TextView toEmailText;
     Button sendButton;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -19,7 +21,7 @@ public class FeedbackActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
-        toEditText = findViewById(R.id.to_edittext);
+        toEmailText = findViewById(R.id.to_edittext);
         subjectEditText = findViewById(R.id.subject_edittext);
         messageText = findViewById(R.id.message_edittext);
         sendButton = findViewById(R.id.sendButton);
@@ -30,7 +32,7 @@ public class FeedbackActivity extends AppCompatActivity {
     }
 
     private void sendMail() {
-        String recipientList = toEditText.getText().toString();
+        String recipientList = toEmailText.getText().toString();
         String[] recipients = recipientList.split(",");
 
         String subject = subjectEditText.getText().toString();

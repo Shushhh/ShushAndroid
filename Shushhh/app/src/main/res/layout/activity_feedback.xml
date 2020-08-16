@@ -74,13 +74,14 @@ android:background="@color/colorPrimary">
                 app:layout_constraintTop_toBottomOf="@id/viewfirst"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:text="Please send your feedback to sudhirsahil2001@gmail.com and provide feedback within the Message box."
+                android:text="Please send us your thoughts to shushhhapp@gmail.com by entering your feedback in the message box. Hit send and click on your email client! Thank you!"
                 android:textColor="@color/colorAccent"
                 android:textSize="16sp"
                 android:fontFamily="@font/rubik_light"
                 android:layout_marginTop="20dp"
                 android:paddingLeft="40dp"
-                android:paddingRight="40dp"/>
+                android:paddingRight="40dp"
+                android:gravity="center"/>
 
             <LinearLayout
                 android:id="@+id/to_linearlayout"
@@ -104,19 +105,20 @@ android:background="@color/colorPrimary">
                     android:gravity="center"
                     android:text="To:"
                     android:textColor="@color/colorAccent"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"/>
 
-                <EditText
+                <TextView
                     android:id="@+id/to_edittext"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/rubik"
                     android:imeOptions="actionDone"
                     android:inputType="text"
-                    android:text="sudhirsahil2001@gmail.com"
+                    android:text="@string/feedback_email_address"
                     android:textColor="@color/cardview_light_background"
                     android:textSize="16sp"
-                    android:backgroundTint="#9499A3"/>
+                    android:backgroundTint="#9499A3"
+                    android:padding="10dp"/>
 
             </LinearLayout>
 
@@ -178,7 +180,7 @@ android:background="@color/colorPrimary">
                     android:inputType="text"
                     android:padding="15dp"
                     android:gravity="top|left"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@android:color/white"
                     android:textColorHint="@color/colorAccent"
                     android:textSize="16sp"
                     app:layout_constraintTop_toBottomOf="@id/to_linearlayout2" />
