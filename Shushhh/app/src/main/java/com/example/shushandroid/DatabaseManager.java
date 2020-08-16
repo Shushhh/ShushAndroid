@@ -40,6 +40,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         public static final String UUID = "uuid";
         public static final String REP = "rep";
         public static final String LATLNG = "latlng";
+        public static final String ID = "id";
 
         public static final String TABLE_NAME = "ShushDB";
 
@@ -53,6 +54,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 REP + " varchar, " +
                 LOC + " varchar, " +
                 RAD + " varchar, " +
+                ID + " varchar, " +
                 LATLNG + " varchar)";
 
         public static final String DROP_QUERY = "drop table if exists " + TABLE_NAME;
@@ -72,7 +74,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public DatabaseManager(@Nullable Context context) {
 
-        super(context, DatabaseEntry.TABLE_NAME, null, 7); // increment version by 1 if database needs changes
+        super(context, DatabaseEntry.TABLE_NAME, null, 8); // increment version by 1 if database needs changes
 
     }
 
@@ -117,6 +119,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         contentValues.put(DatabaseEntry.REP, shushObject.getRep());
         contentValues.put(DatabaseEntry.LOC, shushObject.getLocation());
         contentValues.put(DatabaseEntry.RAD, shushObject.getRadius());
+        contentValues.put(DatabaseEntry.ID, shushObject.getId());
         contentValues.put(DatabaseEntry.UUID, shushObject.getUUID());
         if (shushObject.getLatLng() != null)
             contentValues.put(DatabaseEntry.LATLNG, shushObject.getLatLng().toString());
@@ -140,6 +143,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
         contentValues.put(DatabaseEntry.LOC, shushObject.getLocation());
         contentValues.put(DatabaseEntry.RAD, shushObject.getRadius());
         contentValues.put(DatabaseEntry.UUID, shushObject.getUUID());
+        contentValues.put(DatabaseEntry.ID, shushObject.getId());
         if (shushObject.getLatLng() != null)
             contentValues.put(DatabaseEntry.LATLNG, shushObject.getLatLng().toString());
         long n = this.getWritableDatabase().update(DatabaseEntry.TABLE_NAME, contentValues, DatabaseEntry.UUID + "=?", new String[] {shushObject.getUUID()});
@@ -169,7 +173,9 @@ public class DatabaseManager extends SQLiteOpenHelper {
                 String radius = cursor.getString(cursor.getColumnIndex(DatabaseEntry.RAD));
                 String uuid = cursor.getString(cursor.getColumnIndex(DatabaseEntry.UUID));
                 String latlng = cursor.getString(cursor.getColumnIndex(DatabaseEntry.LATLNG));
-                ShushObject shushObject = new ShushObject(name, time, date, rep, location, radius, uuid);
+                String id = cursor.getString(cursor.getColumnIndex(DatabaseEntry.ID));
+
+                ShushObject shushObject = new ShushObject(name, time, date, rep, location, radius, uuid, id);
                 if (latlng != null)
                     shushObject.setLatLng(parseStringToLatLng(latlng));
                 shushObjectArrayList.add(shushObject);

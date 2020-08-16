@@ -141,7 +141,7 @@ public class ShushQueryScheduler {
                     else
                         intent.putExtra(SCHEDULE_TYPE, Key.LOCATION_TIME_NO_REPEAT);
                     intent.putExtra(TOGGLE_KEY, Key.SILENT);
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, Integer.parseInt(shushObject.getId()), intent, 0);
                     fromAlarmManager.set(AlarmManager.RTC_WAKEUP, calendars[0].getTimeInMillis(), pendingIntent); // set to silent
 
                     id++;
@@ -159,7 +159,7 @@ public class ShushQueryScheduler {
                     else
                         intent2.putExtra(SCHEDULE_TYPE, Key.LOCATION_TIME_NO_REPEAT);
                     intent2.putExtra(TOGGLE_KEY, Key.RING);
-                    PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context, id, intent2, 0);
+                    PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context, Integer.parseInt(shushObject.getId()) + 1, intent2, 0);
                     toAlarmManager.set(AlarmManager.RTC_WAKEUP, calendars[1].getTimeInMillis(), pendingIntent2); // set to ring
 
                     System.out.println(calendars[0] + "|" + calendars[1]);

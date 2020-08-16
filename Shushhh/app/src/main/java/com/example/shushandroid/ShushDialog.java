@@ -2,6 +2,7 @@ package com.example.shushandroid;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -36,6 +37,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 import java.util.UUID;
 
 import androidx.annotation.NonNull;
@@ -93,6 +95,8 @@ public class ShushDialog extends DialogFragment {
     public ShushObject shushObject;
     LatLng latlng;
 
+    private ArrayList<String> ids;
+
     static ShushDialog newInstance() {
         return new ShushDialog();
     }
@@ -102,6 +106,12 @@ public class ShushDialog extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.FullscreenDialogTheme);
+        ids = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            if (i % 2 != 0) {
+                ids.add(i + "");
+            }
+        }
     }
 
 
@@ -228,6 +238,7 @@ public class ShushDialog extends DialogFragment {
 
         deleteButton.setOnClickListener(v -> {
             if (presetUUIDString != null && !presetUUIDString.isEmpty()) {
+                cancelAlarm(databaseManager.getShushObject(presetUUIDString));
                 if (!databaseManager.delete(presetUUIDString)) {
                     Log.e("DB Error", "Error deleting " + presetUUIDString + " ShushObject");
                 } else {
@@ -376,6 +387,10 @@ public class ShushDialog extends DialogFragment {
                 shushObject.setRep(toggleGroupManager.getToggleStateString());
                 shushObject.setLocation(location);
                 shushObject.setRadius(radius);
+                int x = new Random().nextInt(ids.size()-1);
+                shushObject.setId(ids.get(x));
+                ids.remove(x);
+
                 if (latlng == null) {
                     shushObject.setLatLng(storedLatLng);
                 } else {
@@ -606,6 +621,16 @@ public class ShushDialog extends DialogFragment {
             this.textView = textView;
         }
 
+    }
+
+    public void cancelAlarm (ShushObject shushObject) {
+        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getActivity(), SilencerReciever.class);
+        Intent intent2 = new Intent(getActivity(), SilencerReciever.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), Integer.parseInt(shushObject.getId()), intent, 0);
+        PendingIntent pendingIntent2 = PendingIntent.getBroadcast(getActivity(), Integer.parseInt(shushObject.getId()) + 1, intent2, 0);
+        alarmManager.cancel(pendingIntent);
+        alarmManager.cancel(pendingIntent2);
     }
 
 }

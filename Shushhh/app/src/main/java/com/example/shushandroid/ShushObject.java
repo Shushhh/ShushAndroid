@@ -22,6 +22,7 @@ public class ShushObject {
     private String radius;
     private String UUID;
     private String rep;
+    private String id;
 
     private LatLng latLng;
 
@@ -29,7 +30,7 @@ public class ShushObject {
 
     }
 
-    public ShushObject(String name, String time, String date, String rep, String location, String radius, String UUID) {
+    public ShushObject(String name, String time, String date, String rep, String location, String radius, String UUID, String id) {
         this.name = name;
         this.time = time;
         this.date = date;
@@ -37,6 +38,15 @@ public class ShushObject {
         this.location = location;
         this.radius = radius;
         this.UUID = UUID;
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public LatLng getLatLng() {
