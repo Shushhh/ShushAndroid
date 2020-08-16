@@ -631,6 +631,7 @@ public class ShushDialog extends DialogFragment {
         PendingIntent pendingIntent2 = PendingIntent.getBroadcast(getActivity(), Integer.parseInt(shushObject.getId()) + 1, intent2, 0);
         alarmManager.cancel(pendingIntent);
         alarmManager.cancel(pendingIntent2);
+        Log.i("Count", "Delete");
     }
 
 }

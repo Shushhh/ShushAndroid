@@ -144,6 +144,8 @@ public class ShushQueryScheduler {
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(context, Integer.parseInt(shushObject.getId()), intent, 0);
                     fromAlarmManager.set(AlarmManager.RTC_WAKEUP, calendars[0].getTimeInMillis(), pendingIntent); // set to silent
 
+                    Log.i("id", shushObject.getId());
+
                     id++;
 
                     try {
@@ -162,7 +164,7 @@ public class ShushQueryScheduler {
                     PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context, Integer.parseInt(shushObject.getId()) + 1, intent2, 0);
                     toAlarmManager.set(AlarmManager.RTC_WAKEUP, calendars[1].getTimeInMillis(), pendingIntent2); // set to ring
 
-                    System.out.println(calendars[0] + "|" + calendars[1]);
+                    Log.i("DATE", calendars[0].getTime() + "|" + calendars[1].getTime());
 
                     id++;
                 }
