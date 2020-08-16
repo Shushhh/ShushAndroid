@@ -47,7 +47,7 @@
         app:layout_constraintTop_toBottomOf="@id/shushimage"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:text="ShushAndroid"
+        android:text="@string/app_name"
         android:textColor="@color/colorAccentDarker"
         android:textSize="18dp"
         />

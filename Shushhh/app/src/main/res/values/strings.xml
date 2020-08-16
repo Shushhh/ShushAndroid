@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ShushAndroid</string>
+    <string name="app_name">Shushhh</string>
     <string name="shushhhlogo">Shushhh</string>
     <string name="message">Welcome to Shush Android! Type your automated voicemail message here.</string>
     <string name="editbutton">Edit</string>
