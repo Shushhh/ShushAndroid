@@ -42,6 +42,7 @@ android:background="@color/colorPrimary">
                 android:textStyle="bold"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -114,7 +115,8 @@ android:background="@color/colorPrimary">
                     android:inputType="text"
                     android:text="sudhirsahil2001@gmail.com"
                     android:textColor="@color/cardview_light_background"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:backgroundTint="#9499A3"/>
 
             </LinearLayout>
 
@@ -150,7 +152,8 @@ android:background="@color/colorPrimary">
                     android:imeOptions="actionDone"
                     android:inputType="text"
                     android:textColor="@color/cardview_light_background"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:backgroundTint="#9499A3"/>
 
             </LinearLayout>
 
