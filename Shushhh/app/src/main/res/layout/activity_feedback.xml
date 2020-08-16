@@ -72,92 +72,104 @@ android:background="@color/colorPrimary">
     android:layout_marginTop="20dp"
     android:paddingLeft="40dp"
     android:paddingRight="40dp"/>
-    
+
     <LinearLayout
+        android:id="@+id/to_linearlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:id="@+id/to_linearlayout"
-        android:background="@drawable/feedback_round"
-        app:layout_constraintTop_toBottomOf="@id/feedback_type_text"
+        android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp" >
+        android:background="@drawable/feedback_round"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/feedback_type_text">
 
         <TextView
             android:layout_width="50dp"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/rubik"
+            android:gravity="center"
             android:text="To:"
             android:textColor="@color/colorAccent"
-            android:textSize="16sp"
-            android:gravity="center"
-            android:fontFamily="@font/rubik"/>
+            android:textSize="16sp" />
+
         <EditText
+            android:id="@+id/to_edittext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="@color/cardview_light_background"
-            android:id="@+id/to_edittext"
-            android:text="sudhirsahil2001@gmail.com"
-            android:inputType="text"
+            android:fontFamily="@font/rubik"
             android:imeOptions="actionDone"
-            android:fontFamily="@font/rubik"/>
+            android:inputType="text"
+            android:text="sudhirsahil2001@gmail.com"
+            android:textColor="@color/cardview_light_background"
+            android:textSize="16sp" />
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/to_linearlayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:id="@+id/to_linearlayout2"
-        android:background="@drawable/feedback_round"
-        app:layout_constraintTop_toBottomOf="@id/to_linearlayout"
+        android:layout_marginStart="20dp"
         android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp" >
+        android:background="@drawable/feedback_round"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/to_linearlayout">
 
         <TextView
             android:layout_width="70dp"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/rubik"
+            android:gravity="center"
             android:text="Subject: "
             android:textColor="@color/colorAccent"
-            android:textSize="16sp"
-            android:gravity="center"
-            android:fontFamily="@font/rubik"/>
+            android:textSize="16sp" />
+
         <EditText
+            android:id="@+id/subject_edittext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="@color/cardview_light_background"
-            android:id="@+id/subject_edittext"
-            android:inputType="text"
+            android:fontFamily="@font/rubik"
             android:imeOptions="actionDone"
-            android:fontFamily="@font/rubik"/>
+            android:inputType="text"
+            android:textColor="@color/cardview_light_background"
+            android:textSize="16sp" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/to_linearlayout2">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/message_edittext"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:id="@+id/message_edittext"
-            app:layout_constraintTop_toBottomOf="@id/to_linearlayout2"
-            android:padding="10dp"
             android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
             android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
             android:background="@drawable/feedback_round"
-            android:textSize="16sp"
-            android:textColor="@color/colorAccent"
-            android:hint="Message"
-            android:textColorHint="@color/colorAccent"
-            android:inputType="text"
+            android:fontFamily="@font/rubik"
+            android:hint="Message: "
             android:imeOptions="actionDone"
-            android:fontFamily="@font/rubik"/>
+            android:inputType="text"
+            android:padding="10dp"
+            android:textColor="@color/colorAccent"
+            android:textColorHint="@color/colorAccent"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@id/to_linearlayout2" />
 
     </LinearLayout>
 
