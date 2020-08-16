@@ -10,6 +10,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
 
 import java.sql.SQLOutput;
 
@@ -23,11 +24,12 @@ public class ForegroundServiceManager extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
         Notification notification = new Notification.Builder(this, "service")
-                .setContentTitle("Service")
-                .setContentText("Test")
+                .setContentTitle("Shush Background Service")
                 .setSmallIcon(R.drawable.ic_shush_notif_icon)
                 .setContentIntent(pendingIntent)
+                .setStyle(new Notification.BigTextStyle().bigText("Shush checks and updates your ringer settings according to the time and location settings. Keep the service running to ensure best results."))
                 .build();
+
         startForeground(1, notification);
 
         try {

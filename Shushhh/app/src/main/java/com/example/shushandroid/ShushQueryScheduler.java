@@ -113,6 +113,12 @@ public class ShushQueryScheduler {
 
                         id++;
 
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
                         Intent intent2 = new Intent(context, SilencerReciever.class);
                         intent2.putExtra(SCHEDULE_TYPE, Key.TIME_REPEAT);
                         intent2.putExtra(TOGGLE_KEY, Key.RING);
@@ -139,6 +145,12 @@ public class ShushQueryScheduler {
                     fromAlarmManager.set(AlarmManager.RTC_WAKEUP, calendars[0].getTimeInMillis(), pendingIntent); // set to silent
 
                     id++;
+
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
                     AlarmManager toAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
                     Intent intent2 = new Intent(context, SilencerReciever.class);
