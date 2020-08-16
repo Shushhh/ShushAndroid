@@ -26,9 +26,4 @@ public class SharedPreferenceManager {
         } else return 0.5;
     }
 
-    public Integer retrieveToggleState () {
-        Integer t = this.sharedPreferences.getInt(context.getResources().getString(R.string.settings_toggle_string), 0);
-        return t;
-    }
-
 }

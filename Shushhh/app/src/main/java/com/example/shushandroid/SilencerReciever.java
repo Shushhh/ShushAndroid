@@ -42,7 +42,6 @@ public class SilencerReciever extends BroadcastReceiver {
     private AudioManager audioManager;
     private SharedPreferenceManager sharedPreferenceManager;
     private double hours;
-    private Integer toggleState;
     public static int index = 0;
     public static int firstTime = 1;
 
@@ -61,7 +60,6 @@ public class SilencerReciever extends BroadcastReceiver {
 
         sharedPreferenceManager = new SharedPreferenceManager(context);
         hours = sharedPreferenceManager.retrieveLocationInterval();
-        toggleState = sharedPreferenceManager.retrieveToggleState();
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         interval = (long) (hours * 60 * 60 * 1000);
 
@@ -69,68 +67,6 @@ public class SilencerReciever extends BroadcastReceiver {
          * If the user mentions a location, perform GeoFencing processing here *
          */
         int count = 0;
-        int locationcounter = 0;
-
-        final boolean[] silentChecker = {false};
-        int[] locationcount = {0};
-        int[] locationcount2 = {0};
-
-
-
-        /*
-
-        List<ShushObject> locationList = new ArrayList<>();
-
-        locationcount2[0]++;
-                locationList.add(shushObject);
-                Log.d("test", locationList.toString());
-                Log.i("Run", "run");
-
-                LocationListener locationListener = new LocationListener() {
-                    @Override
-                    public void onLocationChanged(@NonNull Location location) {
-
-                        Log.i("Listener", "listener");
-
-                        Location setLocation = new Location("Current Location");
-                        setLocation.setLatitude(shushObject.getLatLng().latitude);
-                        setLocation.setLongitude(shushObject.getLatLng().longitude);
-
-                        if (setLocation.distanceTo(location) < Double.parseDouble(shushObject.getRadius().substring(0, shushObject.getRadius().length() - 1))) {
-                            silentChecker[0] = true;
-                            Log.d("test", "silent");
-
-                            System.out.println("SILENT");
-                        } else {
-                            if (silentChecker[0] == true) {
-                                locationcount[0]++;
-                                Log.d("test", "silent");
-                                //Set ringer to silent
-                                if (locationcount[0] == locationcount2[0]) {
-                                    locationcount[0] = 0;
-                                    silentChecker[0] = false;
-                                    Log.d("size", "size: " + locationcount2[0]);
-                                    Log.d("test", "ring");
-                                    //Set ringer to ring
-                                }
-                            } else {
-                                silentChecker[0] = false;
-                                Log.d("test", "ring");
-                                //Set ringer to ring
-                            }
-                            System.out.println(setLocation.distanceTo(location));
-                        }
-
-                        if (shushObject.equals(locationList.get(locationList.size() - 1))) {
-                            locationcount[0] = 0;
-                        }
-                        Log.d("test", "size of list: " + locationList.size());
-                        Log.d("test", "size of arraylist" + shushObjectArrayList.size());
-                    }
-                };
-                locationManager.removeUpdates(locationListener);
-
-         */
 
         if (intent.getStringExtra(ShushQueryScheduler.SCHEDULE_TYPE) != null) {
             String scheduleType = Objects.requireNonNull(intent.getStringExtra(ShushQueryScheduler.SCHEDULE_TYPE));
@@ -198,7 +134,6 @@ public class SilencerReciever extends BroadcastReceiver {
                             // for ActivityCompat#requestPermissions for more details.
                             return;
                         } else {
-
                             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 100, 0, locationListener);
                         }
                     }
