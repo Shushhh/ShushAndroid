@@ -93,7 +93,7 @@ public class ShushQueryScheduler {
                 Log.i("Intent info", shushObject.getLatLng().latitude + " | " + shushObject.getLatLng().longitude + " | " + Double.parseDouble(shushObject.getRadius().substring(0, shushObject.getRadius().length() - 1)));
                 Log.i("call","call1");
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, Integer.parseInt(shushObject.getId()), intent, 0);
                 fromAlarmManager.cancel(pendingIntent);
                 fromAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), (long) (hours * 60 * 60 * 1000) / 5, pendingIntent);
                 Log.i("call","call2");// set to silent
@@ -109,7 +109,7 @@ public class ShushQueryScheduler {
                         Intent intent = new Intent(context, SilencerReciever.class);
                         intent.putExtra(SCHEDULE_TYPE, Key.TIME_REPEAT);
                         intent.putExtra(TOGGLE_KEY, Key.SILENT);
-                        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
+                        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, Integer.parseInt(shushObject.getId()), intent, 0);
                         fromAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendars[0].getTimeInMillis(), (7 * 24 * 60 * 60 * 1000), pendingIntent); // set to silent
 
                         id++;
@@ -124,7 +124,7 @@ public class ShushQueryScheduler {
                         intent2.putExtra(SCHEDULE_TYPE, Key.TIME_REPEAT);
                         intent2.putExtra(TOGGLE_KEY, Key.RING);
                         AlarmManager toAlarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                        PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context, id, intent2, 0);
+                        PendingIntent pendingIntent2 = PendingIntent.getBroadcast(context, Integer.parseInt(shushObject.getId()) + 1, intent2, 0);
                         toAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendars[1].getTimeInMillis(), (7 * 24 * 60 * 60 * 1000), pendingIntent2); // set to ring
 
                         id++;
