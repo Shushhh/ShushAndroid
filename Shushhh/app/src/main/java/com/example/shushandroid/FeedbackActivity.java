@@ -3,6 +3,8 @@ package com.example.shushandroid;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -25,6 +27,9 @@ public class FeedbackActivity extends AppCompatActivity {
         subjectEditText = findViewById(R.id.subject_edittext);
         messageText = findViewById(R.id.message_edittext);
         sendButton = findViewById(R.id.sendButton);
+
+        messageText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        messageText.setRawInputType(InputType.TYPE_CLASS_TEXT);
 
         getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimary));
 
