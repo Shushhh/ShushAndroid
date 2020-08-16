@@ -94,7 +94,7 @@ public class ShushQueryScheduler {
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0);
                 fromAlarmManager.cancel(pendingIntent);
-                fromAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), (long) (hours/30 * 60 * 60 * 1000), pendingIntent);
+                fromAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), (long) (hours * 60 * 60 * 1000), pendingIntent);
                 Log.i("call","call2");// set to silent
                 id ++;
 

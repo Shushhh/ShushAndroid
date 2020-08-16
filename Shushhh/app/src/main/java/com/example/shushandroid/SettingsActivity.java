@@ -52,11 +52,11 @@ public class SettingsActivity extends AppCompatActivity {
         saveButton.setOnClickListener(view -> {
 
             if (radioButton30.isChecked()) {
-                intervalString = getResources().getString(R.string.thirty_minutes);
+                intervalString = getResources().getString(R.string.five_minutes);
             } else if (radioButton60.isChecked()) {
-                intervalString = getResources().getString(R.string.one_hour);
+                intervalString = getResources().getString(R.string.fifteen_minutes);
             } else if (radioButton120.isChecked()) {
-                intervalString = getResources().getString(R.string.two_hours);
+                intervalString = getResources().getString(R.string.thirty_minutes);
             }
 
             sharedPreferences = this.getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);

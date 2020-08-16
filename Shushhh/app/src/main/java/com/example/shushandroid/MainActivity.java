@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.colorAccentDarker));
     }
 
     public static void updateRecyclerView () {

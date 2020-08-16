@@ -84,7 +84,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/rubik"
-            android:text="30 minutes"
+            android:text="@string/five_minutes"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:paddingLeft="16dp"
@@ -95,7 +95,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/rubik"
-            android:text="1 hour"
+            android:text="@string/fifteen_minutes"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:paddingLeft="16dp" />
@@ -105,7 +105,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/rubik"
-            android:text="2 hours"
+            android:text="@string/thirty_minutes"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:paddingLeft="16dp" />
