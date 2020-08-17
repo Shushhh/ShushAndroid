@@ -16,7 +16,7 @@
         android:orientation="horizontal"
         android:background="?attr/selectableItemBackground"
         android:id="@+id/settingsView"
-        android:padding="10dp">
+        android:padding="7dp">
 
         <ImageView
             android:layout_width="@dimen/bottom_sheet_icon_size"
@@ -46,7 +46,7 @@
         android:orientation="horizontal"
         android:background="?attr/selectableItemBackground"
         android:id="@+id/feedback_view"
-        android:padding="10dp">
+        android:padding="7dp">
 
         <ImageView
             android:layout_width="@dimen/bottom_sheet_icon_size"
@@ -74,7 +74,7 @@
         android:orientation="horizontal"
         android:background="?attr/selectableItemBackground"
         android:id="@+id/about_us_view"
-        android:padding="10dp">
+        android:padding="7dp">
 
         <ImageView
             android:layout_width="@dimen/bottom_sheet_icon_size"
@@ -111,7 +111,7 @@
         android:gravity="center"
         android:text="Version 1.0"
         android:textColor="#9499A3"
-        android:textSize="18dp"
+        android:textSize="16dp"
         android:textStyle="bold" />
 
 </LinearLayout>

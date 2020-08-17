@@ -200,10 +200,4 @@ public class SilencerReciever extends BroadcastReceiver {
             }
         }
     }
-
-    public void checkRadius (double latitude, double longitude, double radius) {
-
-    }
-
-
 }
