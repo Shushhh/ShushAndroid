@@ -347,7 +347,7 @@ public class ShushQueryScheduler {
     public static int numberLocationShushObjects (ArrayList<ShushObject> shushObjects) {
         int i = 0;
         for (ShushObject shushObject: shushObjects) {
-            if (!shushObject.getLocation().equals(ShushObject.Key.NULL)) {
+            if (!shushObject.getLocation().equals(ShushObject.Key.NULL) && shushObject.getDate().equals(ShushObject.Key.NULL)) {
                 i++;
             }
         }
