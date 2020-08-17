@@ -17,6 +17,7 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -183,6 +184,8 @@ public class ShushDialog extends DialogFragment {
         shushObject = new ShushObject();
         timePicker = new TimePickerFragment(getActivity());
         databaseManager = new DatabaseManager(getActivity());
+
+        addNameEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
 
         getActivity().getWindow().setNavigationBarColor(getResources().getColor(R.color.colorPrimary));
 
