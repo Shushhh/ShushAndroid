@@ -23,6 +23,7 @@ No ads. No cost. No hassle.
 
 ------------------
 ### How it looks
-<img src="https://lh3.googleusercontent.com/xZL3PEVNszJqaty08EsF4NZvWAbm2lBFJsjP31yZVL4FzxOs-AzaMi-jVCW9jEWDzm21">
-<img src="https://lh3.googleusercontent.com/bpN8Lu7XEjjogcGVfuU7HsORH4pBdbjhzdoHDJ_HW0KYt5vFIkxuQUsKw_SEA57z6CDJ">
-<img src="https://lh3.googleusercontent.com/fWoQcxcLkMsVGr2j2yR7k_AXLODxEoMGtK9CEvR1lvnaUQhsoo_Sf3y5sLT02lKQEg">
+
+Main Page                  |  Creating Schedule
+:-------------------------:|:-------------------------:
+<img src="https://lh3.googleusercontent.com/xZL3PEVNszJqaty08EsF4NZvWAbm2lBFJsjP31yZVL4FzxOs-AzaMi-jVCW9jEWDzm21">  |  <img src="https://lh3.googleusercontent.com/fWoQcxcLkMsVGr2j2yR7k_AXLODxEoMGtK9CEvR1lvnaUQhsoo_Sf3y5sLT02lKQEg">
